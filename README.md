@@ -12,6 +12,3 @@ https://github.com/monsonite/MINT
 https://github.com/monsonite/MINT-Documentation
 
 chat https://github.com/SteveJustin1963/tec-MINT/wiki
-
-![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/1.jfif)
-
