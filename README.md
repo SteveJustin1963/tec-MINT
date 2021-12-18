@@ -1,10 +1,9 @@
 # tec-MINT
 A small forth like system for the tec-1 and other sbc
 
-in no order, John Hardy, Craig Jones and Craig Hart and maybe more folk will be making a big anouncment soon....(today is 16.12.21)
+in no order, John Hardy, Craig Jones and Craig Hart and maybe more folk have made a big anouncment soon
 
-![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/1.jfif)
-
+https://www.facebook.com/groups/tec1z80/posts/1250512652124448/ 
 
 
 ## Ref
