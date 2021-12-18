@@ -1,7 +1,7 @@
 # tec-MINT
 A small forth like system for the tec-1 and other sbc
 
-in no order, John Hardy, Craig Jones and Craig Hart and maybe more folk have made a big anouncment soon
+in no order, John Hardy, Craig Jones and Craig Hart and maybe more folk have made a big anouncment ...
 
 https://www.facebook.com/groups/tec1z80/posts/1250512652124448/ 
 
