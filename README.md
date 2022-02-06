@@ -1,4 +1,7 @@
 # tec-MINT
+
+THIS IS A PRFOUND STEP FORWARD IN SOFTWARE DEVELOPMENT FOR THE TEC1. NOW ITS POSSIBLE TO RAPIDY PROTO TYPE CODE FOR EVERYONE!
+
 A small forth like system for the tec-1 and other sbc.
 
 In no order, John Hardy, Ken Boak, Craig Jones and Craig Hart and maybe more folk have made a big breakthrough, read the announcement ...
