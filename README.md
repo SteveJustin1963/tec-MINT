@@ -2,7 +2,9 @@
 
 THIS IS A PRFOUND STEP FORWARD IN SOFTWARE DEVELOPMENT FOR THE TEC1. 
 
-NOW ITS POSSIBLE TO RAPIDY PROTO TYPE CODE that works forst time by EVERYONE!
+NOW ITS POSSIBLE TO RAPIDY PROTO TYPE CODE that works first time by EVERYONE!
+
+
 
 A small forth like system for the tec-1 and other sbc.
 
