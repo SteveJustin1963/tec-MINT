@@ -1,6 +1,6 @@
 # tec-MINT
-
-https://github.com/orgMINT
+- https://github.com/monsonite/MINT
+- https://github.com/orgMINT
 
 
 THIS IS A PRFOUND STEP FORWARD IN SOFTWARE DEVELOPMENT FOR THE TEC1. 
