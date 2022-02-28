@@ -1,11 +1,10 @@
 # tec-MINT
-- https://github.com/monsonite/MINT
-- https://github.com/orgMINT
-- https://www.facebook.com/groups/tec1z80
+- https://github.com/orgMINT                The source
+- https://github.com/monsonite/MINT         Depreciated
+- https://www.facebook.com/groups/tec1z80   Search 
 
 
 THIS IS A PRFOUND STEP FORWARD IN SOFTWARE DEVELOPMENT FOR THE TEC1. 
-
 NOW ITS POSSIBLE TO RAPIDY PROTOTYPE CODE that works first time by EVERYONE!
 
 
