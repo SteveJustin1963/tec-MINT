@@ -1,5 +1,5 @@
 # tec-MINT
-- https://github.com/orgMINT                The source
+- https://github.com/orgMINT                The source 
 - https://github.com/monsonite/MINT         Depreciated
 - https://www.facebook.com/groups/tec1z80   Search 
 
