@@ -24,7 +24,8 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 ### My attaempt to run v1.1
 - cj sent me a EEPROM chip to load the code, its a AT28C64B. it will hang over the tec1d socket by 2 pins each side.
 - need to make an adapter board to fix this. as can run a 28 pin in 24 pin rom socket
-- see this map 
+- see this https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/MemoryDevices01.pdf
+-  
 
 
 
