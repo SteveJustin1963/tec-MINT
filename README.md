@@ -21,6 +21,12 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1638969598.mp4
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1639658972.mp4
 
+### My attaempt to run v1.1
+- cj sent me a EEPROM chip to load the code, its a AT28C64B. it will hang over the tec1d socket by 2 pins each side.
+- need to make an adapter board to fix this. as can run a 28 pin in 24 pin rom socket
+- see this map 
+
+
 
 ## Ref
 - https://github.com/monsonite/MINT
