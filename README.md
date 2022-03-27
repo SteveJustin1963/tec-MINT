@@ -31,7 +31,7 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 - so i extend the socket 4 pins and glue to end of existing socket. relocate jumper wire on right by removing and running long wire to the 74138 that way the bent leg of the socket does not touch it.
 - solder another wire from vcc on lhs so rom select switch 5v.
 
-![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8436.jpg)
+![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/sock1.png)
 
 
 ## Ref
