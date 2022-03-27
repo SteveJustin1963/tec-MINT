@@ -26,7 +26,7 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 - need to make an adapter board to fix this. as can run a 28 pin in 24 pin rom socket
 - see this https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/MemoryDevices01.pdf
 
-![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/ee%20pins.png)
+![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/ee%20pins2.png)
 
 - so i extend the socket 4 pins and glue to end of existing socket. relocate jumper wire on right by removing and running long wire to the 74138 that way the bent leg of the socket does not touch it.
 - solder another wire from vcc on lhs so rom select switch 5v.
