@@ -35,7 +35,8 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 
 - downlad Tera Term https://ttssh2.osdn.jp/ because it has a variable baud rate, helps with fault find
 - plug in a USB to TTL serial cable, 5v is close enough for rs232, that has the embedded chip for the conversion, usualy have 4 wires, tx-green rx-white gnd-blk 5v-red
-- 
+- plug it in PnP will load a driver and allocate a com port, find in device manager, ull get like com12, do a loop back test short tx-rx, shud echo char in teraterm
+-  
 
 
 ## Ref
