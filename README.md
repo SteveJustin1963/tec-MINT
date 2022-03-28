@@ -32,6 +32,8 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 - this extends the socket to 28. under relocate jumper wire on right as it touches the bent socket pin, run wire to the 74138.
 - solder another wire from vcc on lhs so rom select switch 5v.
 
+![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8433.jpg)
+
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/sock1.png)
 
 - downlad Tera Term https://ttssh2.osdn.jp/ because it has a variable baud rate, helps with fault find
