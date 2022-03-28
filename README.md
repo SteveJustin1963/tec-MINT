@@ -33,6 +33,10 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/sock1.png)
 
+- downlad Tera Term https://ttssh2.osdn.jp/ because it has a variable baud rate, helps with fault find
+- plug in a USB to TTL serial cable, 5v is close enough for rs232, that has the embedded chip for the conversion, usualy have 4 wires, tx-green rx-white gnd-blk 5v-red
+- 
+
 
 ## Ref
 - https://github.com/monsonite/MINT
