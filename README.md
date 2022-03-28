@@ -22,10 +22,11 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1639658972.mp4
 
 ### My attaempt to run v1.1
-- cj sent me a EEPROM chip to load the code, its a AT28C64B. it will hang over the tec1d socket by 2 pins each side.
-- need to make an adapter board to fix this. as can run a 28 pin in 24 pin rom socket
+- cj sent me a blank EEPROM chip to load the code, its a AT28C64B. it will hang over the tec1d socket by 2 pins each side.
+- need to extend the 24 pin socket to 28 as pinout identical except for A12 and VCC, an easy mod
 - see this https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/MemoryDevices01.pdf
-
+- cut off 2x2 off a socket bend th pins out and epoxy to the end of the 24 sock, attach wires
+- 
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/ee%20pins2.png)
 
 - so i extend the socket 4 pins and glue to end of existing socket. relocate jumper wire on right by removing and running long wire to the 74138 that way the bent leg of the socket does not touch it.
