@@ -40,7 +40,16 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 - download Tera Term https://ttssh2.osdn.jp/ because it has a variable baud rate, helps with fault find
 - plug in a USB to TTL serial cable, 5v is close enough for rs232, that has the embedded chip for the conversion, usually have 4 wires, tx-green rx-white gnd-blk 5v-red
 - plug it in PnP will load a driver and allocate a com port, find in device manager, ull get like com12, do a loop back test short tx-rx, should echo char in teraterm
--  
+- now without a dedicated serial port chip, mint can do bitbang, compile and get code that supports it, default is 4800, so ull need the 4mhx chip in the clock
+- also need to make a cct mod see CJ's mod in https://github.com/SteveJustin1963/tec-BIT-BANG
+
+![]()
+![]()
+![]()
+![]()
+![]()
+![]()
+
 
 
 ## Ref
