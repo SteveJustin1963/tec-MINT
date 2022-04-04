@@ -51,7 +51,7 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8486%20(1).jpg)
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8487%20(1).jpg)
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8488%20(1).jpg)
-![]()
+![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8467.jpg)
 ![]()
 
 
