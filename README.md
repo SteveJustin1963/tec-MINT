@@ -1,7 +1,7 @@
 # tec-MINT
 - https://github.com/orgMINT                The source 
 - https://github.com/monsonite/MINT         Depreciated
-- https://www.facebook.com/groups/tec1z80   Search 
+- https://www.facebook.com/groups/623556744820045/search/?q=mint   Search 
 
 
 THIS IS A PRFOUND STEP FORWARD IN SOFTWARE DEVELOPMENT FOR THE TEC1. 
