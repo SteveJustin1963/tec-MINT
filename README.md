@@ -43,8 +43,14 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 - now without a dedicated serial port chip, mint can do bitbang, compile and get code that supports it, default is 4800, so ull need the 4mhx chip in the clock
 - also need to make a cct mod see CJ's mod in https://github.com/SteveJustin1963/tec-BIT-BANG
 
-![]()
-![]()
+![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8455.jpg)
+![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8483%20(1).jpg)
+![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8483%20(2).jpg)
+![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8484%20(1).jpg)
+![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8485%20(1).jpg)
+![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8486%20(1).jpg)
+![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8487%20(1).jpg)
+![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8488%20(1).jpg)
 ![]()
 ![]()
 
