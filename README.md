@@ -8,7 +8,7 @@ NOW ITS POSSIBLE TO RAPIDY PROTOTYPE CODE that works first time by EVERYONE!
 - https://github.com/monsonite/MINT         Depreciated
 - https://www.facebook.com/groups/623556744820045/search/?q=mint   Search 
 
-MINT is a small forth like system for the tec-1 and other SBC or other MCU.
+MINT is a small forth like system for the tec-1 and other SBC or MCU.
 
 ## Glory
 In no order, John Hardy, Ken Boak, Craig Jones and Craig Hart and maybe more folk have made a big breakthrough, read the announcement ...
