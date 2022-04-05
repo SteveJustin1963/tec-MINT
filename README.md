@@ -22,8 +22,10 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 - https://www.youtube.com/watch?v=m66y6C54Cds
 
 ### Now, my attempt to run v1.1
-- cj sent me a blank EEPROM chip to load the code, its a AT28C64B. it will hang over the tec1d socket by 2 pins each side.
-- need to extend the 24 pin socket to 28 as pinout identical except for A12 and VCC, an easy mod
+- you can erase and reprogram a standard EPROM
+- however CJ sent me a blank EEPROM chip to load the code, its a AT28C64B. It electricaly erased and faster to use. 
+- it will hang over the tec1d socket by 2 pins each side. need to fix this.
+- so need to extend the 24 pin socket out to 28 pins, its good the pinout is identical except for A12 and VCC, an easy mod
 - see this https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/MemoryDevices01.pdf
  
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/ee%20pins2.png)
@@ -53,7 +55,13 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8467.jpg)
 ![]()
 
-
+## Iterate
+- MINT monitor
+- talk to all standard HW addons
+- build new projects
+- MINT compiler
+- new vers of MINT
+- 
 
 ## Ref
 - https://github.com/monsonite/MINT
