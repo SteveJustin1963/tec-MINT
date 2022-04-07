@@ -7,6 +7,7 @@ NOW ITS POSSIBLE TO RAPIDY PROTOTYPE CODE that works first time by EVERYONE!
 - https://github.com/orgMINT                The source 
 - https://github.com/monsonite/MINT         Depreciated
 - https://www.facebook.com/groups/623556744820045/search/?q=mint   Search 
+- https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/
 
 MINT is a small forth like system for the tec-1 and other SBC or MCU.
 
@@ -22,7 +23,7 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 - https://www.youtube.com/watch?v=m66y6C54Cds
 
 ### Now, my attempt to run v1.1
-- https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/
+
 - you can erase and reprogram a standard EPROM
 - however CJ sent me a blank EEPROM chip to load the code, its a AT28C64B. It electricaly erased and faster to use. 
 - it will hang over the tec1d socket by 2 pins each side. need to fix this.
