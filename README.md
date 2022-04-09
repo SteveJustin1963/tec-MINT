@@ -33,7 +33,7 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/ee%20pins2.png)
 
 - cut off a 2x2 off a wide socket bend the pins out and epoxy to the end of the 24 sock, attach wires
-- this extends the socket to 28. unsolder it and just soler it to pad landing, dont poke the wire thru.
+- this extends the socket to 28. one pin will touch the wire bridge, so unsolder it and just solder it to pad landing, dont let the wire poke thru and touch the socket pin.
 - solder another wire from vcc on lhs so rom select switch 5v.
 
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8433.jpg)
