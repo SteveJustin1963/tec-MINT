@@ -70,3 +70,5 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 - https://github.com/monsonite/MINT-Documentation
 - https://github.com/tec1group/MINT-cookbook
 - chat https://github.com/SteveJustin1963/tec-MINT/wiki
+- Help file https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/edit#gid=0
+
