@@ -1,8 +1,8 @@
 # tec-MINT
 
 # WARNING 
-THIS IS A PRFOUND STEP FORWARD IN SOFTWARE DEVELOPMENT FOR THE TEC1. 
-NOW ITS POSSIBLE TO RAPIDY PROTOTYPE CODE that works first time by EVERYONE!
+THIS IS A PROFOUND STEP FORWARD IN SOFTWARE DEVELOPMENT FOR THE TEC1. 
+NOW IT'S POSSIBLE TO RAPIDLY PROTOTYPE CODE that works first time by EVERYONE!
 
 - https://github.com/orgMINT                The source 
 - https://github.com/monsonite/MINT         Depreciated
