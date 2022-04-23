@@ -4,8 +4,8 @@
 THIS IS A PROFOUND STEP FORWARD IN SOFTWARE DEVELOPMENT FOR THE TEC1. 
 NOW IT'S POSSIBLE TO RAPIDLY PROTOTYPE CODE that works first time by EVERYONE!
 
-- https://github.com/orgMINT                The source 
-- https://github.com/monsonite/MINT         Depreciated
+- https://github.com/orgMINT                Code and howtos updated here 
+- https://github.com/monsonite/MINT         howtos added here as well
 - https://www.facebook.com/groups/623556744820045/search/?q=mint   Search 
 - https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/
 
