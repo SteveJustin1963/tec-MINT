@@ -63,7 +63,7 @@ CJ; "To build a new Mint for the TEC-1 you need all the files from orgMINT/MINT-
 Overwrite the existing MINT.asm, MINT-macros.asm and ram.asm with your new versions. 
 Compile the file TEC-1-ROM-B.z80. "
 
-BUT its not right. We need to combines parts from CJ with JH so we get a .bin that has bit bang or code for serial chip. JH updates only in https://github.com/orgMINT/MINT (no where else- this is THE source) files like MINT.asm and test.RUN.z80. 
+BUT its not complete. We need to combines parts from CJ with JH so we get a .bin that has bit bang or code for serial chip. JH updates only in https://github.com/orgMINT/MINT (no where else- this is THE source) files like MINT.asm and test.RUN.z80. 
 
 
 
