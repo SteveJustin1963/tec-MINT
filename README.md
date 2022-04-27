@@ -11,7 +11,7 @@ NOW IT'S POSSIBLE TO RAPIDLY PROTOTYPE CODE that works first time by EVERYONE!
 
 MINT is a small forth like system for the tec-1 and other SBC or MCU.
 
-## Glory
+## Glory to...
 In no order, John Hardy, Ken Boak, Craig Jones and Craig Hart and maybe more folk have made a big breakthrough, read the announcement ...
 https://www.facebook.com/groups/tec1z80/posts/1250512652124448/ 
 
