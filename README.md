@@ -59,12 +59,11 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 ![]()
 
 ### roll a 1.1
-CJ; "To build a new Mint for the TEC-1 you need the all the files from  orgMINT/MINT-builds/TEC-1_Build.
+CJ; "To build a new Mint for the TEC-1 you need all the files from orgMINT/MINT-builds/TEC-1_Build.
 Overwrite the existing MINT.asm, MINT-macros.asm and ram.asm with your new versions. 
 Compile the file TEC-1-ROM-B.z80. "
 
-BUT its not right, we need the fixes that JH keeps updating into https://github.com/orgMINT/MINT
-But his files run in the asm80 emulator, we need to patch from of CJ with JH so we get the right .bin to copy into ROM...
+BUT its not right. We need to combines parts from CJ with JH so we get a .bin that has bit bang or code for serial chip. JH updates only in https://github.com/orgMINT/MINT (no where else- this is THE source) files like MINT.asm and test.RUN.z80. 
 
 
 
