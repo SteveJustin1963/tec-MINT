@@ -26,6 +26,7 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 
 - you can erase and reprogram a standard EPROM
 - however CJ sent me a blank EEPROM chip to load the code, its a AT28C64B. It electricaly erased and faster to use. 
+- roll a 1.1 see below from CJ
 - it will hang over the tec1d socket by 2 pins each side. need to fix this.
 - so need to extend the 24 pin socket out to 28 pins, its good the pinout is identical except for A12 and VCC, an easy mod
 - see this https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/MemoryDevices01.pdf
@@ -56,6 +57,17 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8488%20(1).jpg)
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8467.jpg)
 ![]()
+
+### roll a 1.1
+CJ; "To build a new Mint for the TEC-1 you need the all the files from  orgMINT/MINT-builds/TEC-1_Build.
+Overwrite the existing MINT.asm, MINT-macros.asm and ram.asm with your new versions. 
+Compile the file TEC-1-ROM-B.z80. "
+
+BUT its not right, we need the fixes that JH keeps updating into https://github.com/orgMINT/MINT
+But his files run in the asm80 emulator, we need to patch from of CJ with JH so we get the right .bin to copy into ROM...
+
+
+
 
 ## Iterate
 - MINT monitor
