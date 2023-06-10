@@ -20,7 +20,9 @@ https://www.facebook.com/groups/tec1z80/posts/1250512652124448/
 ### Videos
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1638969598.mp4
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1639658972.mp4
-- https://www.youtube.com/watch?v=m66y6C54Cds
+- https://www.youtube.com/watch?v=m66y6C54Cds  transcript in wiki
+
+
 
 ### Now, my attempt to run v1.1
 
