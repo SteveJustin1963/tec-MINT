@@ -75,7 +75,8 @@ BUT its not complete. We need to combines parts from CJ with JH so we get a .bin
 - talk to all standard HW addons
 - build new projects
 - MINT compiler
-- new vers of MINT
+- new vers of MINT or Forth etc
+  - https://github.com/jhlagado/www.colorforth.com
   - https://github.com/jhlagado/firth
   - https://github.com/jhlagado/siena
   - https://github.com/jhlagado/menta
