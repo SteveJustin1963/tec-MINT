@@ -76,6 +76,16 @@ BUT its not complete. We need to combines parts from CJ with JH so we get a .bin
 - build new projects
 - MINT compiler
 - new vers of MINT
+  - https://github.com/jhlagado/firth
+  - https://github.com/jhlagado/siena
+  - https://github.com/jhlagado/menta
+  - https://github.com/jhlagado/minto
+  - https://github.com/jhlagado/sectorforth
+  - https://github.com/jhlagado/zedforth
+  - https://github.com/jhlagado/MINTY
+  - https://github.com/jhlagado/monty
+  - https://github.com/jhlagado/Mindy
+  -  
 - 
 
 ## Ref
