@@ -2,7 +2,7 @@
 
 # WARNING 
 THIS IS A PROFOUND STEP FORWARD IN SOFTWARE DEVELOPMENT FOR THE TEC-1. 
-NOW IT'S POSSIBLE TO RAPIDLY PROTOTYPE CODE that works first time by EVERYONE!
+NOW IT'S POSSIBLE TO RAPIDLY PROTOTYPE CODE by EVERYONE!
 
 - https://github.com/orgMINT                Code and howtos updated here ...Thee Source!
 - https://github.com/monsonite/MINT         howtos added here as well
