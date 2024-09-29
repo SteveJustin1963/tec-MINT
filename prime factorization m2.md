@@ -1,3 +1,5 @@
+does not work work in progress
+
 prime factorization method for integers between 0 and hex FFFF
 
 ```
