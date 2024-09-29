@@ -1,3 +1,5 @@
+// program broken
+
 # Greatest Common Divisor (GCD) using Euclidean Algorithm
 This program finds the GCD of two numbers using the Euclidean algorithm.
 ```
@@ -16,4 +18,8 @@ a .           // Print the GCD
 
 # Example of Calling the Function:
 `30 20 A       // Calculates the GCD of 30 and 20, prints GCD: 10`
-
+ 
+  
+# error
+ > 30 20 A
+0 0 0 0 0 0 0 0 -38 0 öMINT2.0
