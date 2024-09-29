@@ -1,18 +1,33 @@
 ```
-// Read multi-digit number function and store in variable a
+// Multi-number Input Handler with Array Storage in MINT
+
+// Read multiple numbers and store in array a
 :R
-  0 a !                  // Initialize a to 0
+  100 /A a !             // Allocate array of 100 elements and store in a
+  0 i !                  // Initialize index to 0
+  0 n !                  // Initialize current number to 0
+  0 e !                  // Initialize enter count to 0
   /U (                   // Start unlimited loop
     /K c !               // Read a character (stored as ASCII value)
     c /C                 // Debug: Print character
     c 13 = c 10 = | (    // If CR (13) or NL (10)
-      /N                 // Print newline
-      `Number stored: `  // Debug: Print stored number
-      a .                // Print value of a as a number
-      /N                 // Print newline
-    ) /E (               // Else
+      n 0 > (            // If we have a number to store
+        n a i ? !        // Store number in array
+        i 1 + i !        // Increment index
+        0 n !            // Reset current number
+      )
+      e 1 + e !          // Increment enter count
+      e 2 = (            // If two consecutive enters
+        `Input finished` /N
+        `Numbers stored: ` i . /N
+        i                // Exit loop, returning count of numbers
+      ) /E (             // Else (not two consecutive enters)
+        /N               // Print newline
+      )
+    ) /E (               // Else (not enter)
+      0 e !              // Reset enter count
       c 48 >= c 57 <= & (  // If valid digit (ASCII 48-57)
-        a 10 * c 48 - + a !  // a = a * 10 + (c - 48)
+        n 10 * c 48 - + n !  // n = n * 10 + (c - 48)
       ) /E (             // Else (invalid input)
         `Invalid input, ignoring` /N
       )
@@ -20,16 +35,21 @@
   )
 ;
 
+// Print array contents
+:P
+  `Array contents:` /N
+  c ! 0 i ! (            // Loop c times
+    a i ? .              // Print number at index i
+    32 /C                // Print space
+    i 1 + i !            // Increment index
+  )
+  /N
+;
+
 // Test function
 :T
-  /U (                           // Start unlimited loop
-    `Enter a number (333 to exit): `  // Prompt for input
-    R                            // Call input function
-    a 333 = (                    // If input is 333
-      `Exiting` /N               // Print exit message and newline
-    ) /E (                       // Else
-      `Continue...` /N           // Print continue message
-    )
-  )
+  `Enter numbers (double enter to finish):` /N
+  R c !                  // Call input function, store count in c
+  c P                    // Print array contents
 ;
 ```
