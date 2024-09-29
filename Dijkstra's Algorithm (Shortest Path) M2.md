@@ -29,3 +29,8 @@ An implementation of Dijkstra's algorithm to find the shortest path in a graph.
 0 s !                                   // Start node is 0
 g s d D                                 // Call Dijkstra's algorithm
 ```
+# Explanation:
+- Graph: `[ 0 7 9 0 0 14 0 0 10 15 0 11 0 6 ]` represents an adjacency matrix.
+-Distances: `[ 0 999 999 999 999 ]` represents the distances from the start node to all other nodes,
+  - initialized with infinity (or a large value) except the start node (which is 0).
+- Start Node: `s = 0` sets the start node to 0.
