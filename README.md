@@ -7,7 +7,7 @@ THIS IS A PROFOUND STEP FORWARD IN SOFTWARE DEVELOPMENT FOR THE TEC-1.
 
 NOW IT'S POSSIBLE TO RAPIDLY PROTOTYPE CODE by EVERYONE!
 
-- https://github.com/orgMINT                Code and howtos updated here ...Thee Source!
+- [https://github.com/orgMINT  ](https://github.com/orgMINT/MINT)       ..THE SOURCE !
 - https://github.com/monsonite/MINT         howtos added here as well
 - https://www.facebook.com/groups/623556744820045/search/?q=mint   Search 
 - https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/
