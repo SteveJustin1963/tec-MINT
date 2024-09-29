@@ -55,3 +55,45 @@ does not work yet
   c P                    // Print array contents
 ;
 ```
+
+
+////////////////////////
+```
+// Read a single number and add it to array a
+:R
+  10 /A a !              // Allocate array of 10 elements and store in a
+  0 i !                  // Initialize index to 0
+  /U (                   // Start unlimited loop
+    `Enter a number: `
+    /K c !               // Read a character
+    c 48 - n !           // Convert ASCII to number
+    n a i ? !            // Store number in array
+    i 1 + i !            // Increment index
+    `Stored: ` n . /N    // Print stored number
+    `Continue? (1=yes, 0=no): `
+    /K c !               // Read response
+    c 48 = (             // If '0' is entered
+      i                  // Exit loop, returning count of numbers
+    )
+  )
+;
+
+// Print array contents
+:P
+  `Array contents:` /N
+  c ! 0 i ! (            // Loop c times
+    a i ? .              // Print number at index i
+    32 /C                // Print space
+    i 1 + i !            // Increment index
+  )
+  /N
+;
+
+// Test function
+:T
+  `Enter numbers one at a time:` /N
+  R c !                  // Call input function, store count in c
+  c P                    // Print array contents
+;
+```
+/////////////////////////////
