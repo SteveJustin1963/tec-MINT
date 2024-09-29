@@ -165,7 +165,7 @@ The `Filter` function processes an array and returns a new array containing only
   n !                   // Store length in 'n'
   n @ (                 // Loop 'n' times
     p @ @               // Fetch value from address in 'p'
-    dup                 // Duplicate the value (needed if function consumes it)
+    "                   // Duplicate the value (needed if function consumes it)
     f @ /G              // Call function 'f' with value on stack
     (                   // Begin conditional execution if result is true (non-zero)
       /h @ !            // Store original value at heap pointer
@@ -189,7 +189,7 @@ The `Filter` function processes an array and returns a new array containing only
    - `n @ (`: Begins a loop that runs `n` times.
    - **Inside the Loop:**
      - `p @ @`: Fetches the value from the array.
-     - `dup`: Duplicates the value to keep a copy for potential storage.
+     - `"`: Duplicates the value to keep a copy for potential storage.
      - `f @ /G`: Calls the filter function `f`. The function should leave a boolean (non-zero for true) on the stack.
      - `(`: Begins a conditional block that executes if the top of the stack is true.
        - `/h @ !`: Stores the original value at the current heap pointer.
