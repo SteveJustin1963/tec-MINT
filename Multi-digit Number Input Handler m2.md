@@ -97,3 +97,26 @@ does not work yet
 ;
 ```
 /////////////////////////////
+
+```
+// Simple echo function
+:E
+  Press any key (q to quit): /N
+  /U (                   // Start unlimited loop
+    /K c !               // Read a character
+    You pressed: 
+    c /C                 // Echo the character
+    /N                   // New line
+    c 113 = (            // If 'q' is pressed (ASCII 113)
+      Exiting /N
+    )
+  )
+;
+
+// Test function
+:T
+  Simple Input Echo Test /N
+  E                      // Call echo function
+;
+```
+////////////
