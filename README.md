@@ -1,4 +1,4 @@
-see also mint2 code in https://github.com/SteveJustin1963/MINT-cookbook and https://github.com/SteveJustin1963/tec-scope
+mint2 code beng used in https://github.com/SteveJustin1963/tec-scope
 
 # tec-MINT
 
