@@ -27,11 +27,11 @@ We create an array `a` containing the ASCII codes of the characters we want to p
 
 ```mint
 // Define array 'a' with ASCII codes from 33 to 53
-\[ 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 ] ' a !
+\[ 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 ]   a !
 ```
 
 - `\[ ... ]`: Defines a byte array.
-- `'`: Drops the length (we only need the address).
+ 
 - `a !`: Stores the array's address in variable `a`.
 
 ### 2. Function `P`: Printing a Single Character Line
@@ -65,8 +65,7 @@ We create an array `a` containing the ASCII codes of the characters we want to p
 - **Fetching Character Data:**
   - `a @ + \@`: Accesses the ASCII code from the array `a` at the given `index`.
   - `32 -`: Adjusts the ASCII code to align with the font table indexing.
-  - `8 *`: Calculates the offset in the font table (each character has 8 bytes).
-  - `#E000 +`: Adds the base address of the font table.
+  - `8 *`: Calculates the offset in the font table (each character has 8 bytes).a  - `#E000 +`: Adds the base address of the font table.
   - `swap +`: Adds the `row` number to get the specific byte address for that row.
   - `\@`: Fetches the font data byte for the character at the specified row.
   - `z !`: Stores the font data byte in variable `z`.
@@ -126,7 +125,7 @@ Putting it all together:
 
 ```mint
 // Define array 'a' with ASCII codes from 33 to 53
-\[ 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 ] ' a !
+\[ 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 ]  a !
 
 // Function P: Print character at given index and row
 :P
@@ -249,41 +248,5 @@ This program demonstrates advanced features of MINT, such as array manipulation,
 ---
 
 
-```
-// Define array 'a' with ASCII codes from 33 to 53
-\[ 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 ] a !
-
-// Function P: Print character at given index and row
-:P
-  a @ + \@               // Fetch ASCII code from array 'a' at 'index'
-  32 -                   // Adjust for font table offset
-  8 *                    // Calculate character offset in font table
-  #E000 +                // Base address of font table
-  swap +                 // Add 'row' to get the font data address
-  \@                     // Fetch the font data byte
-  z !                    // Store in variable 'z'
-  5 (                    // Loop over 5 pixels (character width)
-    z @ 128 & 0 =        // Check if highest bit is zero (pixel off)
-    ( 32 /C )            // Print space if pixel is off
-    /E ( 219 /C )        // Else, print full block
-    z @ { z !            // Shift 'z' left by 1 bit for next pixel
-  )
-  32 /C                  // Print space after the character
-;
-
-// Function Y: For each row, print all characters
-:Y
-  8 (                    // Loop over 8 rows (from 0 to 7)
-    /i @                 // Get current row number
-    21 (                 // Loop over 21 characters (indices 0 to 20)
-      /j @               // Get current character index
-      /j @ /i @          // Push 'index' and 'row' onto stack
-      P                  // Call function 'P' to print character line
-    )
-    /N                   // Print a newline after each row
-  )
-;
-
-// Execute the program
-Y
-```
+ 
+ 
