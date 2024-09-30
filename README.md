@@ -2,7 +2,7 @@
 
 # tec-MINT - Go on, punch yourself in the nuts with MINT, there are many good reasons!
 
-** MINT is a small forth like system for the TEC-1 and Southern Cross **
+# MINT is a small forth like system for the TEC-1 and Southern Cross  
 
 
 # WARNING 
