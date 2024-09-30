@@ -29,7 +29,7 @@
 ;
 
 // Example usage
-[5 3 8 4 2] S
-l .
+[5 3 8 4 2] S  // Sort the list [5, 3, 8, 4, 2]
+l .            // Print the sorted list
 
 ```
