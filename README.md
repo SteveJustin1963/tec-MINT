@@ -1,6 +1,6 @@
-# "Go on, punch yourself in the nuts with MINT, there are many good reasons! "
+  
 
-# tec-MINT
+# tec-MINT - Go on, punch yourself in the nuts with MINT, there are many good reasons!
 
 # WARNING 
 THIS IS A PROFOUND STEP FORWARD IN SOFTWARE DEVELOPMENT FOR THE TEC-1. 
