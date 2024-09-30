@@ -1,4 +1,6 @@
-mint2 code beng used in https://github.com/SteveJustin1963/tec-scope
+mint2 code beng used in 
+- https://github.com/SteveJustin1963/tec-scope and 
+- https://github.com/SteveJustin1963/tec-MINT/tree/main/code
 
 # tec-MINT
 
