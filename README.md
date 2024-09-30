@@ -95,6 +95,7 @@ BUT its not complete. We need to combines parts from CJ with JH so we get a .bin
 - compiler for standalone 
 - talk to all standard HW addons
 - build new projects
+- future : https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/history.md
 
 
 
