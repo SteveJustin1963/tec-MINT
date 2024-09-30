@@ -248,6 +248,42 @@ This program demonstrates advanced features of MINT, such as array manipulation,
 
 ---
 
-**Feel free to experiment with the code, modify the character range, or adjust the pixel representation to create different outputs. Happy coding with MINT Version 2.0!**
 
----
+```
+// Define array 'a' with ASCII codes from 33 to 53
+\[ 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 ] a !
+
+// Function P: Print character at given index and row
+:P
+  a @ + \@               // Fetch ASCII code from array 'a' at 'index'
+  32 -                   // Adjust for font table offset
+  8 *                    // Calculate character offset in font table
+  #E000 +                // Base address of font table
+  swap +                 // Add 'row' to get the font data address
+  \@                     // Fetch the font data byte
+  z !                    // Store in variable 'z'
+  5 (                    // Loop over 5 pixels (character width)
+    z @ 128 & 0 =        // Check if highest bit is zero (pixel off)
+    ( 32 /C )            // Print space if pixel is off
+    /E ( 219 /C )        // Else, print full block
+    z @ { z !            // Shift 'z' left by 1 bit for next pixel
+  )
+  32 /C                  // Print space after the character
+;
+
+// Function Y: For each row, print all characters
+:Y
+  8 (                    // Loop over 8 rows (from 0 to 7)
+    /i @                 // Get current row number
+    21 (                 // Loop over 21 characters (indices 0 to 20)
+      /j @               // Get current character index
+      /j @ /i @          // Push 'index' and 'row' onto stack
+      P                  // Call function 'P' to print character line
+    )
+    /N                   // Print a newline after each row
+  )
+;
+
+// Execute the program
+Y
+```
