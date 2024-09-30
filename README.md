@@ -2,7 +2,7 @@
 
 # Go on, punch yourself in the nuts with MINT, there are many good reasons!
 
-This is my journey
+This is my journey - to see how far I can apply MINT to all my repositories. 
 
 # MINT is a small forth like system for the TEC-1 and Southern Cross  
 WARNING - THIS IS A PROFOUND STEP FORWARD IN SOFTWARE DEVELOPMENT FOR THE TEC-1. 
