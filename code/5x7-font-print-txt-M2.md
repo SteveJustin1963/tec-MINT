@@ -234,19 +234,168 @@ The program will produce an output similar to the following (simplified represen
 
 ---
 
+////////////////////////////////////
+
+# Printing ASCII Characters Using MINT Version 2.0
+
+## Objective
+
+Print out 21 characters between ASCII codes 33 and 53 using MINT Version 2.0. The program accesses each character's font data from a font table starting at address `#E000` and displays the characters line by line, simulating their appearance.
+
+## Overview
+
+- Define an array containing the ASCII codes from 33 to 53.
+- Access font data for each character from the font table.
+- Print each character line by line, handling individual pixels.
+- Use loops and functions to iterate over characters and rows.
+
+## Code Breakdown
+
+### 1. Defining the Character Array
+
+We create an array `a` containing the ASCII codes of the characters we want to print.
+
+```mint
+\[ 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 ] a !
+```
+
+- `\[ ... ]`: Defines a byte array.
+- `a !`: Stores the array's address in variable `a`.
+
+### 2. Function `P`: Printing a Single Character Line
+
+**Purpose:** Print a single line (row) of a character specified by its index in the array `a`.
+
+**Stack Effect:** `index row --`
+
+```mint
+:P
+  a ? + \? 32 -         // Get ASCII code from array 'a', adjust for font table offset
+  8 * #E000 + + \?      // Calculate font data address and fetch the byte
+  5 (                   // Loop over 5 pixels (character width)
+    " 128 & 0 = 
+    ( 32 ) /E ( 219 )   // Choose space or full block based on pixel
+    /C                  // Print the chosen character
+    {                   // Shift left for next pixel
+  )
+  32 /C                 // Print a space after the character for spacing
+;
+```
+
+### 3. Function `Y`: Printing All Characters Line by Line
+
+**Purpose:** Iterate over each row of the characters and print them line by line.
+
+```mint
+:Y
+  8 (                   // Loop over 8 rows (from 0 to 7)
+    21 (                // Loop over 21 characters (indices 0 to 20)
+      /j /i P           // Call function 'P' with current index and row
+    )
+    /N                  // Print a newline after each row
+  )
+;
+```
+
+### 4. Executing the Program
+
+To run the program and print the characters, simply call function `Y`:
+
+```mint
+Y
+```
+
+## Complete Program
+
+```mint
+\[ 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 ] a !
+
+:P
+  a ? + \? 32 - 8 * #E000 + + \?
+  5 (
+    " 128 & 0 = ( 32 ) /E ( 219 ) /C
+    {
+  )
+  32 /C
+;
+
+:Y
+  8 (
+    21 ( /j /i P )
+    /N
+  )
+;
+
+Y
+```
+
+## Additional Notes
+
+- **Variables Used:**
+  - `a`: Holds the address of the array containing ASCII codes.
+
+- **Font Table Address:**
+  - Assumed to be at `#E000`.
+  - Each character occupies 8 bytes in the font table.
+  - Characters are indexed starting from ASCII code 32.
+
+- **Characters Printed:**
+  - ASCII codes from 33 to 53.
+  - Includes characters like `! " # $ % & ' ( ) * + , - . / 0 1 2 3 4 5`.
+
+- **Character Width:**
+  - Each character is 5 pixels wide, with an additional space for separation.
+
+- **Pixel Representation:**
+  - Full Block (ASCII 219): Represents a pixel that is "on".
+  - Space (ASCII 32): Represents a pixel that is "off".
+
+- **Loop Counters:**
+  - `/i`: Outer loop counter for rows.
+  - `/j`: Inner loop counter for character indices.
+
+## How the Program Works
+
+1. **Initialization:**
+   - An array `a` is created with the ASCII codes of the desired characters.
+   - The font table is assumed to be located at `#E000`.
+
+2. **Function `Y`:**
+   - Loops over each row (0 to 7) and each character index (0 to 20).
+   - Calls function `P` with the current character index and row number.
+
+3. **Function `P`:**
+   - Fetches the ASCII code of the character from the array `a`.
+   - Calculates the address of the font data byte for the character at the specified row.
+   - Loops over 5 pixels (bits) of the font data byte.
+     - Checks each bit to determine if the pixel is "on" or "off".
+     - Prints a full block or space accordingly.
+   - Prints a space after the character for separation.
+
+4. **Output:**
+   - The program outputs the characters line by line, creating a visual representation of the characters.
+
+## Example Output
+
+The program will produce an output similar to the following (simplified representation):
+
+```
+!  "  #  $  %  &  '  (  )  *  +  ,  -  .  /  0  1  2  3  4  5 
+█  █  █  █  █  █     █  █  █  █        █     █  █  █  █  █  █ 
+█     █  █  █  █     █  █  █  █        █     █     █     █  █ 
+█     █  █  █  █  █  █  █  █  █  █           █  █  █  █  █  █ 
+█     █  █  █  █  █  █  █  █  █  █              █  █     █  █ 
+      █     █  █  █     █  █     █  █        █  █  █     █    
+      █     █  █  █     █  █     █  █        █  █  █  █  █  █ 
+      █     █     █     █  █     █           █  █  █  █  █  █ 
+```
+
 ## Conclusion
 
-By updating the code to **MINT Version 2.0** and including detailed comments, we've created a program that:
+This program demonstrates advanced features of MINT 2.0, such as:
+- Array manipulation
+- Function definitions
+- Loop constructs
+- Bit manipulation
 
-- Defines an array of ASCII characters.
-- Accesses font data to render characters.
-- Uses loops and functions to iterate over characters and rows.
-- Prints a visual representation of the characters using ASCII art.
-
-This program demonstrates advanced features of MINT, such as array manipulation, function definitions, and loop constructs.
-
----
-
-
- 
- 
+It efficiently renders ASCII characters using a custom font table, showcasing MINT 2.0's capabilities for character display and low-level operations.
