@@ -175,3 +175,68 @@ Here's a complete MINT program that moves character `'X'` to position `(5, 10)` 
 By leveraging ANSI escape sequences and MINT's `/C` operator, you can effectively control cursor movement and place characters at desired `(x, y)` positions on the screen. This method provides a flexible way to create text-based interfaces, animations, or simple graphics within the constraints of MINT and the underlying hardware.
 
 If you have specific requirements or encounter any issues, feel free to provide more details, and I can assist further!
+
+/////////////////////////
+
+Certainly! I'll review and fix the code for the `MOVE_CHAR_EXT` function. Here's the corrected version:
+
+
+
+```mint
+:MOVE_CHAR_EXT
+  // Arguments: char y x
+  // Stack before: char y x
+  // Stack after: empty
+  x ! y ! c !  // Store arguments in variables
+
+  #1B /C        // ESC
+  `[` /C        // '['
+
+  // Convert y to ASCII digits
+  y 100 / #30 + /C    // Hundreds place
+  y 100 % 10 / #30 + /C    // Tens place
+  y 10 % #30 + /C         // Ones place
+
+  `;` /C        // ';'
+
+  // Convert x to ASCII digits
+  x 100 / #30 + /C    // Hundreds place
+  x 100 % 10 / #30 + /C    // Tens place
+  x 10 % #30 + /C         // Ones place
+
+  `H` /C        // 'H'
+
+  // Print the character
+  c /C        // Print the character
+;
+
+```
+
+Here are the changes and explanations:
+
+1. Argument Handling:
+   - Added `x ! y ! c !` at the beginning to store the arguments in variables. This is necessary because MINT uses a stack-based approach, and we need to preserve the values for multiple uses.
+
+2. Y-coordinate Conversion:
+   - Changed `y 10 / % #30 + /C` to `y 100 % 10 / #30 + /C` for the tens place.
+   - Changed `y % #30 + /C` to `y 10 % #30 + /C` for the ones place.
+   - These changes ensure correct handling of all three digits.
+
+3. X-coordinate Conversion:
+   - Similar changes as for the Y-coordinate.
+
+4. Character Printing:
+   - Changed `char /C` to `c /C`, using the stored character value.
+
+This revised version should correctly handle coordinates up to 999 for both x and y, and properly print the character at the specified position.
+
+To use this function, you would call it like this:
+
+```
+`X` 250 150 MOVE_CHAR_EXT
+```
+
+This would move the cursor to position (150, 250) and print the character 'X' there.
+
+Is there anything else you'd like me to explain or modify about this function?
+
