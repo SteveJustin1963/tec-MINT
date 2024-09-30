@@ -1,6 +1,6 @@
   
 
-# tec-MINT - Go on, punch yourself in the nuts with MINT, there are many good reasons!
+# Go on, punch yourself in the nuts with MINT, there are many good reasons!
 
 # MINT is a small forth like system for the TEC-1 and Southern Cross  
 WARNING - THIS IS A PROFOUND STEP FORWARD IN SOFTWARE DEVELOPMENT FOR THE TEC-1. 
