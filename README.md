@@ -2,6 +2,9 @@
 
 # tec-MINT - Go on, punch yourself in the nuts with MINT, there are many good reasons!
 
+** MINT is a small forth like system for the TEC-1 and Southern Cross **
+
+
 # WARNING 
 THIS IS A PROFOUND STEP FORWARD IN SOFTWARE DEVELOPMENT FOR THE TEC-1. 
 
@@ -13,7 +16,6 @@ NOW IT'S POSSIBLE TO RAPIDLY PROTOTYPE CODE by EVERYONE!
 - https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/
 - https://github.com/SteveJustin1963/tec-MINT/tree/main/code WIP
 
-MINT is a small forth like system for the tec-1 and other SBC or MCU.
 
 ## Glory to...
 In no order, John Hardy, Ken Boak, Craig Jones and Craig Hart-RIP and more folk have made a big breakthrough, read the announcement ...
