@@ -355,6 +355,51 @@ By updating the code to **MINT Version 2.0**, we've created a program that count
 
 ---
 
-**Feel free to experiment with the code, adjust the timing, or modify the display patterns to create different effects. Happy coding with MINT Version 2.0!**
+```
+// Segment lookup table
+\[ #EB #28 #CD #AD #2E #A7 #E7 #29 #EF #2F #6F #E6 #C3 #EC #C7 #47 ] ' c !
+
+// Function A: Convert nibble to segment data
+:A
+  #0F &        // Mask lower 4 bits
+  c @ + \@     // Fetch segment data
+;
+  
+// Function B: Output nibble to active digit
+:B
+  $            // Swap number and scan
+  A            // Convert nibble to segment data
+  2 /O         // Output to port 2 (DISPLAY)
+  #40 | d !    // Ensure bit 6 is high, store in 'd'
+  d @ 1 /O     // Output selector value in 'd' to port 1 (SCAN)
+  10 ( )       // Delay
+  #40 1 /O     // Turn off digits, keep bit 6 high
+;
+
+// Function C: Scan number to display
+:C
+  #04 d !                        // Initialize 'd' with #04 (digit 2)
+  4 (
+    %% B                          // Duplicate number and scan, call B
+    d @ { d !                     // Shift 'd' left to select next digit
+    $ } } } } $                   // Shift number right by 4 bits (nibble)
+  )
+  ''                            // Drop top two items
+;
+
+// Function E: Main program to count and display
+:E
+  #FFFF (
+    100 (
+      /j @ C                      // Get outer loop counter, call C
+    )
+  )
+  0 0 1 /O                        // Turn off Ports 1 & 2, keep bit 6 high
+;
+
+// Execute function E
+E
+```
+
 
 ---
