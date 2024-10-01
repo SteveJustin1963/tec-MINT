@@ -1,4 +1,4 @@
-## function in MINT1.3, `random1`, is a pseudo-random number generator. 
+## function in MINT1.3, `random1`, simple pseudo-random number generator. 
 
 ```
 //random1
