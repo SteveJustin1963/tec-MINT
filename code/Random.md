@@ -23,6 +23,8 @@
 
 This type of function seems to be a **linear congruential generator (LCG)**, a simple and commonly used method for generating pseudo-random numbers. LCGs follow the form:
 
+![image](https://github.com/user-attachments/assets/ef40f162-87cd-47af-82ee-fb5f00188120)
+
 \[
 x_{n+1} = (a \times x_n + c) \, \% \, m
 \]
