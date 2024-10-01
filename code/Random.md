@@ -1,6 +1,7 @@
-The function you’ve provided in MINT, `random1`, is a pseudo-random number generator. Let's break it down and evaluate its effectiveness:
+//function in MINT1.3, `random1`, is a pseudo-random number generator. 
 
-```mint
+```
+//random1
 :A 7 x@ * 3 + " x! 32555 > (`_`)(`|`);
 :B 10000(A);
 ```
