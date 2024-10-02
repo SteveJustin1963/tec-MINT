@@ -1,6 +1,5 @@
-Certainly! Let's re-analyze the approach for calculating pi using the Leibniz series and implement it in MINT 2. We'll break down the process, provide explanations, and include comments in the code.
-
-
+calculating pi using the Leibniz series
+and implement it in MINT 2. 
 
 ```mint
 // Pi Calculation using Leibniz Series in MINT 2
@@ -41,7 +40,7 @@ P
 
 ```
 
-Now, let's break down the code and explain the implementation:
+code explain:
 
 1. Variable Initialization:
    - `a`: Accumulator for the sum of terms (pi_fraction)
