@@ -1,6 +1,6 @@
 To implement a sine function using integer arithmetic for the TEC-1, we'll need to use fixed-point arithmetic. We'll use a 16-bit integer to represent our fixed-point numbers, with 8 bits for the integer part and 8 bits for the fractional part. This gives us a range of -128 to 127.99609375 with a precision of 1/256 ≈ 0.00390625.
 
-Here's a MINT implementation of a sine function using a linear approximation:
+ MINT implementation of a sine function using a linear approximation:
 
 
 
@@ -58,7 +58,7 @@ The `T` function demonstrates how to use the sine function for angles from 0 to 
 
 Note that this is an approximation and will have some error, especially near the extremes of the range. The linear approximation is simple and fast but less accurate than more complex methods like Taylor series expansion.
 
-If you need more accuracy, you could implement a Taylor series approximation, but it would be more computationally expensive. Here's how you might start implementing a Taylor series approximation:
+To Get more accuracy, implement a Taylor series approximation, but it would be more computationally expensive. Taylor series approximation would look like this:
 
 
 
@@ -91,20 +91,20 @@ U  // Run the Taylor series test
 
 ```
 
-This updated code adds two new functions:
+This adds two new functions:
 
 1. `N`: Implements a Taylor series approximation of sine up to the x^5 term.
 2. `U`: A test function similar to `T`, but using the Taylor series approximation.
 
 The Taylor series approximation (`N`) should be more accurate than the linear approximation (`S`), especially for angles further from 0. However, it's also more computationally expensive.
 
-To use the Taylor series approximation, you would call `N` instead of `S`:
+To use the Taylor series approximation, we call `N` instead of `S`:
 
 ```
 30 D N .
 ```
 
-Remember that both of these methods are approximations and will have some error due to the limited precision of our fixed-point arithmetic. The Taylor series approximation should generally be more accurate, but it may still have significant errors for large angles or when more precision is needed.
+Both of these methods are approximations and will have some error due to the limited precision of our fixed-point arithmetic. The Taylor series approximation should generally be more accurate, but it may still have significant errors for large angles or when more precision is needed.
 
 ```
 // ... (previous code remains the same)
