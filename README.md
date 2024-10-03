@@ -10,10 +10,12 @@
 - https://github.com/SteveJustin1963/tec-MINT/tree/main/code WIP
 
 
-## Glory 
-In no order, John Hardy, Ken Boak, Craig Jones and Craig Hart-RIP and more folk have made a big breakthrough, read the announcement ...
-- https://www.facebook.com/groups/tec1z80/posts/1250512652124448/ 
-- https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/history.md
+## Honour Roll 
+In no order
+- John Hardy, Ken Boak, Craig Jones and Craig Hart-RIP and others
+- announcement
+  - https://www.facebook.com/groups/tec1z80/posts/1250512652124448/ 
+  - https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/history.md
 
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/263565308_1147844542415783_7150078760328965579_n.jpg)
 
@@ -26,7 +28,7 @@ In no order, John Hardy, Ken Boak, Craig Jones and Craig Hart-RIP and more folk 
 
 ### My attempt to run v1.1, first go
 
-- am using EEPROM so can rewrite it as needed; AT28C64B.
+- per CJ, i am using an EEPROM; AT28C64B.
 - complie v1.1, see flags as needed
 - install eeprom, mod the socket, hangs over the existing rom socket by 2 pins each side. make the mod
 - result; 24 pin socket into 28 pins, lucky the pinout is identical except for A12 and VCC
@@ -35,7 +37,8 @@ In no order, John Hardy, Ken Boak, Craig Jones and Craig Hart-RIP and more folk 
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/ee%20pins2.png)
 
 - cut off a 2x2 off a wide socket bend the pins out and epoxy to the end of the 24 sock, attach wires
-- this extends the socket to 28. one pin will touch the wire bridge, so unsolder it and just solder it to pad landing, dont let the wire poke thru and touch the socket pin.
+- make a bigger socket to 28 pins
+- one pin will touch the wire bridge, so unsolder it and just solder it to pad landing, dont let the wire poke thru and touch the socket pin.
 - solder another wire from vcc on lhs so rom select switch 5v.
 
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8433.jpg)
@@ -44,10 +47,17 @@ In no order, John Hardy, Ken Boak, Craig Jones and Craig Hart-RIP and more folk 
 
 - Termnal pn PC; TeraTerm at https://ttssh2.osdn.jp/
   - has variable baud rates, helps to find timing faults
-- plug in a USB to TTL serial cable, 5v is close enough for rs232, that has the embedded chip for the conversion, usually have 4 wires, tx-green rx-white gnd-blk 5v-red
-- plug it in PnP will load a driver and allocate a com port, find in device manager, ull get like com12, do a loop back test short tx-rx, should echo char in teraterm
-- now without a dedicated serial port chip, mint can do bitbang, compile and get code that supports it, default is 4800, so ull need the 4mhx chip in the clock
-- also need to make a cct mod see CJ's mod in https://github.com/SteveJustin1963/tec-BIT-BANG
+- USB to TTL serial cable, TTl 5v is close enough for rs232
+  - has embedded chip for usb to ttl 
+  - 4 wires, tx-green rx-white gnd-blk 5v-red
+- the pc will load PnP driver and allocate a com port
+  - find in device manager
+  - teraterm will list it so select it
+  - do a loop back test, short tx-rx, should echo char in terminal screen
+- as we opted without a uart we can use serial bitbang
+  - compile and get code that supports it, default is 4800
+  - need 4mhz clock
+- add cct mod for serial line off data bus,  https://github.com/SteveJustin1963/tec-BIT-BANG
 
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8455.jpg)
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8483%20(1).jpg)
@@ -61,12 +71,7 @@ In no order, John Hardy, Ken Boak, Craig Jones and Craig Hart-RIP and more folk 
 ![]()
 
 ### build v 1.1
-CJ; "To build a new Mint for the TEC-1 you need all the files from orgMINT/MINT-builds/TEC-1_Build.
-Overwrite the existing MINT.asm, MINT-macros.asm and ram.asm with your new versions. 
-Compile the file TEC-1-ROM-B.z80. "
-
-BUT its not complete. We need to combines parts from CJ with JH so we get a .bin that has bit bang or code for serial chip. JH updates only in https://github.com/orgMINT/MINT (no where else- this is THE source) files like MINT.asm and test.RUN.z80. 
-
+set correct flags for the build and then compile and then burn the rom. this will combine CJ's bitbang with NINT 
 
 
 
