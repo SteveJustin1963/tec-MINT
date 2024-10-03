@@ -1,23 +1,16 @@
-  
-
-# Go on, punch yourself in the nuts with MINT, there are many good reasons!
-
-This is my journey - to see how far I can apply MINT to all my repositories. 
-
-# MINT is a small forth like system for the TEC-1 and Southern Cross  
-WARNING - THIS IS A PROFOUND STEP FORWARD IN SOFTWARE DEVELOPMENT FOR THE TEC-1. 
-
-
-NOW IT'S POSSIBLE TO RAPIDLY PROTOTYPE CODE by EVERYONE!
+### MINT is a small forth like system for the TEC-1 and Southern Cross  
+- Rapid prototyping of code 
 
 - [https://github.com/orgMINT  ](https://github.com/orgMINT/MINT)       ..THE SOURCE !
+
+  
 - https://github.com/monsonite/MINT         howtos added here as well
 - https://www.facebook.com/groups/623556744820045/search/?q=mint   Search 
 - https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/
 - https://github.com/SteveJustin1963/tec-MINT/tree/main/code WIP
 
 
-## Glory to...
+## Glory 
 In no order, John Hardy, Ken Boak, Craig Jones and Craig Hart-RIP and more folk have made a big breakthrough, read the announcement ...
 - https://www.facebook.com/groups/tec1z80/posts/1250512652124448/ 
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/history.md
@@ -31,13 +24,12 @@ In no order, John Hardy, Ken Boak, Craig Jones and Craig Hart-RIP and more folk 
 
 
 
-### Now, my attempt to run v1.1
+### My attempt to run v1.1, first go
 
-- you can erase and reprogram a standard EPROM
-- however CJ sent me a blank EEPROM chip to load the code, its a AT28C64B. It electricaly erased and faster to use. 
-- roll a 1.1 see below from CJ
-- it will hang over the tec1d socket by 2 pins each side. need to fix this.
-- so need to extend the 24 pin socket out to 28 pins, its good the pinout is identical except for A12 and VCC, an easy mod
+- am using EEPROM so can rewrite it as needed; AT28C64B.
+- complie v1.1, see flags as needed
+- install eeprom, mod the socket, hangs over the existing rom socket by 2 pins each side. make the mod
+- result; 24 pin socket into 28 pins, lucky the pinout is identical except for A12 and VCC
 - see this https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/MemoryDevices01.pdf
  
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/ee%20pins2.png)
@@ -50,7 +42,8 @@ In no order, John Hardy, Ken Boak, Craig Jones and Craig Hart-RIP and more folk 
 
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/sock1.png)
 
-- download Tera Term https://ttssh2.osdn.jp/ because it has a variable baud rate, helps with fault find
+- Termnal pn PC; TeraTerm at https://ttssh2.osdn.jp/
+  - has variable baud rates, helps to find timing faults
 - plug in a USB to TTL serial cable, 5v is close enough for rs232, that has the embedded chip for the conversion, usually have 4 wires, tx-green rx-white gnd-blk 5v-red
 - plug it in PnP will load a driver and allocate a com port, find in device manager, ull get like com12, do a loop back test short tx-rx, should echo char in teraterm
 - now without a dedicated serial port chip, mint can do bitbang, compile and get code that supports it, default is 4800, so ull need the 4mhx chip in the clock
@@ -67,7 +60,7 @@ In no order, John Hardy, Ken Boak, Craig Jones and Craig Hart-RIP and more folk 
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8467.jpg)
 ![]()
 
-### roll a 1.1
+### build v 1.1
 CJ; "To build a new Mint for the TEC-1 you need all the files from orgMINT/MINT-builds/TEC-1_Build.
 Overwrite the existing MINT.asm, MINT-macros.asm and ram.asm with your new versions. 
 Compile the file TEC-1-ROM-B.z80. "
@@ -78,35 +71,3 @@ BUT its not complete. We need to combines parts from CJ with JH so we get a .bin
 
 
 
-## MINT family
-  - https://github.com/jhlagado/www.colorforth.com
-  - https://github.com/jhlagado/firth
-  - https://github.com/jhlagado/siena
-  - https://github.com/jhlagado/menta
-  - https://github.com/jhlagado/minto
-  - https://github.com/jhlagado/sectorforth
-  - https://github.com/jhlagado/zedforth
-  - https://github.com/jhlagado/MINTY
-  - https://github.com/jhlagado/monty
-  - https://github.com/jhlagado/Mindy
-  -  
-
-## Iterate
-- new monitor
-- compiler for standalone 
-- talk to all standard HW addons
-- build new projects
-- future : https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/history.md
-
-
-
-## Ref
-- https://github.com/monsonite/MINT
-- https://github.com/monsonite/SIMPL
-- https://github.com/monsonite/MINT-Documentation
-- https://github.com/tec1group/MINT-cookbook
-- chat https://github.com/SteveJustin1963/tec-MINT/wiki
-- Help file   https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/edit#gid=0
-- https://github.com/SteveJustin1963/tec-scope and 
-- https://github.com/SteveJustin1963/tec-MINT/tree/main/code
- 
