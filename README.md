@@ -1,4 +1,4 @@
-### MINT is a small forth like system for the TEC-1 and Southern Cross  
+### MINT is a small forth like system for the TEC-1 and Southern Cross Computer
 - Rapid prototyping of code 
 
 - [https://github.com/orgMINT  ](https://github.com/orgMINT/MINT)       ..THE SOURCE !
