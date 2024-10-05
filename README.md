@@ -1,4 +1,4 @@
-# Do yourself a favour and bash yourself in the balls with MINT 
+# Bash yourself in the balls with MINT - now!
 
 ![image](https://github.com/user-attachments/assets/76699c73-d350-4f52-a544-398e5a6214a2)
 
