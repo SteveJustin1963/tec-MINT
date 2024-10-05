@@ -2,8 +2,9 @@
 
 ![image](https://github.com/user-attachments/assets/76699c73-d350-4f52-a544-398e5a6214a2)
 
-- a small forth like system for the TEC-1 or SCC
-- Rapid prototyping of code 
+- A small and fast forth like system for the TEC-1 or SCC
+- Rapid prototyping of code
+- Never works as expected until it does 
 
 - [https://github.com/orgMINT  ](https://github.com/orgMINT/MINT)       ..THE SOURCE ! 
 
