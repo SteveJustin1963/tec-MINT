@@ -15,7 +15,8 @@
 
 
 ## Honour Roll 
-In no order
+The structuring or acknowledgment of the individuals involved in the development of the code follows no discernible hierarchy or prioritization of recognition, implying that their contributions are regarded in a manner devoid of any preordained or systematic reverence. This lack of sequentiality reflects an egalitarian or arbitrary approach, wherein no specific developer is elevated above another in terms of the order of respect or recognition for their work.
+
 - John Hardy, Ken Boak, Craig Jones and Craig Hart-RIP and others
 - announcement
   - https://www.facebook.com/groups/tec1z80/posts/1250512652124448/ 
