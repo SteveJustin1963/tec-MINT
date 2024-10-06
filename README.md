@@ -4,7 +4,7 @@
 ![image](https://github.com/user-attachments/assets/e15ac155-4a9c-48a9-a4c3-31413bce2aa3)
 
 
-- A small and fast forth like system for the TEC-1 or SCC
+- A small and fast forth like system for the TEC-1 and SCC, and others
 - 400,000 commands /sec (4Mhz clock)
 - Rapid prototyping of code
 - Never works as expected until it does 
