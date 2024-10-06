@@ -87,9 +87,17 @@ The structuring or acknowledgment of the individuals involved in the development
 
 ### build v 1.1
 - set correct flags for the build and then compile and then burn the rom. this will combine CJ's bitbang with NINT
+- it works
+
+### ver 2
+- it works and now building apps
+- i have run out of ram
+- cannot load complex programs, lacks larger varibale and function name length
+- mint2 has lots of bugs
+- 
 
 
-Higher versions now available 
+
 
  
 
