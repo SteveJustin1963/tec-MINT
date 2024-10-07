@@ -1,4 +1,6 @@
 ```
+//MINT 2
+
 :L
   a /S s !                // Get the size of the array and store it in s
   `Array contents:` /N    // Print header
@@ -7,6 +9,8 @@
     `: ` a /i ? . /N      // Print ": " followed by array element and newline
   )
 ;
+
+//////////////////////////////////////////
 
 // no labels
 :L
@@ -17,7 +21,7 @@
     `: ` a /i ? . /N
   )
 ;
-//
+//////////////////////////////////////////
 
 
 > [ 1 2 3 4 5]a! L
