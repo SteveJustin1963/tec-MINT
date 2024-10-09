@@ -1,383 +1,135 @@
-CORDIC algorithmusing only addition, subtraction, bitwise shift, and table lookups.
-
-
-
-```mint
-// CORDIC ATAN2 
-// Angle table (scaled by 16200 for 45 degrees)
-:A [
-16200 9563 5053 2565 1287 644 322 161
-81 40 20 10 5 3 1 1 0
-] a !
-
-// CORDIC gain (0.607252935 * 65536)
-39797 g !
-
-// Main ATAN2 function
-:T
-  y ! x !  // Store input coordinates
-  
-  // Determine quadrant and normalize to quadrant 1 or 4
-  x 0 < ( y ~ 1 + y ! x ~ 1 + x ! ) q !
-  
-  // Initialize angle accumulator
-  0 z !
-  
-  // CORDIC iteration
-  16 (
-    y 0 < (
-      // Rotate clockwise
-      x y i } + x !
-      y x i } - y !
-      z a i ? - z !
-    ) (
-      // Rotate counter-clockwise
-      x y i } - x !
-      y x i } + y !
-      z a i ? + z !
-    )
-  )
-  
-  // Convert to degrees (multiply by 180/16200)
-  z 180 * 16200 / z !
-  
-  // Adjust for quadrant
-  q ( z ~ 1 + z ! )
-  
-  // Return angle on stack
-  z
-;
-
-// Test function
-:R
-  `Enter x coordinate: `
-  /K x !
-  `Enter y coordinate: `
-  /K y !
-  x . ` ` y . ` -> `
-  x y T .
-  /N
-;
-
-// Run test
-R
-
 ```
-
-This MINT implementation of the CORDIC algorithm for ATAN2 calculation includes the following key components:
-
-1. `:A`: This creates the angle lookup table, scaled by 16200 for 45 degrees, as in the original code.
-
-2. `:T`: This is the main ATAN2 function. It does the following:
-   - Stores input coordinates
-   - Determines the quadrant and normalizes to quadrant 1 or 4
-   - Initializes the angle accumulator
-   - Performs 16 CORDIC iterations
-   - Converts the result to degrees
-   - Adjusts for the original quadrant
-
-3. `:R`: This is a test function that prompts for x and y coordinates and calculates the angle.
-
-To use the ATAN2 function, call `T` with x and y values on the stack. For example:
-
-```
-10 10 T .  // Calculate and print ATAN2(10, 10)
-```
-
-This implementation has some simplifications:
-
-1. It doesn't include the scaling wrapper for small numbers. This could be added for improved accuracy with small inputs.
-2. It uses a simpler quadrant determination and adjustment.
-3. It doesn't calculate the vector length, focusing only on the angle calculation.
-
-These simplifications make the code more compact and easier to understand, while still providing the 
-core CORDIC ATAN2 functionality. The accuracy should be good for most purposes, 
-but if you need higher precision, you could increase the number of iterations and the size of the angle lookup table.
-
-To test different inputs, you can run the `R` function multiple times. 
-This will prompt you for x and y coordinates and then calculate and display the angle.
-
-```
-// CORDIC ATAN2 implementation
-// Angle table (scaled by 16200 for 45 degrees)
-:A [
-16200 9563 5053 2565 1287 644 322 161
-81 40 20 10 5 3 1 1 0
-] a !
-
-// CORDIC gain (0.607252935 * 65536)
-39797 g !
-
-// Main ATAN2 function
-:T
-  y ! x !  // Store input coordinates
-  
-  // Determine quadrant and normalize to quadrant 1 or 4
-  x 0 < ( y ~ 1 + y ! x ~ 1 + x ! ) q !
-  
-  // Initialize angle accumulator
-  0 z !
-  
-  // CORDIC iteration
-  16 (
-    y 0 < (
-      // Rotate clockwise
-      x y i } + x !
-      y x i } - y !
-      z a i ? - z !
-    ) (
-      // Rotate counter-clockwise
-      x y i } - x !
-      y x i } + y !
-      z a i ? + z !
-    )
-  )
-  
-  // Convert to degrees (multiply by 180/16200)
-  z 180 * 16200 / z !
-  
-  // Adjust for quadrant
-  q ( z ~ 1 + z ! )
-  
-  // Return angle on stack
-  z
-;
-
-// Test function
-:R
-  `Enter x coordinate: `
-  /K x !
-  `Enter y coordinate: `
-  /K y !
-  x . ` ` y . ` -> `
-  x y T .
-  /N
-;
-
-// Run test
-R
-
-```
-
-///////////////////////////////////
-
-CORDIC implementation to include 
-- the scaling wrapper for small numbers 
-- and add the vector length calculation.
--
-- This will improve accuracy for small inputs and provide both angle and magnitude information.
-
-
-
-```mint
-// CORDIC ATAN2 implementation with scaling wrapper
-// Angle table (scaled by 16200 for 45 degrees)
-:A [
-16200 9563 5053 2565 1287 644 322 161
-81 40 20 10 5 3 1 1 0
-] a !
-
-// CORDIC gain (0.607252935 * 65536)
-39797 g !
-
-// Absolute value
-:B " 0 < ( ~ 1 + ) ;
-
-// Number of leading zeros
-:L
-  0 c !
-  16 (
-    " { 0 = ( c 1 + c ! ) /E ( /U )
-  )
-  c
-;
-
-// Main ATAN2 function
-:T
-  y ! x !  // Store input coordinates
-  
-  // Scaling wrapper
-  x B L y B L MIN 14 MIN 14 - e !  // Calculate scaling exponent
-  x B e { g * x 0 < ( ~ 1 + ) x !  // Scale x
-  y B e { g * y 0 < ( ~ 1 + ) y !  // Scale y
-  
-  // Determine quadrant and normalize to quadrant 1 or 4
-  x 0 < ( y ~ 1 + y ! x ~ 1 + x ! ) q !
-  
-  // Initialize angle accumulator
-  0 z !
-  
-  // CORDIC iteration
-  16 (
-    y 0 < (
-      // Rotate clockwise
-      x y i } + t !
-      y x i } - y !
-      z a i ? - z !
-    ) (
-      // Rotate counter-clockwise
-      x y i } - t !
-      y x i } + y !
-      z a i ? + z !
-    )
-    t x !
-  )
-  
-  // Calculate vector length
-  x e } x 0 < ( ~ 1 + ) l !
-  
-  // Convert angle to degrees (multiply by 180/16200)
-  z 180 * 16200 / z !
-  
-  // Adjust for quadrant
-  q ( z ~ 1 + z ! )
-  
-  // Return angle and length on stack
-  z l
-;
-
-// Test function
-:R
-  `Enter x coordinate: `
-  /K x !
-  `Enter y coordinate: `
-  /K y !
-  x . ` ` y . ` -> `
-  x y T
-  `Angle: ` . ` degrees`
-  /N
-  `Length: ` .
-  /N /N
-;
-
-// Run test
-R
-
-```
-
-implementation for ATAN2 calculation now includes the 
-- scaling wrapper for small numbers
-- - and calculates the vector length.
-
-Here are the key changes and additions:
-
-1. `:B`: A helper function to calculate the absolute value of a number.
-
-2. `:L`: A function to count the number of leading zeros in a 16-bit number. This is used for determining the scaling factor.
-
-3. Updated `:T` function:
-   - Implements the scaling wrapper:
-     * Calculates the scaling exponent based on the number of leading zeros.
-     * Scales both x and y inputs.
-   - Performs the CORDIC iterations as before.
-   - Calculates the vector length and scales it back down.
-   - Returns both the angle (in degrees) and the vector length.
-
-4. Updated `:R` test function that now displays both the angle and the vector length.
-
-The scaling wrapper improves accuracy for small inputs by scaling them up before the CORDIC iterations and then scaling the result back down. This allows the algorithm to work with the full precision of the fixed-point representation.
-
-To use the ATAN2 function, you would call `T` with x and y values on the stack. For example:
-
-```
-10 10 T . .  // Calculate and print ATAN2(10, 10) angle and length
-```
-
-This implementation provides several improvements:
-
-1. Better accuracy for small inputs due to the scaling wrapper.
-2. Calculation of both angle and vector length.
-3. Handling of edge cases (like x=0 or y=0) more robustly.
-
-The test function `R` now prompts for x and y coordinates, calculates both the angle and length using the CORDIC algorithm, and displays the results.
-
-This version should provide more accurate results across a wider range of inputs, 
-including very small numbers, while also giving you the additional information of the vector's length.
-
-```
+///  **Corrected MINT Code for CORDIC ATAN2 Algorithm:**
 
 // CORDIC ATAN2 implementation with scaling wrapper
 // Angle table (scaled by 16200 for 45 degrees)
-:A [
-16200 9563 5053 2565 1287 644 322 161
-81 40 20 10 5 3 1 1 0
-] a !
+[16200 9563 5053 2565 1287 644 322 161 81 40 20 10 5 3 1 1 0] a!
 
 // CORDIC gain (0.607252935 * 65536)
-39797 g !
+39797 g!
 
-// Absolute value
+// Absolute value function
 :B " 0 < ( ~ 1 + ) ;
 
-// Number of leading zeros
+// Number of leading zeros function
 :L
-  0 c !
+  " c!
+  0 l!
   16 (
-    " { 0 = ( c 1 + c ! ) /E ( /U )
+    c 0 = /W           // Break if c == 0
+    c { c!             // Shift c left by 1
+    l 1 + l!           // Increment l
   )
-  c
+  l                   // Return l
 ;
 
 // Main ATAN2 function
 :T
-  y ! x !  // Store input coordinates
-  
+  y! x!               // Store input coordinates
+
   // Scaling wrapper
-  x B L y B L MIN 14 MIN 14 - e !  // Calculate scaling exponent
-  x B e { g * x 0 < ( ~ 1 + ) x !  // Scale x
-  y B e { g * y 0 < ( ~ 1 + ) y !  // Scale y
-  
+  x B L xz!
+  y B L yz!
+  xz yz < ( e xz! ) /E ( e yz! ) // e = min(xz, yz)
+  e 14 > ( e 14! )               // Limit e to 14
+  e 14 - e!
+
+  x e { x!
+  y e { y!
+
   // Determine quadrant and normalize to quadrant 1 or 4
-  x 0 < ( y ~ 1 + y ! x ~ 1 + x ! ) q !
-  
+  x 0 < (
+    x ~ 1 + x!
+    y ~ 1 + y!
+    /T q!
+  ) /E ( /F q! )
+
   // Initialize angle accumulator
-  0 z !
-  
+  0 z!
+
   // CORDIC iteration
+  0 i!
   16 (
     y 0 < (
       // Rotate clockwise
-      x y i } + t !
-      y x i } - y !
-      z a i ? - z !
-    ) (
+      t x y i } + t!
+      y x i } - y!
+      x t!
+      z a i ? - z!
+    ) /E (
       // Rotate counter-clockwise
-      x y i } - t !
-      y x i } + y !
-      z a i ? + z !
+      t x y i } - t!
+      y x i } + y!
+      x t!
+      z a i ? + z!
     )
-    t x !
+    i 1 + i!
   )
-  
+
   // Calculate vector length
-  x e } x 0 < ( ~ 1 + ) l !
-  
+  x e } x!
+
   // Convert angle to degrees (multiply by 180/16200)
-  z 180 * 16200 / z !
-  
+  z 180 * 16200 / z!
+
   // Adjust for quadrant
-  q ( z ~ 1 + z ! )
-  
+  q /T = (
+    z ~ 1 + z!
+  )
+
   // Return angle and length on stack
-  z l
+  z x
 ;
 
 // Test function
 :R
-  `Enter x coordinate: `
-  /K x !
-  `Enter y coordinate: `
-  /K y !
+  `Enter x coordinate: ` /K x!
+  `Enter y coordinate: ` /K y!
   x . ` ` y . ` -> `
-  x y T
-  `Angle: ` . ` degrees`
-  /N
-  `Length: ` .
-  /N /N
+
+  x y T          // Call the ATAN2 function
+  `Angle: ` . ` degrees` /N
+  `Length: ` . /N /N
 ;
 
-// Run test
+// Run test function
 R
-
 ```
 
+#### **CORDIC Algorithm Steps:**
+
+1. **Initialization:**
+   - Set initial angle accumulator `z` to 0.
+   - Initialize loop counter `i` to 0.
+
+2. **Iteration Loop:**
+   - Runs for 16 iterations to achieve desired accuracy.
+   - In each iteration:
+     - Determines the rotation direction based on the sign of `y`.
+     - Performs vector rotation using addition and bit shifts.
+     - Updates the angle accumulator `z` using values from the angle table `a`.
+
+3. **Angle Conversion:**
+   - After iterations, converts the accumulated angle `z` to degrees.
+
+4. **Quadrant Adjustment:**
+   - Adjusts the angle based on the original quadrant of the input coordinates.
+
+#### **Input Handling:**
+
+- The test function `:R` reads inputs using `/K`, which reads a character from input.
+- Note that `/K` reads ASCII codes; additional code may be needed to handle multi-digit inputs correctly.
+
+---
+
+### **Important Considerations:**
+
+- **Input Conversion:** The `/K` operator reads a single character and returns its ASCII code. To handle multi-digit numbers, you may need to implement a function that reads characters until a newline or space is detected, assembling them into a number.
+- **Data Types:** MINT uses 16-bit integers. Be cautious with operations that may cause overflow.
+- **Testing:** Ensure to test the code with various inputs, including edge cases like zero and negative numbers, to verify accuracy.
+
+---
+
+### **Conclusion:**
+
+The provided MINT code implements the CORDIC algorithm for calculating the `ATAN2` function using only addition, subtraction, bitwise shifts, and table lookups. It includes a scaling wrapper for improved accuracy with small inputs and calculates the vector length. The code has been corrected and optimized to adhere to MINT's syntax and operational semantics.
