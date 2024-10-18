@@ -344,11 +344,12 @@ ie
 - To create a MINT array, you can use the following syntax:  
 - v = variable i.e. single lowercase single letter
 - n= number 
+
 ```
 > [ n n n ] // as many `n`as you need but not to large as may crash
 > [ v v v ] // as many `v`as you need but not to large as may crash
 > [ n v ] // mixed and not to many
-
+```
 
 
 eg
