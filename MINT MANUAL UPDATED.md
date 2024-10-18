@@ -162,9 +162,7 @@ places it on the top of the stack, we use the `%`
 ### Basic arithmetic operations
 
 ### Addition
-
 eg
-
 ```
 > 10 20 + .
 30
@@ -351,11 +349,14 @@ ie
 > [ v v v ] // as many `v`as you need but not to large as may crash
 > [ n v ] // mixed and not to many
 
+
+
 eg
 ```
 > [ 1 2 3 ]  // but we need to save it
 ```
 - the whole Arrays can be assigned to a variables letter just like numbers can be assigned to a variables letter
+
 
 ie
 ```
@@ -363,7 +364,7 @@ ie
 ```
 - An array of 16-bit numbers can be defined by enclosing them within square brackets:
 
-now if we 
+next we 
 ```
 > [ 1 2 3 4 5 6 7 8 9 0 ] 
 > .
@@ -482,8 +483,6 @@ Then
 > \[1 2 3] 1\?   .
 3
 >
-
-
 ```
 
 ### Leaving byte mode (and return to normal word mode) 
@@ -529,8 +528,6 @@ eg
 - [ 0 0 0 0 0 ] a! // we need to initialize array each time in loops
 -bug  https://github.com/orgMINT/MINT/issues/37
 dont use
-
-```
 
 eg
 ```
