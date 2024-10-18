@@ -1239,7 +1239,7 @@ s 2 > (        // If list has more than 1 element
 - Eg RST 1 is at $0008 then :Z `hello!` ; // will execute
 
 - eg 
-> 8 /X  
+- `> 8 /X`  
 - This jumps to RST 1 address which will calls Z and return"        " know about RST instructions
 - These are called software interrupts because they behave like hardware interrupts
 - Hardware interrupts are RST 7 AND RST 8 which service INT and NMI
