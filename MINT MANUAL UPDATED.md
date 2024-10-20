@@ -26,7 +26,7 @@ language.
 ```
 
 But in this manual we will place on same line as code only for explanation.
-Do not use it in actual code.
+Do not use it in actual code. Better to remove all comments when loading code.
 
 ### Reverse Polish Notation (RPN)
 - RPN is a way of writing expressions in which the operators come after their operands. 
