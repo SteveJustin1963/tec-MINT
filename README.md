@@ -91,9 +91,9 @@ The structuring or acknowledgment of the individuals involved in the development
 
 ### ver 2
 - it works and now building apps
-- i have run out of ram
-- cannot load complex programs, lacks larger varibale and function name length
-- mint2 has lots of bugs
+- i have run out of ram because cannot load long complex programs
+- lacks a larger variable and function set, name length needs to be inceased to 2 characters
+- still lots of bugs
 - 
 
 
