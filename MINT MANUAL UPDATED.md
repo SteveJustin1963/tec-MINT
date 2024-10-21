@@ -788,7 +788,7 @@ eg
 > :@ 1+ ;   a! 
 > 3 a . /G
 ```
-// make bad output. Do not use 
+//bug, dont use
 
 - Anonymous functions can be stored in arrays 
 - and can even be used as a kind of "switch" statement.
