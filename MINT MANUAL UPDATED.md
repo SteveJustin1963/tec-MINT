@@ -787,8 +787,10 @@ eg
 ```
 > :@ 1+ ;   a! 
 > 3 a . /G
-```
+bad output
 //bug, dont use
+```
+
 
 - Anonymous functions can be stored in arrays 
 - and can even be used as a kind of "switch" statement.
@@ -801,8 +803,21 @@ eg
 ```
 > [:@ `zero` ; :@ `one` ; :@ `two` ;] b!
 > b 2? /G
-
+// bug hangs
 ```
+all these tests hang
+```
+>:@ 1 ; /G
+1
+>:@ 1+ ; a! 3 a /G
+4
+>[:@ 10 ;] 0? /G
+10
+>[:@ 10 ; :@ 20 ; :@ 30 ;] 2? /G
+30
+```
+
+
 
 ### Appendices
 
