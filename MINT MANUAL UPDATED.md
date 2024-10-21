@@ -805,7 +805,7 @@ eg
 > b 2? /G
 // bug hangs
 ```
-all these tests hang
+all these tests hang or dont complete
 ```
 >:@ 1 ; /G
 1
