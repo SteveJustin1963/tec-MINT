@@ -30,7 +30,7 @@ language.
 
 eg 
 ```
-> 10 20 + .  // puts two number on stack the add then show result form stack with `.`
+> 10 20 + .  // puts two number on stack, then add, then show result from the stack with `.`
 30
 >
 ```
