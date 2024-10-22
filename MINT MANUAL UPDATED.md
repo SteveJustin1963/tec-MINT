@@ -13,6 +13,7 @@ language.
 - Functions labeled from A to Z uppercase as single character, they are created with begging with `:` and ended with `;`
 - Z is reserved for interrupt calls. You write your interrupt routine under this function.
 - eg :R 1 2 + . ;
+- do not enter a space between `:` and the function letter
 - this means we define a function with : and end with ;
 - The interpreter handles 16-bit integers and addresses which is sufficient for small applications
 - Comments are preceded with //  
