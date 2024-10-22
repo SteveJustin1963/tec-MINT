@@ -6,30 +6,21 @@
 - It is written for the Z80 microprocessor and is 2K. It runs in 2K ram so make sure your programs are small.
 - On initialisation it will present a user prompt ">"
 - It is now ready to accept commands from the keyboard which can be entered follwoed by followed by a CRLF (enter key)
-- MINT is a bytecode interpreter - this means that all of its instructions are 1 byte long. 
+- MINT is a byte-code interpreter - this means that all of its instructions are 1 byte long. 
 - However, the choice of instruction uses printable ASCII characters, as a human readable alternative to assembly
 language. 
 - Variables are a to z lowercase and only as single character
-- Functions labeled from A to Z uppercase as single character, they are created with begging with `:` and ended with `;`
+- Functions labelled from A to Z uppercase as single character, they are created with begging with `:` and ended with `;`
 - Z is reserved for interrupt calls. You write your interrupt routine under this function.
 - eg :R 1 2 + . ;
 - do not enter a space between `:` and the function letter
 - this means we define a function with : and end with ;
-- The interpreter handles 16-bit integers and addresses which is sufficient for small applications
-- Comments are preceded with //  
-- Comment must not occur on same line as code (bug) but placed on next line
-
-
-```
-…code…
-// comments
-…code…
-// comments
-// etc
-```
-
-But in this manual we will place on same line as code only for explanation.
-Do not use it in actual code. Better to remove all comments when loading code.
+- The interpreter handles signed 16-bit integers in decimal and unsigned in hexadecimal 
+- Comments are preceded with //
+- Comment must not occur on same line as code (bug) but placed on the next line
+- In this manual we will place them on the same line for explanation purposes only.
+- Do not use it in actual code as it interferes with MINT's buffer
+- Better to remove all comments when loading final code.
 
 ### Reverse Polish Notation (RPN)
 - RPN is a way of writing expressions in which the operators come after their operands. 
