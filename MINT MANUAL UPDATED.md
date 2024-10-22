@@ -9,7 +9,7 @@
 - However, the choice of instruction uses printable ASCII characters, as a human readable alternative to assembly
 language. 
 - Variables are a to z lowercase and only as single character
-- Functions labeled from A to Z uppercase as single character, they are created with `:`  and ended with ;
+- Functions labeled from A to Z uppercase as single character, they are created with begging with `:` and ended with `;`
 - Z is reserved for interrupt calls. You write your interrupt routine under this function.
 - eg :R 1 2 + . ;
 - this means we define a function with : and end with ;
