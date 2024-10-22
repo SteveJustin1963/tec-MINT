@@ -10,6 +10,7 @@
 language. 
 - Variables are a to z lowercase and only as single character
 - Functions labeled from A to Z uppercase as single character, they are created with `:`  and ended with ;
+- Z is reserved for interrupt calls. You write your interrupt routine under this function.
 - eg :F 1 2 + . ;
 - this means we define a function with : and end with ;
 - The interpreter handles 16-bit integers and addresses which is sufficient for small applications
