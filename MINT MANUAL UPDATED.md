@@ -4,7 +4,8 @@
 - MINT is a minimalist character-based interpreter but one which aims at fast performance, readability and ease of use. 
 - this is the prompt of MINT `> ` ready to accept input
 - It is written for the Z80 microprocessor and is 2K. It runs in 2K ram so make sure your programs are small.
-- On initialisation it will present a user prompt ">" followed by a CR and LF. It is now ready to accept commands from the keyboard.
+- On initialisation it will present a user prompt ">"
+- It is now ready to accept commands from the keyboard which can be entered follwoed by followed by a CRLF (enter key)
 - MINT is a bytecode interpreter - this means that all of its instructions are 1 byte long. 
 - However, the choice of instruction uses printable ASCII characters, as a human readable alternative to assembly
 language. 
