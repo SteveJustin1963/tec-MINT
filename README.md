@@ -86,15 +86,18 @@ The structuring or acknowledgment of the individuals involved in the development
 ![]()
 
 ### build v 1.1
-- set correct flags for the build and then compile and then burn the rom. this will combine CJ's bitbang with NINT
+- set correct flags for the build and then compile and then burn the rom. this will combine CJ's bitbang with MINT
 - it works
 
 ### ver 2
-- it works and now building apps
-- i have run out of ram because cannot load long complex programs
+- new release, see my updated readme
+- i have run out of ram because cannot load long complex programs, moving to 4k ram
 - lacks a larger variable and function set, name length needs to be inceased to 2 characters
-- still lots of bugs
-- 
+- still lots of bugs so beware
+- more fun !! watch out nuts.
+
+![image](https://github.com/user-attachments/assets/6b17ba0f-41df-4da4-ad02-6c87927f685a)
+
 
 
 
