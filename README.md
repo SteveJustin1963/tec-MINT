@@ -90,10 +90,12 @@ The structuring or acknowledgment of the individuals involved in the development
 - it works
 
 ### ver 2
-- new release, see my updated readme
-- i have run out of ram because cannot load long complex programs, moving to 4k ram
-- lacks a larger variable and function set, name length needs to be inceased to 2 characters
-- still lots of bugs so beware, watch out nuts!
+- new release, see my updated readme, so punch your nuts!
+- need more ram, cannot load long programs, moving to 4k 
+- adding SPI cct .. see [tech-scope ](https://github.com/SteveJustin1963/tec-SCOPE)
+- play with /int calls :Z function
+- need a larger variable and function set, name length needs to be inceased to 2 characters
+- John please fix all bugs!
 
 ![image](https://github.com/user-attachments/assets/0e69968a-c699-4b05-929e-496d4e86c33c)
 
