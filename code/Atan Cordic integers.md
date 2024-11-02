@@ -371,8 +371,7 @@ By using only integer operations (addition, subtraction, bitwise shifts, and tab
 
 ---
 
-### **If You Need Further Assistance**
-
-- **Understanding Scaling**: Let me know if you need more details on how the scaling factors are determined and used.
-- **Modifying the Code**: If you want to adjust the number of iterations or the scaling factors for different levels of precision.
-- **Handling Edge Cases**: Guidance on modifying the code to handle specific edge cases or input ranges.
+### further work...
+- scaling..  how the scaling factors are determined and used
+- adjust the number of iterations or the scaling factors for different levels of precision
+- handle specific edge cases or input ranges
