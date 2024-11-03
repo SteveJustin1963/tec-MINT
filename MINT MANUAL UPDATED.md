@@ -15,6 +15,10 @@ language.
 - eg :R 1 2 + . ;
 - do not enter a space between `:` and the function letter
 - this means we define a function with : and end with ;
+- when designing code use plenty commments per line and CRLF
+- but when uploading code into the interpreter put each function as a one whole line with no comments, strip all coments out
+- make all inline strings short, we only have 2k of ram
+- 
 - The interpreter handles signed 16-bit integers in decimal and unsigned in hexadecimal 
 - Comments are preceded with //
 - Comment must not occur on same line as code (bug) but placed on the next line
