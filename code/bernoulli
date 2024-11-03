@@ -182,51 +182,41 @@ CREATE B-ARRAY  \ Changed from VARIABLE to CREATE
 
 /////////////////////////////////////////////
 // mint 
-// Initialize variables for calculation
-// a = current A coefficient value
-// b = array for bernoulli numbers
-// t = temporary storage
-// n = loop counter
-
 :B
-// Create array of 10 elements initialized to 0
-[ 0 0 0 0 0 0 0 0 0 0 ] b!
+[0 0 0 0 0]n!
+[1 1 1 1 1]d!
 
-// Initialize first Bernoulli number B[0] = 1
-1 b 0 ?!
+// B0 = 1/1
+1 n 0?! 
+1 d 0?!
+`B0=`n 0?.`/`d 0?./N
 
-// Main loop to calculate Bernoulli numbers
-10(
-  // Calculate A coefficients
-  /i " 2 * 1- 
-  /i " 2 * 1+ / 
-  1000 * a!
-  
-  // Store initial value
-  a b /i ?!
-  
-  // Update with previous Bernoulli numbers
-  /i 1 > (
-    /i 1 - (
-      // Get previous coefficient
-      b /j ? t!
-      // Multiply by A coefficient
-      t a * 1000 / 
-      // Add to current value
-      b /i ? + b /i ?!
-    )
-  )
-)
+// B1 = -1/2
+1 t! 
+0 t - s! 
+s n 1?!
+2 d 1?!
+`B1=`n 1?.`/`d 1?./N
 
-// Print results with scaling
-10(
-  `B[` /i . `] = `
-  b /i ? 1000 / .
-  /N
-)
+// B2 = 1/6
+1 n 2?!
+6 d 2?!
+`B2=`n 2?.`/`d 2?./N
+
+// B3 = 0
+0 n 3?!
+1 d 3?!
+`B3=`n 3?.`/`d 3?./N
+
+// B4 = -1/30
+1 t!
+0 t - s!
+s n 4?!
+30 d 4?!
+`B4=`n 4?.`/`d 4?./N
 ;
 
-// Run the calculation
 B
+
 
 //////////////////////////////////
