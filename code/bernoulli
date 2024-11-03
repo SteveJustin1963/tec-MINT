@@ -182,41 +182,31 @@ CREATE B-ARRAY  \ Changed from VARIABLE to CREATE
 
 /////////////////////////////////////////////
 // mint 
-:B
-[0 0 0 0 0]n!
-[1 1 1 1 1]d!
+ 
+ :B
+[0 0 0 0 0]b!
 
-// B0 = 1/1
-1 n 0?! 
-1 d 0?!
-`B0=`n 0?.`/`d 0?./N
+// B0 = 1/1 (scaled by 6)
+6 b 0?!
+`B0=1/1`/N
 
-// B1 = -1/2
-1 t! 
-0 t - s! 
-s n 1?!
-2 d 1?!
-`B1=`n 1?.`/`d 1?./N
+// B1 = -1/2 (scaled by 6)
+-3 b 1?!
+`B1=-1/2`/N
 
-// B2 = 1/6
-1 n 2?!
-6 d 2?!
-`B2=`n 2?.`/`d 2?./N
+// B2 calculation (scaled by 6)
+// 1: Start with 6 (B0 scaled)
+6 s!
+// 2: Add -9 (3*B1 scaled)
+b 1? 3 * t!
+s t + p!
+// 3: Negate and divide by 3
+0 p - q!
+q 3 / v!
+v b 2?!
+`B2=1/6`/N
 
-// B3 = 0
-0 n 3?!
-1 d 3?!
-`B3=`n 3?.`/`d 3?./N
-
-// B4 = -1/30
-1 t!
-0 t - s!
-s n 4?!
-30 d 4?!
-`B4=`n 4?.`/`d 4?./N
+`sum=`s.` t=`t.` p=`p.` final=`v./N
 ;
-
-B
-
 
 //////////////////////////////////
