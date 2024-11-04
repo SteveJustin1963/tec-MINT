@@ -55,7 +55,7 @@ The structuring or acknowledgment of the individuals involved in the development
 ### Videos
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1638969598.mp4
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1639658972.mp4
-- https://www.youtube.com/watch?v=m66y6C54Cds  transcript in wiki
+- https://www.youtube.com/watch?v=m66y6C54Cds WARNING-3 HR MOVIE LENGTH
 
 
 
