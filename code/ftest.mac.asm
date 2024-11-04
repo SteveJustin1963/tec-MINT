@@ -1,4 +1,7 @@
+; mint 1.0
+
 ```
+
 .macro utilDefs
     DB ":Q ",$22,";"                    ; ( n -- n n ) a convenient way to access " 
     DB ":W \\h@! 2\\h\\+;"              ; ( n -- ) compiles a word to heap
