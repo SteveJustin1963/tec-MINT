@@ -102,7 +102,7 @@ The structuring or acknowledgment of the individuals involved in the development
 ### ver 2
 - new release, see my updated readme, so punch your nuts!
 - need more ram, cannot load long programs, moving to 4k 
-- adding SPI cct .. see [tech-scope ](https://github.com/SteveJustin1963/tec-SCOPE)
+- adding SPI cct .. see [tec-SCOPE ](https://github.com/SteveJustin1963/tec-SCOPE)
 - play with /int calls :Z function
 - need a larger variable and function set, name length needs to be inceased to 2 characters
 - John please fix all bugs!
