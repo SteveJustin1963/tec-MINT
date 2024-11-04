@@ -110,6 +110,7 @@ The structuring or acknowledgment of the individuals involved in the development
 ![image](https://github.com/user-attachments/assets/0e69968a-c699-4b05-929e-496d4e86c33c)
 
 
+![image](https://github.com/user-attachments/assets/c72e33ea-6bf3-4c88-adec-ae681f39fbd3)
 
 
 
