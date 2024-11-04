@@ -1,5 +1,15 @@
 # Punch yourself in the nuts with MINT!
 
+```
+There once was a coder so bold,  
+Whose MINT code was worth more than gold.  
+With functions so lean,  
+And variables clean,  
+'Til a bug made him punch his own nuts, uncontrolled!
+```
+
+
+
 ![image](https://github.com/user-attachments/assets/76699c73-d350-4f52-a544-398e5a6214a2)
 ![image](https://github.com/user-attachments/assets/e15ac155-4a9c-48a9-a4c3-31413bce2aa3)
 
