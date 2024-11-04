@@ -1,4 +1,4 @@
-# Punch yourself in the nuts with MINT!
+# MINT coding, punch yourself in the nuts!
 
 ```
 There once was a coder so bold,  
