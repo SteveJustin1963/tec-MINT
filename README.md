@@ -1,5 +1,8 @@
 # MINT coding, punch yourself in the nuts!
 
+![image](https://github.com/user-attachments/assets/2dedb642-9c9e-4c19-9cf5-f6345052792c)
+
+
 ```
 There once was a coder so bold,  
 Whose MINT code was worth more than gold.  
@@ -9,7 +12,7 @@ And variables clean,
 ```
 
 
-![image](https://github.com/user-attachments/assets/2dedb642-9c9e-4c19-9cf5-f6345052792c)
+
 
 
 
