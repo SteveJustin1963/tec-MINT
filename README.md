@@ -9,6 +9,11 @@ And variables clean,
 ```
 
 
+![image](https://github.com/user-attachments/assets/2dedb642-9c9e-4c19-9cf5-f6345052792c)
+
+
+
+
 
 ![image](https://github.com/user-attachments/assets/76699c73-d350-4f52-a544-398e5a6214a2)
 ![image](https://github.com/user-attachments/assets/e15ac155-4a9c-48a9-a4c3-31413bce2aa3)
@@ -109,7 +114,7 @@ The structuring or acknowledgment of the individuals involved in the development
 
 ![image](https://github.com/user-attachments/assets/0e69968a-c699-4b05-929e-496d4e86c33c)
 
-![image](https://github.com/user-attachments/assets/dab298cb-29b3-4d68-a0eb-9ef34144e097)
+ 
 
 
 
