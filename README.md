@@ -8,7 +8,7 @@ There once was a coder so bold,
 Whose MINT code was worth more than gold.  
 With functions so lean,  
 And variables clean,  
-'Til a bug made him punch his own nuts, uncontrolled!
+'Til a bug made him punch his own nuts with glee!
 ```
 
 
