@@ -61,7 +61,7 @@ The structuring or acknowledgment of the individuals involved in the development
 
 ### My attempt to run v1.1, first go
 
-- per CJ, i am using an EEPROM; AT28C64B.
+- using an EEPROM; AT28C64B.
 - compile v1.1, see flags as needed
 - install eeprom, mod the socket, hangs over the existing rom socket by 2 pins each side. make the mod
 - result; 24 pin socket into 28 pins, lucky the pinout is identical except for A12 and VCC
@@ -104,11 +104,11 @@ The structuring or acknowledgment of the individuals involved in the development
 ![]()
 
 ### build v 1.1
-- set correct flags for the build and then compile and then burn the rom. this will combine CJ's bitbang with MINT
-- “it finally works! “ [Back to the Future}
+- set correct flags for the build and then compile and then burn the rom. this will combine bitbang with MINT
+- “it finally works!  
 
 ### ver 2
-- new release, see my updated readme, now punch your nuts!
+- new release, see my updated readme
 - need more ram, cannot load long programs, moving to 4k 
 - adding SPI cct .. see [tec-SCOPE ](https://github.com/SteveJustin1963/tec-SCOPE)
 - play with /int calls :Z function
