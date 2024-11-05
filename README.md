@@ -78,14 +78,14 @@ The structuring or acknowledgment of the individuals involved in the development
 
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/sock1.png)
 
-- Termnal pn PC; TeraTerm at https://ttssh2.osdn.jp/
+- Terminal on PC; TeraTerm at https://ttssh2.osdn.jp/
   - has variable baud rates, helps to find timing faults
 - USB to TTL serial cable, TTl 5v is close enough for rs232
   - has embedded chip for usb to ttl 
   - 4 wires, tx-green rx-white gnd-blk 5v-red
 - the pc will load PnP driver and allocate a com port
   - find in device manager
-  - teraterm will list it so select it
+  - Teraterm will list it so select it
   - do a loop back test, short tx-rx, should echo char in terminal screen
 - as we opted without a uart we can use serial bitbang
   - compile and get code that supports it, default is 4800
@@ -105,23 +105,15 @@ The structuring or acknowledgment of the individuals involved in the development
 
 ### build v 1.1
 - set correct flags for the build and then compile and then burn the rom. this will combine CJ's bitbang with MINT
-- it works
+- “it finally works! “ [Back to the Future}
 
 ### ver 2
-- new release, see my updated readme, so punch your nuts!
+- new release, see my updated readme, now punch your nuts!
 - need more ram, cannot load long programs, moving to 4k 
 - adding SPI cct .. see [tec-SCOPE ](https://github.com/SteveJustin1963/tec-SCOPE)
 - play with /int calls :Z function
-- need a larger variable and function set, name length needs to be inceased to 2 characters
+- need a larger variable and function set, name length needs to be increased to 2 characters
 - John please fix all bugs! https://github.com/orgMINT/MINT/issues
 
 ![image](https://github.com/user-attachments/assets/0e69968a-c699-4b05-929e-496d4e86c33c)
-
- 
-
-
-
-
- 
-
 
