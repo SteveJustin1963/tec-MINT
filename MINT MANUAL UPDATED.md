@@ -21,6 +21,7 @@ language.
 - 
 - The mint can only handle signed 16-bit integers in decimal and unsigned in hexadecimal
 - when writing code you can still get plenty of accuracy with only 16-bit (2-byte) cells and using 32-bit (4-byte) intermediate results, using fixed-point and scaled-integer math with less complexity and more efficiency than floating point. 
+- if you cant succeed then use the 9511 APU at port 0xC2
 - Comments are preceded with //
 - Comment must not occur on same line as code (bug) but placed on the next line
 - In this manual we will place them on the same line for explanation purposes only.
