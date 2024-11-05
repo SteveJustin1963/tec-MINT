@@ -113,7 +113,7 @@ The structuring or acknowledgment of the individuals involved in the development
 - adding SPI cct .. see [tec-SCOPE ](https://github.com/SteveJustin1963/tec-SCOPE)
 - play with /int calls :Z function
 - need a larger variable and function set, name length needs to be inceased to 2 characters
-- John please fix all bugs!
+- John please fix all bugs! https://github.com/orgMINT/MINT/issues
 
 ![image](https://github.com/user-attachments/assets/0e69968a-c699-4b05-929e-496d4e86c33c)
 
