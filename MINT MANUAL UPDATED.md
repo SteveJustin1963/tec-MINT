@@ -19,7 +19,8 @@ language.
 - but when uploading code into the interpreter put each function as a one whole line with no comments, strip all coments out
 - make all inline strings short, we only have 2k of ram
 - 
-- The interpreter handles signed 16-bit integers in decimal and unsigned in hexadecimal 
+- The mint can only handle signed 16-bit integers in decimal and unsigned in hexadecimal
+- when writing code you can still get plenty of accuracy with only 16-bit (2-byte) cells and using 32-bit (4-byte) intermediate results, using fixed-point and scaled-integer math with less complexity and more efficiency than floating point. 
 - Comments are preceded with //
 - Comment must not occur on same line as code (bug) but placed on the next line
 - In this manual we will place them on the same line for explanation purposes only.
