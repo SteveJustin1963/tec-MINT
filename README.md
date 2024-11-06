@@ -101,5 +101,12 @@ The structuring or acknowledgment of the individuals involved in the development
 - need a larger variable and function set, name length needs to be increased to 2 characters
 - John please fix all bugs! https://github.com/orgMINT/MINT/issues
 
-![image](https://github.com/user-attachments/assets/0e69968a-c699-4b05-929e-496d4e86c33c)
+we will mod in the last two high address for more rom from the 32k eeprom
+
+![image](https://github.com/user-attachments/assets/fa93240e-c0d4-4440-94cd-dd503c6608f4)
+
+
+
+
+
 
