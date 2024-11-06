@@ -101,8 +101,19 @@ The structuring or acknowledgment of the individuals involved in the development
 - need a larger variable and function set, name length needs to be increased to 2 characters
 - John please fix all bugs! https://github.com/orgMINT/MINT/issues
 
-we will mod in the last two high address for more rom from the 32k eeprom
+## ver 3
+- maintain the classic 1D
+- mod in the last two high address for more rom from from the 32k eeprom
+- ![image](https://github.com/user-attachments/assets/419cea75-b63a-423c-baea-bf82e0aef4ec)
+- add 48-bit FP for now, but might go lower. Let's just leave that question open for now
+- FP goesi in a VAR, and if its put on the stack, only the pointer is stored there
+- stack only for 16-bit integers and pointers, then mint doesn't need to change very much and you could have larger than 32-bit floating point numbers.
+- arrays and strings are handled the same way, never directly store on the stack. 
+- need examples of calculations when doing floating point and/or matrices...even the most basic floating point number could be considered an array with one element in it.
+- consider ideas from APL style languages
+- add porting to the 1G if they beg
 
+ 
 ![image](https://github.com/user-attachments/assets/fa93240e-c0d4-4440-94cd-dd503c6608f4)
 
 
