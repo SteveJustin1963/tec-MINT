@@ -105,16 +105,34 @@ The structuring or acknowledgment of the individuals involved in the development
 - maintain the classic 1D
 - mod in the last two high address for more rom from the 32k eeprom
 - ![image](https://github.com/user-attachments/assets/419cea75-b63a-423c-baea-bf82e0aef4ec)
-- add 48-bit floating point (FP) for now
-- FP always goes into a VAR, and if its put on the stack, only the pointer is stored there
-- the stack is only for 16-bit integers and pointers, then mint doesn't need to change very much and you could have larger than 32-bit floating point numbers.
 - arrays and strings are handled the same way, never directly stored on the stack. 
 - need examples of calculations when doing floating point and/or matrices...even the most basic floating point number could be considered an array with one element in it.
 - consider ideas from APL style languages
 - add SPI master
 - enhance /INT :F
 - enhance ASM calls and return
+- add 48-bit floating point (FP) for now
+- FP always goes into a VAR, and if its put on the stack, only the pointer is stored there
+- the stack is only for 16-bit integers and pointers, then mint doesn't need to change very much and you could have larger than 32-bit floating point numbers.
 
+For a 48-bit floating-point signed number, the range depends on how the bits are allocated for the sign, exponent, and mantissa. In typical floating-point formats, the structure is as follows:
+
+- **1 bit** for the sign
+- **Exponent bits** (usually defined in relation to the format, which affects the range)
+- **Mantissa bits** (precision)
+
+Assuming a similar structure to IEEE formats, if we allocate bits as follows:
+
+1. **1 bit** for the sign
+2. **11 bits** for the exponent (bias of 1023)
+3. **36 bits** for the mantissa
+
+The approximate range would be:
+
+- **Smallest positive (normalized) number:** \( 2^{-1022} \approx 2.23 \times 10^{-308} \)
+- **Largest positive number:** \( (2 - 2^{-36}) \times 2^{1023} \approx 1.79 \times 10^{308} \)
+
+This range is roughly similar to a 64-bit double-precision floating-point format, but with slightly less precision due to the shorter mantissa (36 bits instead of 52). However, without a standard like IEEE defining it, the exact range could vary depending on the chosen exponent and mantissa split.
 
 
 - and...maybe...add porting to the 1G if they beg
