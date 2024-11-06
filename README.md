@@ -30,7 +30,7 @@ The structuring or acknowledgment of the individuals involved in the development
 - Craig Jones
 - Craig Hart-RIP
 - Steve Justin - teeny weeny bit of almost nothing
-- TEC-1 group - I love the smell of napalm in the morning
+- TEC-1 group - they love the smell of napalm in the morning
 
 ### Announcements
   - https://www.facebook.com/groups/tec1z80/posts/1250512652124448/ 
