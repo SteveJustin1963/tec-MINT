@@ -49,8 +49,8 @@ The structuring or acknowledgment of the individuals involved in the development
 
 - using an EEPROM; AT28C64B.
 - compile v1.1, set flags as needed
-- install eeprom, mod the socket, hangs over the existing rom socket by 2 pins each side. make the mod
-- result; 24 pin socket into 28 pins, lucky the pinout is identical except for A12 and VCC
+- mod the socket, install eeprom, hangs over the existing rom socket by 2 pins each side. make the mod
+- result; turn a 24 pin socket into 28 pins, lucky the pinout is identical except for A12 and VCC
 - see this https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/MemoryDevices01.pdf
  
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/ee%20pins2.png)
