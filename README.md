@@ -141,7 +141,7 @@ The approximate range would be:
 This range is roughly similar to a 64-bit double-precision floating-point format, but with slightly less precision due to the shorter mantissa (36 bits instead of 52). However, without a standard like IEEE defining it, the exact range could vary depending on the chosen exponent and mantissa split.
 
 
-- and...maybe...add porting to the 1G if they beg
+ 
 
 ![image](https://github.com/user-attachments/assets/c28e7498-5bc2-4928-b141-aae132415934)
 
