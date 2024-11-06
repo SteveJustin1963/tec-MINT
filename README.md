@@ -133,7 +133,7 @@ The approximate range would be:
 - **Smallest positive (normalized) number:** \( 2^{-1022} \approx 2.23 \times 10^{-308} \)
 - **Largest positive number:** \( (2 - 2^{-36}) \times 2^{1023} \approx 1.79 \times 10^{308} \)
 
-![Uploading image.png…]()
+ 
 
 
 
