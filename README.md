@@ -132,6 +132,10 @@ The approximate range would be:
 - **Smallest positive (normalized) number:** \( 2^{-1022} \approx 2.23 \times 10^{-308} \)
 - **Largest positive number:** \( (2 - 2^{-36}) \times 2^{1023} \approx 1.79 \times 10^{308} \)
 
+![image](https://github.com/user-attachments/assets/547700c0-9c39-4983-8110-d08cee2aabc3)
+
+
+
 This range is roughly similar to a 64-bit double-precision floating-point format, but with slightly less precision due to the shorter mantissa (36 bits instead of 52). However, without a standard like IEEE defining it, the exact range could vary depending on the chosen exponent and mantissa split.
 
 
