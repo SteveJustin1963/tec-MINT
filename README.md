@@ -48,7 +48,7 @@ The structuring or acknowledgment of the individuals involved in the development
 ### My attempt to run v1.1, first go
 
 - using an EEPROM; AT28C64B.
-- compile v1.1, see flags as needed
+- compile v1.1, set flags as needed
 - install eeprom, mod the socket, hangs over the existing rom socket by 2 pins each side. make the mod
 - result; 24 pin socket into 28 pins, lucky the pinout is identical except for A12 and VCC
 - see this https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/MemoryDevices01.pdf
