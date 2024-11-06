@@ -104,7 +104,8 @@ The structuring or acknowledgment of the individuals involved in the development
 ## ver 3
 - maintain the classic 1D
 - mod in the last two high address for more rom from the 32k eeprom
-- ![image](https://github.com/user-attachments/assets/419cea75-b63a-423c-baea-bf82e0aef4ec)
+- ![image](https://github.com/user-attachments/assets/36d45b5b-a19b-4acb-93f1-78bcea778814)
+
 - arrays and strings are handled the same way, never directly stored on the stack. 
 - need examples of calculations when doing floating point and/or matrices...even the most basic floating point number could be considered an array with one element in it.
 - consider ideas from APL style languages
@@ -132,7 +133,8 @@ The approximate range would be:
 - **Smallest positive (normalized) number:** \( 2^{-1022} \approx 2.23 \times 10^{-308} \)
 - **Largest positive number:** \( (2 - 2^{-36}) \times 2^{1023} \approx 1.79 \times 10^{308} \)
 
-![image](https://github.com/user-attachments/assets/547700c0-9c39-4983-8110-d08cee2aabc3)
+![Uploading image.png…]()
+
 
 
 
