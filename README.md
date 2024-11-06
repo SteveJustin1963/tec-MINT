@@ -103,12 +103,12 @@ The structuring or acknowledgment of the individuals involved in the development
 
 ## ver 3
 - maintain the classic 1D
-- mod in the last two high address for more rom from from the 32k eeprom
+- mod in the last two high address for more rom from the 32k eeprom
 - ![image](https://github.com/user-attachments/assets/419cea75-b63a-423c-baea-bf82e0aef4ec)
-- add 48-bit FP for now, but might go lower. Let's just leave that question open for now
-- FP goesi in a VAR, and if its put on the stack, only the pointer is stored there
-- stack only for 16-bit integers and pointers, then mint doesn't need to change very much and you could have larger than 32-bit floating point numbers.
-- arrays and strings are handled the same way, never directly store on the stack. 
+- add 48-bit floating point (FP) for now
+- FP always goes into a VAR, and if its put on the stack, only the pointer is stored there
+- the stack is only for 16-bit integers and pointers, then mint doesn't need to change very much and you could have larger than 32-bit floating point numbers.
+- arrays and strings are handled the same way, never directly stored on the stack. 
 - need examples of calculations when doing floating point and/or matrices...even the most basic floating point number could be considered an array with one element in it.
 - consider ideas from APL style languages
 - add SPI master
