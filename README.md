@@ -111,10 +111,16 @@ The structuring or acknowledgment of the individuals involved in the development
 - arrays and strings are handled the same way, never directly store on the stack. 
 - need examples of calculations when doing floating point and/or matrices...even the most basic floating point number could be considered an array with one element in it.
 - consider ideas from APL style languages
-- add porting to the 1G if they beg
+- add SPI master
+- enhance /INT :F
+- enhance ASM calls and return
 
- 
-![image](https://github.com/user-attachments/assets/fa93240e-c0d4-4440-94cd-dd503c6608f4)
+
+
+- and...maybe...add porting to the 1G if they beg
+
+![image](https://github.com/user-attachments/assets/f6879da1-1dce-42f0-9b40-fcb8668d2397)
+
 
 
 
