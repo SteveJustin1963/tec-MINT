@@ -77,7 +77,7 @@ The structuring or acknowledgment of the individuals involved in the development
   - compile and get code that supports it, default is 4800
   - need 4mhz clock
 - add cct mod for serial line off data bus,  https://github.com/SteveJustin1963/tec-BIT-BANG
-
+![tec1-schematic](https://github.com/user-attachments/assets/d316e4da-a300-4390-832a-6fd06e389e6e)
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8455.jpg)
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8483%20(1).jpg)
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8483%20(2).jpg)
