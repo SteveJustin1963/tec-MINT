@@ -103,7 +103,7 @@ The structuring or acknowledgment of the individuals involved in the development
 
 ## ver 3
 - maintain the classic 1D
-- mod in the last two high address for more rom from the 32k eeprom
+- mod in the last two high address to get 6kmore out of  eeprom 
 - ![image](https://github.com/user-attachments/assets/9d753110-e74e-45b1-a050-2187cc91c0a7)
 - ![image](https://github.com/user-attachments/assets/36d45b5b-a19b-4acb-93f1-78bcea778814)
 
