@@ -80,7 +80,6 @@ The structuring or acknowledgment of the individuals involved in the development
 ![tec1-schematic](https://github.com/user-attachments/assets/d316e4da-a300-4390-832a-6fd06e389e6e)
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8455.jpg)
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8483%20(1).jpg)
-![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8483%20(2).jpg)
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8484%20(1).jpg)
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8485%20(1).jpg)
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8486%20(1).jpg)
