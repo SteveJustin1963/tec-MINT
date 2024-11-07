@@ -1,4 +1,4 @@
-# MINT coding, punch yourself in the nuts!
+# Punch yourself in the nuts with MINT coding !
 
 ![image](https://github.com/user-attachments/assets/2dedb642-9c9e-4c19-9cf5-f6345052792c)
 
