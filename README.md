@@ -93,7 +93,7 @@ The structuring or acknowledgment of the individuals involved in the development
 - “it finally works!  
 
 ### ver 2
-- new release, see my updated [readme](https://github.com/SteveJustin1963/tec-MINT/blob/main/MINT%202%20MANUAL%20UPDATED.md)
+- new release, see my updated [manual](https://github.com/SteveJustin1963/tec-MINT/blob/main/MINT%202%20MANUAL%20UPDATED.md)
 - need more ram, cannot load long programs, moving to 4k 
 - adding SPI cct .. see [tec-SCOPE ](https://github.com/SteveJustin1963/tec-SCOPE)
 - play with /int calls :Z function
