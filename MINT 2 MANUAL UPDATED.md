@@ -1,16 +1,18 @@
-﻿MINT Programming Language version 2.0
+MINT Programming Language version 2.0
 
 
 - MINT is a minimalist character-based interpreter but one which aims at fast performance, readability and ease of use. 
 - this is the prompt of MINT `> ` ready to accept input
-- It is written for the Z80 microprocessor and is 2K. It runs in 2K ram so make sure your programs are small.
 - On initialisation it will present a user prompt ">"
 - It is now ready to accept commands from the keyboard which can be entered follwoed by followed by a CRLF (enter key)
 - MINT is a byte-code interpreter - this means that all of its instructions are 1 byte long. 
 - However, the choice of instruction uses printable ASCII characters, as a human readable alternative to assembly
 language. 
-- Variables are a to z lowercase and only as single character
-- Functions labelled from A to Z uppercase as single character, they are created with begging with `:` and ended with `;`
+- Variables are a to z lowercase and only as single character, double letter allowed if commented at top of program
+- Functions labelled from A to Z uppercase as single character, they are created with begging with `:` and ended with `;`, , double letter allowed if commented at 
+
+top of program
+
 - Z is reserved for interrupt calls. You write your interrupt routine under this function.
 - eg :R 1 2 + . ;
 - do not enter a space between `:` and the function letter
@@ -20,7 +22,9 @@ language.
 - make all inline strings short, we only have 2k of ram
 - 
 - The mint can only handle signed 16-bit integers in decimal and unsigned in hexadecimal
-- when writing code you can still get plenty of accuracy with only 16-bit (2-byte) cells and using 32-bit (4-byte) intermediate results, using fixed-point and scaled-integer math with less complexity and more efficiency than floating point. 
+- when writing code you can still get plenty of accuracy with only 16-bit (2-byte) cells and using 32-bit (4-byte) intermediate results, using fixed-point and scaled-
+
+integer math with less complexity and more efficiency than floating point. 
 - if you cant succeed then use the 9511 APU at port 0x80
 - Comments are preceded with //
 - Comment must not occur on same line as code (bug) but placed on the next line
@@ -44,13 +48,19 @@ eg
 ### Interaction 
 - interact with the MINT interpreter (MI) at the prompt which looks like this `> `
 - if we enter numbers, they are pushed onto the stack. 
-- If the MI encounters a non number it decides if its an operator eg such as `+` which is used to add two items from the stack and then pushes the result back to the stack.
+- If the MI encounters a non number it decides if its an operator eg such as `+` which is used to add two items from the stack and then pushes the result back to 
 
-- We can display the result with `.` operator that takes the result from the stack and prints it to the MI console which is talking to a ascii terminal via a serial line at 4800 bps.
+the stack.
+
+- We can display the result with `.` operator that takes the result from the stack and prints it to the MI console which is talking to a ascii terminal via a serial 
+
+line at 4800 bps.
 
 ### Numbers 
 - MINT only uses 16-bit integers and signed numbers to represent numbers. Nothing bigger! 
-- When + and - operations are performed and it exceeds the number size it sets a carry bit under variable  `/c`. this bit needs to be reset to 0 after using it  like this > 0 /c ! ( this is a bug at the moment) 
+- When + and - operations are performed and it exceeds the number size it sets a carry bit under variable  `/c`. this bit needs to be reset to 0 after using it  like 
+
+this > 0 /c ! ( this is a bug at the moment) 
 - With * operations, when the result exceeds the number limit, it counts the roll overs with the /r variable 
 - when the /  is used to divide, the result goes on the stack and the remainder goes into /r variable, 
 - both / and * operations will set the /r variable correctly each time.
@@ -1168,7 +1178,9 @@ n 1 = (                 // If there is only 1 disk
 - **`s ! t ! f ! n !`**: Pops the number of disks `n`, source rod `f`, target rod `t`, and spare rod `s` from the stack in the correct LIFO order.
 - **Recursive Steps**:
 - If there's only 1 disk, it moves directly from the source to the destination.
-- If there are more than 1 disk, it recursively moves `n-1` disks to the spare rod, moves the nth disk to the target, and then moves the `n-1` disks from the spare to the target.
+- If there are more than 1 disk, it recursively moves `n-1` disks to the spare rod, moves the nth disk to the target, and then moves the `n-1` disks from the spare 
+
+to the target.
 - run it 
 
 ```
@@ -1248,7 +1260,9 @@ s 2 > (        // If list has more than 1 element
 - usage n /X  /v  :Z.....;        
 - Interrupt Handler is triggered it executes the Z function on all interrupts including the RST instructions. 
 - You can tell which interrupt it by looking in the /v variable.
-- You won't be able to test the int 38 interrupt using asm80.com  serial terminal emulator because it is emulating a 6850 UART for the serial port to terminal output to screen
+- You won't be able to test the int 38 interrupt using asm80.com  serial terminal emulator because it is emulating a 6850 UART for the serial port to terminal 
+
+output to screen
 - but it will work with big bang serial code in MINT source code 
 - you can simualte a interrupt by jumping to one of the RST addresses. 
 - Eg RST 1 is at $0008 then :Z `hello!` ; // will execute
