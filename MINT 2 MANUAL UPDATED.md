@@ -5,6 +5,7 @@ MINT Programming Language version 2.0
 - this is the prompt of MINT `> ` ready to accept input
 - On initialisation it will present a user prompt ">"
 - It is now ready to accept commands from the keyboard which can be entered follwoed by followed by a CRLF (enter key)
+- lines cannot exceed 256 bytes in length with the current internal buffer setting
 - MINT is a byte-code interpreter - this means that all of its instructions are 1 byte long. 
 - However, the choice of instruction uses printable ASCII characters, as a human readable alternative to assembly
 language. 
