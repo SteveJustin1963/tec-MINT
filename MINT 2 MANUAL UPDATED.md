@@ -23,10 +23,11 @@ top of program
 - make all inline strings short, we only have 2k of ram
 - 
 - The mint can only handle signed 16-bit integers in decimal and unsigned in hexadecimal
-- when writing code you can still get plenty of accuracy with only 16-bit (2-byte) cells and using 32-bit (4-byte) intermediate results, using fixed-point and scaled-
-
-integer math with less complexity and more efficiency than floating point. 
-- if you cant succeed then use the 9511 APU at port 0x80
+- to increase integer accuracy write your code by using signed 16-bit (2-byte) cells and store intermediate results using 32-bit (4-byte)
+- scale your number accordingly to prevent overflows where possible
+- it is known that integer maths has less complexity and more efficiency than floating point for may tasks 
+- if need 32bit floating point in code use calls to a AP9511 APU chip placed at /CS port 0x80 and C,/D where D = port 80 and C = port 81
+- 
 - Comments are preceded with //
 - Comment must not occur on same line as code (bug) but placed on the next line
 - In this manual we will place them on the same line for explanation purposes only.
@@ -431,10 +432,27 @@ eg
 >
 ```
 
+### Array depth
+> [1 2 3] /D .
+3
+> 
+
 ### Nested arrays 
-- Do not use at moment its not working - bug
+
 - In MINT arrays can be nested inside one another.
-- execution time will increase 
+
+- this works
+```
+> [1 2 3 4] a !
+> [ 2 a 3 ] b!
+The syntax to access the third element of a from b is
+> b 1? 3? .
+4
+>
+// note the result, it works
+```
+
+
 - The following code shows an array with another array as its second item.
 - This code accesses the second item of the first array with `1?`. 
 - It then accesses the first item of the inner array with `0?` and prints the result (which is 2).
@@ -538,8 +556,7 @@ eg
 ### Control loops and counters 
 - with /i and /j to control array size and access
 - [ 0 0 0 0 0 ] a! // we need to initialize array each time in loops
--bug  https://github.com/orgMINT/MINT/issues/37
-dont use
+ 
 
 eg
 ```
@@ -557,6 +574,16 @@ n a /i ?!  /N           // Store 'n' into array at index /i
 a /i ? .  /N		// Fetch array element at index /i and print it
 )
 ```
+
+
+: A [ 0 0 0 0 0 ] a! ; 
+: B 5 ( `Enter a digit: `  /K 48 - n!  n a /i ?!  /N ) ;
+: C 5 ( `Value is: ` a /i ? .  /N ) ;
+
+// run it
+ABC
+
+
 
 ### Loops
 - Looping in MINT is of the form
