@@ -38,7 +38,7 @@ top of program
 - RPN is a way of writing expressions in which the operators come after their operands. 
 - Concatenative languages makes use of the stack which is used to collect data to do work on. 
 - The results are pushed back onto the stack.
-
+- Like Forth, MINT has no protection against underflow for performance reasons, thus calling things off the stack that are not placed there will call spurious numbers
 
 eg 
 ```
