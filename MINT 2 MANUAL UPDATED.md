@@ -523,13 +523,32 @@ Then
 - memory allocation in MINT is the simplest raw memory allocation on the heap.
 - This type of allocation is similar to arrays of bytes and are created using the `/A` allocation operator.
 
+This code allocates a 1000 byte block of uninitialized memory and returns a pointer 
+(an address) to the start of this block.
 ```
 > 1000 /A
 ```
-- This code allocates a 1000 byte block of uninitialized memory and returns a pointer 
-(an address) to the start of this block.
 
-- dont use yet purpose unknown
+The same as allocating a byte array of three bytes ie
+```
+3 /A a !
+```
+
+Here the main difference is that the memory is not initialised.
+also /S (get array size) does not work with memory allocated by /A. ie
+```			
+\[ 0 0 0] a !
+```
+
+To get a value, e.g. get item 0 to 10, is the same for both use
+```
+a 0 /?
+```
+
+To set a value, e.g set item 1 to 10, is the same for both use
+```
+10 a 1 /? /!
+```
 
 
 ### Variables in Arrays
