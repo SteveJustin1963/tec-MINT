@@ -98,7 +98,7 @@ in most other programming languages.
 - decimal is signed integers using 16 bits
 - For example, the number `12345` is represented as `12345`. 
 - A negative number is preceded by a `-` as in `-786`.
-
+- to apply negation to a number, is done with `-1 * `
 
 ### Hexadecimal numbers
 - Hexadecimal numbers are represented in MINT using 0 to 9 and uppercase A to F to represent 
