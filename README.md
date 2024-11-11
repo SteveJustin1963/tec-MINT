@@ -112,7 +112,7 @@ The structuring or acknowledgment of the individuals involved in the development
 - add SPI master
 - enhance /INT :F
 - enhance ASM calls and return
-- add 48-bit floating point (FP) for now
+- add 32-bit floating point (FP) for now
 - FP always goes into a VAR, and if its put on the stack, only the pointer is stored there
 - the stack is only for 16-bit integers and pointers, then mint doesn't need to change very much and you could have larger than 32-bit floating point numbers.
 
