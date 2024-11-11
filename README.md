@@ -123,6 +123,7 @@ For a **32-bit floating-point signed number**, the range depends on the allocati
 - **23 bits** for the mantissa (plus an implicit leading 1 for normalized numbers)
 
 The approximate range is:
+
 ![image](https://github.com/user-attachments/assets/4f85de62-eb23-4f8c-94b9-0629619b52d6)
 
  
