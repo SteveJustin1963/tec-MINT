@@ -123,23 +123,12 @@ For a **32-bit floating-point signed number**, the range depends on the allocati
 - **23 bits** for the mantissa (plus an implicit leading 1 for normalized numbers)
 
 The approximate range is:
-
-1. **Smallest positive (normalized) number:**  
-   \( 2^{-126} \approx 1.18 \times 10^{-38} \)
-
-2. **Largest positive number:**  
-   \( (2 - 2^{-23}) \times 2^{127} \approx 3.40 \times 10^{38} \)
-
-This format provides a balance between range and precision suitable for many scientific and engineering applications.
+![image](https://github.com/user-attachments/assets/4f85de62-eb23-4f8c-94b9-0629619b52d6)
 
  
 
 
-
-
-This range is roughly similar to a 64-bit double-precision floating-point format, but with slightly less precision due to the shorter mantissa (36 bits instead of 52). However, without a standard like IEEE defining it, the exact range could vary depending on the chosen exponent and mantissa split.
-
-
+ 
  
 
 ![image](https://github.com/user-attachments/assets/c28e7498-5bc2-4928-b141-aae132415934)
