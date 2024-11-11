@@ -116,6 +116,7 @@ The structuring or acknowledgment of the individuals involved in the development
 - FP always goes into a VAR, and if its put on the stack, only the pointer is stored there
 - the stack is only for 16-bit integers and pointers, then mint doesn't need to change very much and you could have larger than 32-bit floating point numbers.
 
+
 For a **32-bit floating-point signed number**, the range depends on the allocation of bits for the sign, exponent, and mantissa. Following the typical IEEE 754 format:
 
 - **1 bit** for the sign
@@ -125,6 +126,10 @@ For a **32-bit floating-point signed number**, the range depends on the allocati
 The approximate range is:
 
 ![image](https://github.com/user-attachments/assets/4f85de62-eb23-4f8c-94b9-0629619b52d6)
+
+https://en.wikipedia.org/wiki/IEEE_754
+
+
 
  
 
