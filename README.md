@@ -116,22 +116,21 @@ The structuring or acknowledgment of the individuals involved in the development
 - FP always goes into a VAR, and if its put on the stack, only the pointer is stored there
 - the stack is only for 16-bit integers and pointers, then mint doesn't need to change very much and you could have larger than 32-bit floating point numbers.
 
-For a 48-bit floating-point signed number, the range depends on how the bits are allocated for the sign, exponent, and mantissa. In typical floating-point formats, the structure is as follows:
+For a **32-bit floating-point signed number**, the range depends on the allocation of bits for the sign, exponent, and mantissa. Following the typical IEEE 754 format:
 
 - **1 bit** for the sign
-- **Exponent bits** (usually defined in relation to the format, which affects the range)
-- **Mantissa bits** (precision)
+- **8 bits** for the exponent (bias of 127)
+- **23 bits** for the mantissa (plus an implicit leading 1 for normalized numbers)
 
-Assuming a similar structure to IEEE formats, if we allocate bits as follows:
+The approximate range is:
 
-1. **1 bit** for the sign
-2. **11 bits** for the exponent (bias of 1023)
-3. **36 bits** for the mantissa
+1. **Smallest positive (normalized) number:**  
+   \( 2^{-126} \approx 1.18 \times 10^{-38} \)
 
-The approximate range would be:
+2. **Largest positive number:**  
+   \( (2 - 2^{-23}) \times 2^{127} \approx 3.40 \times 10^{38} \)
 
-- **Smallest positive (normalized) number:** \( 2^{-1022} \approx 2.23 \times 10^{-308} \)
-- **Largest positive number:** \( (2 - 2^{-36}) \times 2^{1023} \approx 1.79 \times 10^{308} \)
+This format provides a balance between range and precision suitable for many scientific and engineering applications.
 
  
 
