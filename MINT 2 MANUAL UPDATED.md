@@ -26,7 +26,7 @@ top of program
 - to increase integer accuracy write your code by using signed 16-bit (2-byte) cells and store intermediate results using 32-bit (4-byte)
 - scale your number accordingly to prevent overflows where possible
 - it is known that integer maths has less complexity and more efficiency than floating point for may tasks 
-- if need 32bit floating point in code use calls to a AP9511 APU chip placed at /CS port 0x80 and C,/D where D = port 80 and C = port 81
+- if we need 32bit floating point we can optionaly call the AP9511 APU chip placed at port 0x80 for /CS and port 0x81 for C,/D where D = port 80 and C = port 81
 - 
 - Comments are preceded with //
 - Comment must not occur on same line as code (bug) but placed on the next line
