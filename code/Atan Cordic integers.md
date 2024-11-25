@@ -375,3 +375,159 @@ By using only integer operations (addition, subtraction, bitwise shifts, and tab
 - scaling..  how the scaling factors are determined and used
 - adjust the number of iterations or the scaling factors for different levels of precision
 - handle specific edge cases or input ranges
+
+
+//////////////////////////////
+
+// Improved CORDIC ATAN2 implementation with proper scaling
+// All angles are scaled by 2^13 (8192) for 90 degrees
+// This gives us good precision while avoiding overflow
+
+// Angle lookup table scaled by 2^13 (8192 = 90 degrees)
+[ 4096 2418 1277 648 325 162 81 40 20 10 5 2 1 0 ] a!
+
+// Initialize key variables
+0 p! // Previous value storage
+0 d! // Direction flag
+0 s! // Sign adjustment
+0 t! // Temporary storage
+
+// Input validation function
+:V
+  " #7FFF > $ ~ #8000 < | (
+    `Error: Input exceeds 16-bit range` /N
+    /R
+  )
+;
+
+// Determine quadrant and setup
+:Q 
+  // Store and validate inputs
+  y! x! x V y V
+  
+  // Handle special cases
+  x 0 = (
+    y 0 = (
+      `Error: (0,0) undefined` /N /R
+    ) /E (
+      y 0 > ( 4096 ) /E ( -4096 ) z! /R
+    )
+  )
+  
+  // Save signs for quadrant determination
+  x 0 < d!
+  y 0 < s!
+  
+  // Take absolute values
+  x " 0 < ( ~ 1 + ) x!
+  y " 0 < ( ~ 1 + ) y!
+  
+  // Set initial quadrant adjustment
+  d s = (
+    d ( 3 ) /E ( 1 )
+  ) /E (
+    d ( 2 ) /E ( 4 )
+  ) q!
+;
+
+// Main CORDIC computation
+:C
+  // Initialize angle accumulator
+  0 z!
+  
+  // Perform 14 iterations (optimized for 16-bit precision)
+  0 i! 14 (
+    // Save current x
+    x p!
+    
+    // Determine rotation direction
+    y 0 < d!
+    
+    // Perform CORDIC iteration
+    d (
+      // Clockwise rotation
+      x y i } + t!
+      y p i } - y!
+      t x!
+      z a i ? - z!
+    ) /E (
+      // Counter-clockwise rotation
+      x y i } - t!
+      y p i } + y!
+      t x!
+      z a i ? + z!
+    )
+    
+    i 1 + i!
+  )
+;
+
+// Main ATAN2 function
+:T
+  // Setup quadrant and validate
+  Q
+  
+  // Perform CORDIC iterations
+  C
+  
+  // Apply quadrant corrections
+  q 2 = q 3 = | ( z ~ 1 + z! )
+  q 4 = ( 8192 z + z! )
+  
+  // Final scaling adjustments
+  z 8192 #FFFF & * 16384 / z!
+;
+
+// User interface with improved number input
+:N
+  // Initialize number and sign
+  0 n! /T s!
+  
+  // Read digits until Enter
+  /U (
+    /K k!
+    
+    // Handle Enter key
+    k 13 = /W
+    
+    // Handle minus sign
+    k 45 = (
+      /F s!
+    ) /E (
+      // Convert digit and accumulate
+      k 48 - " 9 <= $ 0 >= & (
+        n 10 * + n!
+      )
+    )
+  )
+  
+  // Apply sign
+  s /F = ( n ~ 1 + ) /E ( n )
+;
+
+// Test interface
+:R
+  `Enter x coordinate (-32768 to 32767): `
+  N x!
+  
+  `Enter y coordinate (-32768 to 32767): `
+  N y!
+  
+  `Coordinates: (` x . `,` y . `)` /N
+  
+  // Calculate angle
+  x y T
+  
+  `Angle (scaled): ` z . /N
+  
+  // Convert to degrees (multiply by 90/8192)
+  z 90 * 8192 / d!
+  `Angle (degrees): ` d . /N
+;
+
+// Run the program
+R
+
+///////////////////////////////////////////
+
+
