@@ -33,6 +33,9 @@ top of program
 - In this manual we will place them on the same line for explanation purposes only.
 - Do not use it in actual code as it interferes with MINT's buffer
 - Better to remove all comments when loading final code.
+- @ has no use in code, ignore its use for now
+- delays are made with (), for example 100() means do nothing 100 times, this can be nested for longer loops 100(100())
+-
 
 ### Reverse Polish Notation (RPN)
 - RPN is a way of writing expressions in which the operators come after their operands. 
