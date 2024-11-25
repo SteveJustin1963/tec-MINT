@@ -29,8 +29,8 @@ The structuring or acknowledgment of the individuals involved in the development
 - Ken Boak
 - Craig Jones
 - Craig Hart-RIP
-- Steve Justin - teeny weeny bit of almost nothing
-- TEC-1 group - they love the smell of napalm in the morning
+- Steve Justin - post testing
+- TEC-1 group - no idea
 
 ### Announcements
   - https://www.facebook.com/groups/tec1z80/posts/1250512652124448/ 
