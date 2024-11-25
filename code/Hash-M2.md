@@ -1,4 +1,4 @@
-https://github.com/SteveJustin1963/hash/tree/main
+see also https://github.com/SteveJustin1963/hash
 
 
 Note-   longer than one character labels have been used to show clarity these need to be modified to single letter of your choice.
