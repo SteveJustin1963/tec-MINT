@@ -1,3 +1,6 @@
+https://github.com/SteveJustin1963/hash/tree/main
+
+
 Note-   longer than one character labels have been used to show clarity these need to be modified to single letter of your choice.
 
 # Hashing Functions in MINT Version 2.0
