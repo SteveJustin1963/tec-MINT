@@ -10,9 +10,9 @@ MINT Programming Language version 2.0
 - However, the choice of instruction uses printable ASCII characters, as a human readable alternative to assembly
 language. 
 - Variables are a to z lowercase and only as single character, double letter allowed if commented at top of program
-- Functions labelled from A to Z uppercase as single character, they are created with begging with `:` and ended with `;`, , double letter allowed if commented at 
+- Functions labelled from A to Z uppercase as single character, they are created with begging with `:` and ended with `;`, , double letter allowed if commented at top of program
+- if a variable is updated eg a b + and you want to store it, you cannot use ! on its own it must be with a variable, ie b!
 
-top of program
 
 - Z is reserved for interrupt calls. You write your interrupt routine under this function.
 - eg :R 1 2 + . ;
