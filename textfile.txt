@@ -1,0 +1,25 @@
+' // example 
+:@
+  0 n!                     
+  /U (                      
+    /K k!                   
+    k 13 = /W               
+    k 48 -                  
+    n 10 * + n!             
+  )
+; read_number!
+
+[ 0 0 0 0 0 ] a!
+
+5 (
+  `Enter a number: `
+  read_number /G            
+  n a /i ?!                 
+)
+
+5 (
+  `Value is: `
+  a /i ? .
+)
+
+
