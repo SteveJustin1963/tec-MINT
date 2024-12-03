@@ -1,104 +1,74 @@
-from pynput import keyboard
 from pynput.keyboard import Controller, Key
+import keyboard
 import time
 import sys
 
-# Set the path to the text file
+print("Program starting...")
+
+# Path to text file
 file_path = r"C:\Users\61418\Desktop\textfile.txt"
 
-# Dictionary mapping special characters to their shifted versions
+# Special character mappings
 shift_chars = {
     '~': '`', '!': '1', '@': '2', '#': '3', '$': '4', '%': '5', '^': '6',
     '&': '7', '*': '8', '(': '9', ')': '0', '_': '-', '+': '=', '{': '[',
     '}': ']', '|': '\\', ':': ';', '"': "'", '<': ',', '>': '.', '?': '/'
 }
 
-def read_file():
-    """Read the text file content."""
+def type_text():
     try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            return file.read()
-    except FileNotFoundError:
-        print(f"File not found: {file_path}")
-        return None
-
-def type_text(text):
-    """Simulate typing the text."""
-    keyboard_controller = Controller()
-    text = text.replace('\r\n', '\n').replace('\r', '\n')  # Normalize line endings
-    
-    for char in text:
-        try:
-            if char == '\n':  # Handle new lines
-                keyboard_controller.press(Key.enter)
-                keyboard_controller.release(Key.enter)
-                time.sleep(0.2)  # Slightly longer delay for Enter
+        # Read and decode file
+        with open(file_path, 'rb') as file:
+            content = file.read().decode('utf-8')
             
-            elif char in shift_chars:  # Handle shifted characters
-                keyboard_controller.press(Key.shift)
-                keyboard_controller.press(shift_chars[char])
-                keyboard_controller.release(shift_chars[char])
-                keyboard_controller.release(Key.shift)
-            
-            elif char.isupper():  # Handle uppercase letters
-                keyboard_controller.press(Key.shift)
-                keyboard_controller.press(char.lower())
-                keyboard_controller.release(char.lower())
-                keyboard_controller.release(Key.shift)
-            
-            elif char == ' ':  # Handle spaces
-                keyboard_controller.press(Key.space)
-                keyboard_controller.release(Key.space)
-            
-            else:  # Handle regular characters
-                keyboard_controller.press(char)
-                keyboard_controller.release(char)
-            
-            time.sleep(0.05)  # Delay for typing speed
-            
-        except Exception as e:
-            print(f"Error typing character '{char}': {str(e)}")
-            continue
-
-def on_activate():
-    """Function to run when hotkey is pressed"""
-    print("Starting typing sequence...")
-    text = read_file()
-    if text:
-        time.sleep(0.5)  # Small delay before typing starts
-        type_text(text)
-        print("\nTyping complete. Program will exit in 2 seconds...")
-        time.sleep(2)
-        sys.exit(0)
-    else:
-        print("No text to type. Program will exit...")
-        time.sleep(2)
-        sys.exit(1)
-
-def for_canonical(f):
-    return lambda k: f(l.canonical(k))
-
-def main():
-    """Main program loop."""
-    global l  # Make listener accessible to for_canonical
-    
-    try:
-        # Create the hotkey combination
-        hotkey = keyboard.HotKey(keyboard.HotKey.parse('<ctrl>+7'), on_activate)
+        # Clean the text (replace non-breaking spaces and normalize line endings)
+        text = content.replace('\xa0', ' ').replace('\r\n', '\n').replace('\r', '\n')
         
-        # Create and start the listener
-        with keyboard.Listener(
-            on_press=for_canonical(hotkey.press),
-            on_release=for_canonical(hotkey.release)
-        ) as l:
-            print("Hotkey listener running. Press Ctrl+7 to type the text.")
-            print(f"Reading from file: {file_path}")
-            l.join()
-            
+        print("Starting in 3 seconds...")
+        time.sleep(3)
+        print("Typing...")
+        
+        kb = Controller()
+        
+        for char in text:
+            try:
+                if char == '\n':
+                    kb.press(Key.enter)
+                    kb.release(Key.enter)
+                
+                elif char in shift_chars:  # Handle shift + key characters
+                    kb.press(Key.shift)
+                    kb.press(shift_chars[char])
+                    kb.release(shift_chars[char])
+                    kb.release(Key.shift)
+                
+                elif char.isupper():  # Handle uppercase letters
+                    kb.press(Key.shift)
+                    kb.press(char.lower())
+                    kb.release(char.lower())
+                    kb.release(Key.shift)
+                
+                else:  # Handle regular characters
+                    kb.press(char)
+                    kb.release(char)
+                
+                time.sleep(0.05)  # Delay between characters
+                
+            except Exception as e:
+                print(f"Error typing character '{char}': {e}")
+                continue
+        
+        print("Done typing!")
+        sys.exit()
+        
     except Exception as e:
-        print(f"Error in main program: {str(e)}")
-        time.sleep(2)
-        sys.exit(1)
+        print(f"Error: {e}")
+        sys.exit()
 
-if __name__ == "__main__":
-    main()
+print("Press Ctrl+7 to start typing, Esc to quit")
+
+# Set up hotkey
+keyboard.add_hotkey('ctrl+7', type_text)
+
+# Keep program running until Esc pressed
+keyboard.wait('esc')
