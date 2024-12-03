@@ -37,7 +37,9 @@ In MINT Version 2.0, comments start with `//` and continue to the end of the lin
     a @ 3 /O                   // Output the value of 'a' to port 3
     2000 ( )                   // Delay loop
   )
-; // go left
+;
+
+// go left
 ```
 
 **Explanation:**
