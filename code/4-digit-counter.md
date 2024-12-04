@@ -63,8 +63,8 @@ We will define a byte array containing the segment data for digits `0` to `F`.
 
 **MINT Code:**
 
-```mint
-\[ #EB #28 #CD #AD #2E #A7 #E7 #29 #EF #2F #6F #E6 #C3 #EC #C7 #47 ] ' c !
+```mint2
+\[ #EB #28 #CD #AD #2E #A7 #E7 #29 #EF #2F #6F #E6 #C3 #EC #C7 #47 ] c!
 ```
 
 **Explanation:**
@@ -83,20 +83,22 @@ We need a function that takes a 4-bit value (nibble) and returns the correspondi
 
 **MINT Code:**
 
-```mint
+```mint2
 :A
-  #0F &        // Mask lower 4 bits
-  c @ + \@     // Fetch segment data from table
+  #0F &        
+  c + \? 
 ;
 ```
 
 **Explanation:**
+```
+:A Begin function definition named A (must not have space between : and A per manual)
+#0F & Bitwise AND with #0F to mask the lower 4 bits of input number
+c + Add the masked value to the base address stored in c (pointer to segment lookup table)
+\? Fetch byte from the array at calculated index (correct operator for byte array access)
+; End function definition
+```
 
-- `:A`: Begin function definition named `A`.
-- `#0F &`: Bitwise AND with `#0F` to mask the lower 4 bits.
-- `c @ +`: Add the nibble value to the base address of the segment table.
-- `\@`: Fetch the segment data from the calculated address.
-- `;`: Ends function definition.
 
 **Stack Effect:** `value -- segment_data`
 
@@ -110,27 +112,40 @@ This function outputs a nibble (lower 4 bits of a number) to a specific active d
 
 ```mint
 :B
-  $            // Swap number and scan
-  A            // Convert nibble to segment data
-  2 /O         // Output segment data to port 2 (DISPLAY)
-  #40 | s !    // Ensure bit 6 is high, store in 's'
-  s @ 1 /O     // Output selector to port 1 (SCAN)
-  10 ( )       // Delay for about half a millisecond
-  #40 1 /O     // Turn off all digits, keep bit 6 high
+  $           
+  A           
+  2 /O        
+  #40 | s !   
+  s 1 /O      
+  10()        
+  #40 1 /O    
 ;
-```
+ 
 
 **Explanation:**
 
-- `:B`: Begin function definition named `B`.
-- `$`: Swap the top two stack items (`number` and `scan`).
-- `A`: Convert the lower 4 bits of `number` to segment data.
-- `2 /O`: Output segment data to port 2.
-- `#40 | s !`: Bitwise OR `scan` with `#40` to set bit 6 high, store in `s`.
-- `s @ 1 /O`: Output the selector value in `s` to port 1.
-- `10 ( )`: Delay loop.
-- `#40 1 /O`: Output `#40` to port 1 to turn off all digits but keep bit 6 high.
-- `;`: Ends function definition.
+:B: Begin function definition named B (no space after : per manual)
+$: Swap number and scan values on stack (uses SWAP operator)
+A: Call function A to convert nibble to segment pattern
+2 /O: Output segment pattern to port 2 (display segments)
+#40 | s !: OR with #40 to set bit 6 high, store in variable s
+s 1 /O: Output value from s to port 1 (digit select) - removed @ since it's not used in MINT
+10(): Create delay loop (no spaces between number and parentheses per manual)
+#40 1 /O: Write #40 to port 1 to disable all digits while keeping bit 6 high
+;: End function definition
+
+This function appears to be a multiplexed 7-segment display driver that:
+
+Takes a digit value and scan position
+Converts digit to segment pattern using function A
+Outputs segment pattern
+Outputs digit select with bit 6 set
+Delays briefly
+Turns off all digits but keeps bit 6 high
+```
+
+
+
 
 **Stack Effect:** `number scan --`
 
@@ -144,15 +159,45 @@ This function takes a 16-bit number and displays it on the upper 4 digits of the
 
 ```mint
 :C
-  #04 scan !                        // Initialize 'scan' with #04 (digit 2)
-  4 (
-    %% B                            // Duplicate number and scan, call B
-    scan @ { scan !                 // Shift scan left to select next digit
-    $ } } } } $                     // Shift number right by 4 bits (nibble)
+  #04 scan !                      
+  4(
+    % % B                          
+    scan { scan !                 
+    $ } } } } $                    
   )
-  ''                                // Drop top two items
+  ' '                             
 ;
 ```
+:C: Begin function definition named C (no space after : per manual)
+#04 scan !: Initialize scan variable with #04 (selects digit 2)
+4(: Loop 4 times for 4 digits (no space between number and parenthesis)
+Inside loop:
+
+% %: Use OVER operator twice to duplicate top two stack items (number and scan)
+B: Call function B to display current digit
+scan { scan !: Get scan value, shift left one bit, store back in scan
+$ } } } } $: Shuffle number to top, shift right 4 bits (one nibble), restore stack order
+
+
+): End loop
+' ': Drop operator twice to remove remaining items from stack
+;: End function definition
+
+This function implements 4-digit multiplexed display by:
+
+Starting at digit 2
+Looping 4 times to handle each digit
+Displaying current digit via function B
+Shifting scan bit left for next digit position
+Shifting number right to get next digit's value
+Cleaning up stack when done
+
+The main changes from original were:
+
+Removed @ operator since it's not used in MINT
+Fixed spacing around parentheses
+Changed "' '" to separate drops per manual syntax
+Used % instead of %% for duplicating stack items
 
 **Explanation:**
 
@@ -169,6 +214,10 @@ This function takes a 16-bit number and displays it on the upper 4 digits of the
 - `)` Ends the loop.
 - `''`: Drop the top two items from the stack.
 - `;`: Ends function definition.
+
+
+
+xxxxxxxxxxxxxxxxxxx
 
 **Variables Used:**
 
