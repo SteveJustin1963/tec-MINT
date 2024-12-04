@@ -72,7 +72,6 @@ We will define a byte array containing the segment data for digits `0` to `F`.
 - `\[ ... ]`: Defines a byte array.
 - The hexadecimal values represent the segment data for digits `0` to `F`.
 - `]`: Ends the array definition, pushing the address and length onto the stack.
-- `'`: Drops the length (we don't need it).
 - `c !`: Stores the address of the array in variable `c`.
 
 ---
@@ -92,12 +91,11 @@ We need a function that takes a 4-bit value (nibble) and returns the correspondi
 
 **Explanation:**
 ```
-:A Begin function definition named A (must not have space between : and A per manual)
-#0F & Bitwise AND with #0F to mask the lower 4 bits of input number
-c + Add the masked value to the base address stored in c (pointer to segment lookup table)
-\? Fetch byte from the array at calculated index (correct operator for byte array access)
-; End function definition
-```
+- :A Begin function definition named A (must not have space between : and A per manual)
+- #0F & Bitwise AND with #0F to mask the lower 4 bits of input number
+- c + Add the masked value to the base address stored in c (pointer to segment lookup table)
+- \? Fetch byte from the array at calculated index (correct operator for byte array access)
+- ; End function definition
 
 
 **Stack Effect:** `value -- segment_data`
@@ -120,30 +118,27 @@ This function outputs a nibble (lower 4 bits of a number) to a specific active d
   10()        
   #40 1 /O    
 ;
- 
+```
 
 **Explanation:**
 
-:B: Begin function definition named B (no space after : per manual)
-$: Swap number and scan values on stack (uses SWAP operator)
-A: Call function A to convert nibble to segment pattern
-2 /O: Output segment pattern to port 2 (display segments)
-#40 | s !: OR with #40 to set bit 6 high, store in variable s
-s 1 /O: Output value from s to port 1 (digit select) - removed @ since it's not used in MINT
-10(): Create delay loop (no spaces between number and parentheses per manual)
-#40 1 /O: Write #40 to port 1 to disable all digits while keeping bit 6 high
-;: End function definition
+- :B: Begin function definition named B (no space after : per manual)
+- $: Swap number and scan values on stack (uses SWAP operator)
+- A: Call function A to convert nibble to segment pattern
+- 2 /O: Output segment pattern to port 2 (display segments)
+- #40 | s !: OR with #40 to set bit 6 high, store in variable s
+- s 1 /O: Output value from s to port 1 (digit select) - removed @ since it's not used in MINT
+- 10(): Create delay loop (no spaces between number and parentheses per manual)
+- #40 1 /O: Write #40 to port 1 to disable all digits while keeping bit 6 high
+- ;: End function definition
 
 This function appears to be a multiplexed 7-segment display driver that:
-
-Takes a digit value and scan position
-Converts digit to segment pattern using function A
-Outputs segment pattern
-Outputs digit select with bit 6 set
-Delays briefly
-Turns off all digits but keeps bit 6 high
-```
-
+- Takes a digit value and scan position
+- Converts digit to segment pattern using function A
+- Outputs segment pattern
+- Outputs digit select with bit 6 set
+- Delays briefly
+- Turns off all digits but keeps bit 6 high
 
 
 
