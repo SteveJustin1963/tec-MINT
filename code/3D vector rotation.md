@@ -56,6 +56,52 @@ w 1 ? s / .
 w 2 ? s / .
 
 ```
+## no comments
+```
+
+1000 s !
+
+[ 1000 2000 3000 ] v !
+
+
+[ 866 -500 0 500 866 0 0 0 1000 ] m !
+
+:M a ! b ! a b * s / ;
+
+:R
+  v ! m !
+  m 0 ? v 0 ? M
+  m 1 ? v 1 ? M +
+  m 2 ? v 2 ? M + x !
+  m 3 ? v 0 ? M
+  m 4 ? v 1 ? M +
+  m 5 ? v 2 ? M + y !
+  m 6 ? v 0 ? M
+  m 7 ? v 1 ? M +
+  m 8 ? v 2 ? M + z !
+  [ x y z ] v!
+;
+
+:S
+m v R w !
+`Original vector: `
+v 0 ? s / .
+v 1 ? s / .
+v 2 ? s / .
+/N
+;
+
+:T
+`Rotated vector: `
+w 0 ? s / .
+w 1 ? s / .
+w 2 ? s / .
+/N
+;
+```
+
+
+
 
 This MINT code does the following:
 
