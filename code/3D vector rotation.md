@@ -37,7 +37,7 @@
   m 8 ? v 2 ? M + z !
   
   // Create and return new rotated vector
-  [ x y z ]
+  [ x y z ] v!
 ;
 
 // Perform rotation
