@@ -87,15 +87,7 @@ i (                      // Loop i times
 ;
 ```
 
-Key corrections made:
-
-1. Initialized a fixed-size array instead of an empty array (MINT doesn't support dynamic arrays)
-2. Used proper MINT variable naming (single lowercase letters)
-3. Removed spaces after `:` in function definition
-4. Used proper array access syntax with `?` operator
-5. Added counter variable `i` to track array position
-6. Used proper loop syntax for printing results
-7. Used MINT's loop counter `/i` for iterating through results
+ 
 
 Usage would be:
 
