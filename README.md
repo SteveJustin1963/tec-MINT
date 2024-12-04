@@ -97,7 +97,7 @@ The structuring or acknowledgment of the individuals involved in the development
 - need a larger variable and function set, name length needs to be increased to 2 characters
 - John please fix all [bugs](https://github.com/orgMINT/MINT/issues)
 
-## ver 3
+## ver 3 (adapted and added to JH's comments)
 - maintain the classic 1D
 - mod in the last two high address to get 6kmore out of  eeprom 
 - ![image](https://github.com/user-attachments/assets/9d753110-e74e-45b1-a050-2187cc91c0a7)
