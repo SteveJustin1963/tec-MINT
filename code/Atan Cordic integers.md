@@ -87,6 +87,80 @@
 R
 ```
 
+## no comments
+```
+[ 8192 4836 2555 1297 651 325 163 81 41 20 10 5 3 1 1 0 ] a!
+39839 k!
+
+:B " 0 < ( ~ 1 + ) ;
+
+:T
+y! x!
+x 0 < (
+x ~ 1 + x!
+y ~ 1 + y!
+/T q!
+) /E (
+/F q!
+)
+0 z!
+0 n!
+15 (
+y 0 < (
+x y n } + t!
+y x n } - y!
+x t!
+z a n ? - z!
+) /E (
+x y n } - t!
+y x n } + y!
+x t!
+z a n ? + z!
+)
+n 1 + n!
+)
+q /T = (
+z ~ 1 + z!
+)
+z .
+;
+
+:R
+`Enter x coordinate: `
+read_number x!
+`Enter y coordinate: `
+read_number y!
+`x: `
+x .
+` y: `
+y .
+/N
+x y T
+`Angle (scaled): `
+.
+/N
+z 180 * 16384 / g!
+`Angle (degrees): `
+g .
+/N
+;
+
+:N
+0 n!
+/U (
+/K k!
+k 13 = /W
+k 48 -
+n 10 * + n!
+)
+n
+;
+
+R
+```
+
+
+
 ---
 
 ### **Explanation**
