@@ -22,7 +22,20 @@ def type_text():
             content = file.read().decode('utf-8')
             
         # Clean the text (replace non-breaking spaces and normalize line endings)
-        text = content.replace('\xa0', ' ').replace('\r\n', '\n').replace('\r', '\n')
+        lines = content.split('\n')
+        cleaned_lines = []
+        for line in lines:
+            if line.strip().startswith(':Q'):  # Keep :Q definition intact
+                cleaned_lines.append(line)
+            else:
+                comment_index = line.find('//')
+                if comment_index != -1:
+                    line = line[:comment_index].rstrip()
+                if line:  # Only add non-empty lines
+                    cleaned_lines.append(line)
+        
+        text = '\n'.join(cleaned_lines)
+        text = text.replace('\xa0', ' ').replace('\r\n', '\n').replace('\r', '\n')
         
         print("Starting in 3 seconds...")
         time.sleep(3)
