@@ -1,6 +1,6 @@
 # source file is textfile.txt
 # run.bat to batch file it in windows
-# you have 3 seconds to press ctrl-7 to start it
+# after press ctrl-7 you have 3 seconds before it starts
 
 from pynput.keyboard import Controller, Key
 import keyboard
