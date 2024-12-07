@@ -186,12 +186,23 @@ CREATE B-ARRAY  \ Changed from VARIABLE to CREATE
     10 CALCULATE-BERNOULLI-NUMBERS
     10 PRINT-BERNOULLI-NUMBERS ;
 ```
+
+
 /////////////////////////////////////////////
 
+The code is calculating Bernoulli numbers with integer arithmetic by scaling them by 6 to avoid fractions. The known first few Bernoulli numbers are:
+- B₀ = 1
+- B₁ = -1/2 
+- B₂ = 1/6
+
+The code maintains accuracy by:
+1. Scaling all values by 6 to work with integers
+2. Doing calculations with the scaled values
+3. Un-scaling at the end by dividing by appropriate factors
 
 
 ```mint2
-// mint 
+// mint2 
  
  :B
 [0 0 0 0 0]b!
