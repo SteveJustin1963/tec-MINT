@@ -1,7 +1,7 @@
 // https://rclab.de/en/analyticalengine/bernoullinumbercalculation
 // https://mathworld.wolfram.com/BernoulliNumber.html
 // https://math.stackexchange.com/questions/2844290/what-is-the-simplest-way-to-get-bernoulli-numbers
-
+```
 #include <stdio.h>
 
 // Function to calculate coefficients A_i(n) iteratively for each Bernoulli term
@@ -47,10 +47,10 @@ int main() {
     calculate_Bernoulli_numbers(max_n);
     return 0;
 }
-
+```
 
 //////////////////////////////
-
+```
 // 16 bit signed with integer logic
 
 #include <stdio.h>
@@ -107,8 +107,12 @@ int main() {
     calculate_Bernoulli_numbers(max_n);
     return 0;
 }
+```
+
 
 /////////////////////////////////////////
+```
+
 \ forth83
 \ Scaling factor for fixed-point approximation
 1000 CONSTANT SCALE
@@ -179,8 +183,12 @@ CREATE B-ARRAY  \ Changed from VARIABLE to CREATE
 : TEST-BERNOULLI ( -- )
     10 CALCULATE-BERNOULLI-NUMBERS
     10 PRINT-BERNOULLI-NUMBERS ;
-
+```
 /////////////////////////////////////////////
+
+
+
+```mint2
 // mint 
  
  :B
@@ -208,5 +216,7 @@ v b 2?!
 
 `sum=`s.` t=`t.` p=`p.` final=`v./N
 ;
+```
+
 
 //////////////////////////////////
