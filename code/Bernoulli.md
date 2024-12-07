@@ -1,7 +1,9 @@
+```
 // https://rclab.de/en/analyticalengine/bernoullinumbercalculation
 // https://mathworld.wolfram.com/BernoulliNumber.html
 // https://math.stackexchange.com/questions/2844290/what-is-the-simplest-way-to-get-bernoulli-numbers
-```
+
+
 #include <stdio.h>
 
 // Function to calculate coefficients A_i(n) iteratively for each Bernoulli term
