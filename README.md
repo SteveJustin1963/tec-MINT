@@ -99,7 +99,7 @@ The structuring or acknowledgment of the individuals involved in the development
 
 ## ver 3 (adapted and added to JH's comments)
 - maintain the classic 1D
-- mod in the last two high address to get 6kmore out of  eeprom 
+- mod in the last two high address to get 6k more out of  eeprom 
 - ![image](https://github.com/user-attachments/assets/9d753110-e74e-45b1-a050-2187cc91c0a7)
 - ![image](https://github.com/user-attachments/assets/36d45b5b-a19b-4acb-93f1-78bcea778814)
 
