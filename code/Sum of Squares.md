@@ -1,5 +1,8 @@
+```
+
 // Sum of Squares 
 // Initialize variables
+
 0 n! 0 i! 0 j! 0 s! 0 t! 0 a! 0 b!
 
 // Main sum of squares function
@@ -135,3 +138,8 @@
     n 2 = ( a b V ) /E (
     a b F ) )
 ;
+
+```
+
+
+
