@@ -1,5 +1,8 @@
+```
 // bitonic-sort
 // Initialize variables
+
+
 0 n! 0 i! 0 j! 0 k! 0 t! 
 
 // Helper function to swap array elements at positions i,j
@@ -105,3 +108,7 @@
     B
     `After:` /N D
 ;
+
+```
+
+
