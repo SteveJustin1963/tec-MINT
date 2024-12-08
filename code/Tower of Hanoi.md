@@ -1,5 +1,7 @@
+```
 // Tower of Hanoi
 // Initialize variables
+
 0 n! 0 s! 0 t! 0 f! 0 m! 0 c!
 
 // Create pegs (arrays to represent each rod)
@@ -186,3 +188,6 @@
     `Demonstration with 2 disks:` /N
     2 R
 ;
+```
+
+
