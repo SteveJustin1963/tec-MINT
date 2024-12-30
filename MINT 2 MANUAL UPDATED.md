@@ -348,6 +348,7 @@ ie
 
 ### Basic arrays
 - MINT arrays are a type of data structure that can be used to store a collection of elements.
+- they are stored in the heap area of MINT until rebooted, once defined there size cannot be changed
 - Arrays are indexed, which means that each element in the array has a unique number associated with it. 
 - This number is called the index of the element.
 - In MINT, the array indexes start at 0
@@ -382,9 +383,11 @@ next we
 3254 // we get the memory location, we do use it this way, so save it to a variable like a!
 >
 ```
-- Defining an array puts its start address onto the stack
-- overtime 3254 will change, its the starting address for the array we just made
-- we should save it to a variable, then can then be allocated to a variable, which acts as a pointer to the array in memory
+- when defining an array, its contents is placed in the heap and its address onto the stack unless stored in a variable, which is recommended.
+- once defined the array size cannot change.
+- for example `> [1] ` will place its address on stack, we can see it with `>.` showing 3234 
+- if we add another array [4] then `>.` shows 3238 
+- we should save the address that points to the array in a variable, so it acts as a pointer to the array in the heap memory
 
 ie
 ```
@@ -419,7 +422,8 @@ eg
 ```
 
 ### Array size
-- The size of an array can be determined with the `/S` operator 
+- as noted before the array size cannot change once set
+- The size of an array can be determined with the `/S` operator
 - which puts the number of items in the array on the stack
 - The following prints 5 on the console.
 
@@ -431,9 +435,14 @@ eg
 ```
 
 ### Array depth
-> [1 2 3] /D .
+bug, this command is broken, do not use
+it should work like this
+```> [1 2 3] /D .
 3
 > 
+```
+
+
 
 ### Nested arrays 
 
