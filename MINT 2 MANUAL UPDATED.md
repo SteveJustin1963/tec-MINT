@@ -27,7 +27,7 @@ language.
 - scale your number accordingly to prevent overflows where possible
 - it is known that integer maths has less complexity and more efficiency than floating point for may tasks 
 - if we need 32bit floating point we can optionaly call the AP9511 APU chip placed at port 0x80 for /CS and port 0x81 for C,/D where D = port 80 and C = port 81
-- 
+- When stipping out all comments, also best to place one function per line, not srtagger accross several lines; reduces crashes.
 - Comments are preceded with //
 - Comment must not occur on same line as code (bug) but placed on the next line
 - In this manual we will place them on the same line for explanation purposes only.
@@ -53,22 +53,17 @@ eg
 ### Interaction 
 - interact with the MINT interpreter (MI) at the prompt which looks like this `> `
 - if we enter numbers, they are pushed onto the stack. 
-- If the MI encounters a non number it decides if its an operator eg such as `+` which is used to add two items from the stack and then pushes the result back to 
-
-the stack.
-
-- We can display the result with `.` operator that takes the result from the stack and prints it to the MI console which is talking to a ascii terminal via a serial 
-
-line at 4800 bps.
+- If the MI encounters a non number it decides if its an operator eg such as `+` which is used to add two items from the stack and then pushes the result back to the stack.
+- We can display the result with `.` operator that takes the result from the stack and prints it to the MI console which is talking to a ascii terminal via a serial line at 4800 bps.
 
 ### Numbers 
 - MINT only uses 16-bit integers and signed numbers to represent numbers. Nothing bigger! 
-- When + and - operations are performed and it exceeds the number size it sets a carry bit under variable  `/c`. this bit needs to be reset to 0 after using it  like 
-
-this > 0 /c ! ( this is a bug at the moment) 
-- With * operations, when the result exceeds the number limit, it counts the roll overs with the /r variable 
-- when the /  is used to divide, the result goes on the stack and the remainder goes into /r variable, 
-- both / and * operations will set the /r variable correctly each time.
+- When `+` and `-` operations are performed and the result is larger that 16bits a carry bit is set and stored in variable `/c`
+- the `/c` bit remains until a new carry is set or reset in code with `0 /c !`
+- With `*` operations, when the result exceeds 16bits it rolls over, each roll over isstored in variable `/r` 
+- the `/r` bit remains until a new rollover is set or reset in code with `0 /r !`
+- when the `/` is used to divide, the result goes on the stack and the remainder goes into /r variable
+- all the `/ * + - ` operations will set the `/c` and `/r` variables correctly each time used
 
 
 - There are two main types of numbers in MINT: 
