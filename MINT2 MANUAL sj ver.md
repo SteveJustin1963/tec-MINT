@@ -10,7 +10,8 @@ MINT Programming Language version 2.0
 - However, the choice of instruction uses printable ASCII characters, as a human readable alternative to assembly
 language. 
 - Variables are a to z lowercase and only as single character followed by a space, double letter allowed if commented at top of program
-- Functions labelled from A to Z uppercase as single character followed by a space, they are created with begging with `:` and ended with `;`, , double letter allowed if commented at top of program
+- Functions labelled from A to Z uppercase as single character followed by a space, they are created with beginning with `:` eg :F, there is strictly now space between : and F, and function ends with with `;`
+- if you run out of function letters you can use double letters if commens added with //
 - if a variable is updated eg a b + and you want to store it, you cannot use ! on its own it must be with a variable, ie b!
 
 
