@@ -1,6 +1,7 @@
 MINT Programming Language version 2.0
 
-
+- if a program, function or command has anytype of logical or sytax error, it will corrupt MINTS ability accept even correct input and or run correct input
+- all input MUST be prefect for all other things to run.
 - MINT is a minimalist character-based interpreter but one which aims at fast performance, readability and ease of use. 
 - this is the prompt of MINT `> ` ready to accept input
 - On initialisation it will present a user prompt ">"
