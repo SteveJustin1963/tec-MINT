@@ -820,7 +820,8 @@ eg
 the result which is then printed.
 
 ### Using functions
-- Once you've assigned functions to a label ir A, B, C …, you can use them in your MINT code.
+- Once you habe written some code using variables and operator you can assign them to a functions use uppercase single letter such as
+ A, B, C etc, this make up your overall MINT code. then you can run them by calling the label or lables or place them in other functions and calling that
 Eg
 ```
 > :A . ;
