@@ -358,28 +358,29 @@ ie
 - n= number 
 
 ```
-> [ n n n ] // as many `n`as you need but not to large as may crash
-> [ v v v ] // as many `v`as you need but not to large as may crash
-> [ n v ] // mixed and not to many
+> [n n n] // multi n can be used until heap memory is used up.
+          // note there must be no space between [n and n]
+> [n v]   // you can mixed numbers with variables
+
 ```
 
 
 eg
 ```
-> [ 1 2 3 ]  // but we need to save it
+> [1 2 3]  // but we need to save it
 ```
 - the whole Arrays can be assigned to a variables letter just like numbers can be assigned to a variables letter
 
 
 ie
 ```
-> [ 1 2 3 ] a !
+> [1 2 3]a!  // not no space between ]a!
 ```
 - An array of 16-bit numbers can be defined by enclosing them within square brackets:
 
 next we 
 ```
-> [ 1 2 3 4 5 6 7 8 9 0 ] 
+> [1 2 3 4 5 6 7 8 9 0] 
 > .
 3254 // we get the memory location, we do use it this way, so save it to a variable like a!
 >
@@ -392,7 +393,7 @@ next we
 
 ie
 ```
-> [ 1 2 3 4 5 6 7 8 9 0 ] a !
+> [1 2 3 4 5 6 7 8 9 0]a!
 
 >
 ```
@@ -402,7 +403,7 @@ then
 
 eg
 ```
-> [ 1 2 3 ] 2?  .
+> [1 2 3]2? .
 3
 >
 ```
@@ -430,7 +431,7 @@ eg
 
 eg
 ```
-> [ 1 2 3 4 5 ] /S .
+> [1 2 3 4 5] /S .
 5
 >
 ```
@@ -452,7 +453,7 @@ it should work like this
 - this works
 ```
 > [1 2 3 4] a !
-> [ 2 a 3 ] b!
+> [2 a 3] b!
 The syntax to access the third element of a from b is
 > b 1? 3? .
 4
@@ -468,7 +469,7 @@ The syntax to access the third element of a from b is
 eg
 ```
 > [1 [ 2 3 ] ] a!                                                
-> [ 1 2 3 ] b!
+> [1 2 3 ] b!
 > b 0?.
 1
 // looks correct
