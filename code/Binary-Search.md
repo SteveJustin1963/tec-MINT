@@ -181,3 +181,84 @@
     [ 2 4 6 8 10 ] a!
     6 V              // visual search for 6
 ;
+
+
+///////////////////////
+
+27.1.25
+
+```
+:M m a ? t = ( m f! /T ) ;
+
+:H m 1 - h! ;
+
+:L m 1 + l! ;
+
+:B h! l! t! -1 f! 
+  /U (
+    l h <= /W
+    l h + h l - 2 / m!   
+    M
+    m a ? t < ( H ) /E ( L )
+  )
+  f -1 = ( `Not found` /N ) /E ( `Found at ` f . /N ) `B-done` ;
+
+:T 
+  [1 3 5 7 9 11 13 15 17 19] a!
+  `Test: Searching for 7` /N 0 9 7 B
+  `Test: Searching for 1` /N 0 9 1 B
+  `Test: Searching for 19` /N 0 9 19 B
+  `Test: Searching for 8` /N 0 9 8 B ;
+```
+
+```
+Start
+  |
+  v
+Initialize:
+  - Store h, l, t
+  - Set f = -1
+  |
+  v
+l <= h ? ------------------ No --> Output: Not Found --> End
+  | Yes
+  v
+Calculate m:
+  m = (l + h) // 2
+  |
+  v
+a[m] == t ? --------------- Yes --> Store m in f --> Output: Found at f --> End
+  |
+  No
+  |
+  v
+a[m] < t ? ---------------- Yes --> Update l = m + 1
+  |
+  No
+  |
+  v
+Update h = m - 1
+  |
+  v
+Loop back to l <= h
+```
+
+```
+:B h! l! t! -1 f! 
+  /U (
+    l h <= /W
+    l h + h l - 2 / m!
+    m a ? t = ( m f! /T )
+    m a ? t < ( m 1 + l! ) /E ( m 1 - h! )
+  )
+  f -1 = ( `Not found` /N ) /E ( `Found at ` f . /N ) ;
+:T 
+  [1 3 5 7 9 11 13 15 17 19] a!
+  0 9 7 B
+  0 9 1 B
+  0 9 19 B
+  0 9 8 B ;
+```
+
+
+
