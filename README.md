@@ -99,13 +99,13 @@ The structuring or acknowledgment of the individuals involved in the development
 
 ## ver 3 (adapted and added to JH's comments)
 - maintain the classic 1D
-- mod in the last two high address to get 6k more out of  eeprom 
+- add with modification the last two high address to get 6k more out of eeprom 
 - ![image](https://github.com/user-attachments/assets/9d753110-e74e-45b1-a050-2187cc91c0a7)
 - ![image](https://github.com/user-attachments/assets/36d45b5b-a19b-4acb-93f1-78bcea778814)
 
-- arrays and strings are handled the same way, never directly stored on the stack. 
+- arrays and strings are handled the same way, never directly stored on the stack, uses heap space (grows with ram)
 - need examples of calculations when doing floating point and/or matrices...even the most basic floating point number could be considered an array with one element in it.
-- consider ideas from APL style languages
+- consider ideas from APL style languages, next MINT will be https://github.com/SteveJustin1963/Tec-TACIT
 - add SPI master
 - enhance /INT :F
 - enhance ASM calls and return
