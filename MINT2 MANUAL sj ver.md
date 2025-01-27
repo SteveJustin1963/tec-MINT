@@ -1,18 +1,19 @@
 MINT Programming Language version 2.0
 
-- if a program, function or command has anytype of logical or sytax error, it will corrupt MINTS ability accept even correct input and or run correct input
+- if a program, function or command has any type of logical or syntax error, it will corrupt MINTS ability accept even correct input and or run correct input
 - all input MUST be prefect and error free for the code to run error free unless there is a bug in the code.
 - MINT is a minimalist character-based interpreter but one which aims at fast performance, readability and ease of use. 
 - this is the prompt of MINT `> ` ready to accept input
 - On initialisation it will present a user prompt ">"
-- It is now ready to accept commands from the keyboard which can be entered follwoed by followed by a CRLF (enter key)
+- It is now ready to accept commands from the keyboard which can be entered followed by followed by a CRLF (enter key)
+- after CRLF a new prompt will appear. when you upload code into terminal with a text transfer method, at the end of each function the `>` should be echoed back
 - lines cannot exceed 256 bytes in length with the current internal buffer setting
 - MINT is a byte-code interpreter - this means that all of its instructions are 1 byte long. 
 - However, the choice of instruction uses printable ASCII characters, as a human readable alternative to assembly
 language. 
 - Variables are a to z lowercase and only as single character followed by a space, double letter allowed if commented at top of program
 - Functions labelled from A to Z uppercase as single character followed by a space, they are created with beginning with `:` eg :F, there is strictly now space between : and F, and function ends with with `;`
-- if you run out of function letters you can use double letters if commens added with //
+- if you run out of function letters you can use double letters, note it with comment //
 - if a variable is updated eg a b + and you want to store it, you cannot use ! on its own it must be with a variable, ie b!
 
 
@@ -20,16 +21,16 @@ language.
 - eg :R 1 2 + . ;
 - do not enter a space between `:` and the function letter
 - this means we define a function with : and end with ;
-- when designing code use plenty commments per line and CRLF
-- but when uploading code into the interpreter put each function as a one whole line with no comments, strip all coments out
+- when designing code use plenty comments per line and CRLF
+- but when uploading code into the interpreter put each function as a one whole line with no comments, strip all comments out
 - make all inline strings short, we only have 2k of ram
 - 
 - The mint can only handle signed 16-bit integers in decimal and unsigned in hexadecimal
 - to increase integer accuracy write your code by using signed 16-bit (2-byte) cells and store intermediate results using 32-bit (4-byte)
 - scale your number accordingly to prevent overflows where possible
 - it is known that integer maths has less complexity and more efficiency than floating point for may tasks 
-- if we need 32bit floating point we can optionaly call the AP9511 APU chip placed at port 0x80 for /CS and port 0x81 for C,/D where D = port 80 and C = port 81
-- When stipping out all comments, also best to place one function per line, not srtagger accross several lines; reduces crashes.
+- if we need 32bit floating point we can optionally call the AP9511 APU chip placed at port 0x80 for /CS and port 0x81 for C,/D where D = port 80 and C = port 81
+- When stripping out all comments, also best to place one function per line, not stagger across several lines; reduces crashes.
 - Comments are preceded with //
 - Comment must not occur on same line as code (bug) but placed on the next line
 - In this manual we will place them on the same line for explanation purposes only.
@@ -41,7 +42,7 @@ language.
 
 ### Reverse Polish Notation (RPN)
 - RPN is a way of writing expressions in which the operators come after their operands. 
-- Concatenative languages makes use of the stack which is used to collect data to do work on. 
+- Concatenation languages makes use of the stack which is used to collect data to do work on. 
 - The results are pushed back onto the stack.
 - Like Forth, MINT has no protection against underflow for performance reasons, thus calling things off the stack that are not placed there will call spurious numbers
 
@@ -56,13 +57,13 @@ eg
 - interact with the MINT interpreter (MI) at the prompt which looks like this `> `
 - if we enter numbers, they are pushed onto the stack. 
 - If the MI encounters a non number it decides if its an operator eg such as `+` which is used to add two items from the stack and then pushes the result back to the stack.
-- We can display the result with `.` operator that takes the result from the stack and prints it to the MI console which is talking to a ascii terminal via a serial line at 4800 bps.
+- We can display the result with `.` operator that takes the result from the stack and prints it to the MI console which is talking to a ASCII terminal via a serial line at 4800 bps.
 
 ### Numbers 
 - MINT only uses 16-bit integers and signed numbers to represent numbers. Nothing bigger! 
 - When `+` and `-` operations are performed and the result is larger that 16bits a carry bit is set and stored in variable `/c`
 - the `/c` bit remains until a new carry is set or reset in code with `0 /c !`
-- With `*` operations, when the result exceeds 16bits it rolls over, each roll over isstored in variable `/r` 
+- With `*` operations, when the result exceeds 16bits it rolls over, each roll over is stored in variable `/r` 
 - the `/r` bit remains until a new rollover is set or reset in code with `0 /r !`
 - when the `/` is used to divide, the result goes on the stack and the remainder goes into /r variable
 - all the `/ * + - ` operations will set the `/c` and `/r` variables correctly each time used
@@ -109,7 +110,7 @@ the digits from 0 to 15
 - hexadecimal numbers are assumed to be positive in MINT not signed like decimal numbers
 
 
-All programing logic for decimal and hexadecimal need to follow integer logic 
+All programming logic for decimal and hexadecimal need to follow integer logic 
 and and fixed point numbers need to scaled before logic then converted back.
 
 
@@ -212,7 +213,7 @@ eg
 
 This program places 5 and 4 on the stack and runs the operator `*` which
 multiplies them together. If multiplications result in a value greater than #FFFF, the `overflow` of the
-last multiplication operation is available in the /r system variable. ( not in /c, thats for + and - )
+last multiplication operation is available in the /r system variable. ( not in /c, that's for + and - )
 
 
 ```
@@ -266,7 +267,8 @@ They can be used to
 - Check if a bit is set or unset.
 - Setting or clearing a bit.
 - Flipping a bit.
-- Counting the number of set bits in a number.
+-
+ Counting the number of set bits in a number.
 
 eg 
 - Check if the first bit of the number 10 is set
@@ -533,7 +535,7 @@ Then
 - memory allocation in MINT is the simplest raw memory allocation on the heap.
 - This type of allocation is similar to arrays of bytes and are created using the `/A` allocation operator.
 
-This code allocates a 1000 byte block of uninitialized memory and returns a pointer 
+This code allocates a 1000 byte block of uninitialised memory and returns a pointer 
 (an address) to the start of this block.
 ```
 > 1000 /A
@@ -562,10 +564,10 @@ To set a value, e.g set item 1 to 10, is the same for both use
 
 
 ### Variables in Arrays
-- you can put a variable in an array but it will only store the ascii number of that you are inputting
+- you can put a variable in an array but it will only store the ASCII number of that you are inputting
 - this means when you call an array value, and want to use it 
-you have to convert the ascii back to its alpha or numeric characer 
-- after calling the value form the array you can print the ascii symbol with /K.
+you have to convert the ASCII back to its alpha or numeric character 
+- after calling the value form the array you can print the ASCII symbol with /K.
 
 eg
 ```
@@ -576,15 +578,15 @@ eg
 > : D 1(A B C) ;
 > D                  //run D and press 123
 49 50 51   
->                 //it shows ascii for 1 2 3
+>                 //it shows ASCII for 1 2 3
 > D                 // run D and press abc
 97 98 99  
->                // it shows ascii for abc
+>                // it shows ASCII for abc
 ```
 
 ### Control loops and counters 
 - with /i and /j to control array size and access
-- [ 0 0 0 0 0 ] a! // we need to initialize array each time in loops
+- [ 0 0 0 0 0 ] a! // we need to initialise array each time in loops
  
 
 eg
@@ -678,7 +680,8 @@ eg
 - passing a false value to /W via a conditional test ( like > < or = ) will terminate the loop
 
 eg
-- This code initializes `t` to zero and starts a loop to repeat 10 times. 
+-
+ This code initializes `t` to zero and starts a loop to repeat 10 times. 
 - As it the code repeats it accesses the `/i` variable and compares it to 4. 
 - When `/i` exceeds 4 it breaks the loop. Otherwise it accesses `t` and adds 1 to it.
 - Finally when the loop ends it prints the value of t which is 4.
@@ -823,8 +826,8 @@ eg
 the result which is then printed.
 
 ### Using functions
-- Once you habe written some code using variables and operator you can assign them to a functions use uppercase single letter such as
- A, B, C etc, this make up your overall MINT code. then you can run them by calling the label or lables or place them in other functions and calling that
+- Once you have written some code using variables and operator you can assign them to a functions use uppercase single letter such as
+ A, B, C etc, this make up your overall MINT code. then you can run them by calling the label or labels or place them in other functions and calling that
 Eg
 ```
 > :A . ;
@@ -993,7 +996,8 @@ all these tests hang or dont complete
 | ------ | ---------------------------------------- | ------ |
 | /c     | carry variable                           | -- n   |
 | /h     | heap pointer variable                    | -- a   |
-| /i     | loop variable                            | -- n   |
+| /i     | loop variable
+                            | -- n   |
 | /j     | outer loop variable                      | -- n   |
 | /k     | (internal) offset into text input buffer | -- a   |
 | /r     | remainder/overflow of last div/mul       | -- n   |
@@ -1256,7 +1260,8 @@ s 2 > (        // If list has more than 1 element
     l i ? k !  // Assign key from list element at index i
     i 1 - j !  // Initialize j to i - 1
     j 0 > k l j ? < (  // While j > 0 and key is less than list[j]
-      l j 1 + l j !    // Shift elements to the right
+      l j 1 + l j !    //
+ Shift elements to the right
       j 1 - j !        // Decrement j
     )
     k l j 1 + !        // Place the key at the correct position
@@ -1313,8 +1318,8 @@ s 2 > (        // If list has more than 1 element
 - **Start Node**: `s = 0` sets the start node to 0.
 
 ### Interrupt Handler         
-- experimantal code, do not use
-- may or maynot be in current source code, see John Hardy
+- experimental code, do not use
+- may or may not be in current source code, see John Hardy
 - usage n /X  /v  :Z.....;        
 - Interrupt Handler is triggered it executes the Z function on all interrupts including the RST instructions. 
 - You can tell which interrupt it by looking in the /v variable.
@@ -1322,7 +1327,7 @@ s 2 > (        // If list has more than 1 element
 
 output to screen
 - but it will work with big bang serial code in MINT source code 
-- you can simualte a interrupt by jumping to one of the RST addresses. 
+- you can simulate a interrupt by jumping to one of the RST addresses. 
 - Eg RST 1 is at $0008 then :Z `hello!` ; // will execute
 
 - eg 
