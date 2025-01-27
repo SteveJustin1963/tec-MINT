@@ -1,3 +1,4 @@
+```
 // Binary Search
 
 // Initialize variables
@@ -181,7 +182,7 @@
     [ 2 4 6 8 10 ] a!
     6 V              // visual search for 6
 ;
-
+```
 
 ///////////////////////
 
