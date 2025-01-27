@@ -69,7 +69,7 @@ def type_text():
                     kb.press(char)
                     kb.release(char)
                 
-                time.sleep(0.05)  # Delay between characters
+                time.sleep(0.11)  # Delay between characters
                 
             except Exception as e:
                 print(f"Error typing character '{char}': {e}")
