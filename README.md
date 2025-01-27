@@ -7,8 +7,8 @@
 
 - A small and fast forth like system for the TEC-1 and SCC, and others
 - 400,000 commands /sec (4Mhz clock)
-- Rapid prototyping of code
-- Never works as expected until it does 
+- Rapid prototyping of code, easy concatenation, no compiling, runs instantly
+- Never works as expected until it does
 
 - [https://github.com/orgMINT  ](https://github.com/orgMINT/MINT)       ..THE SOURCE ! 
 
