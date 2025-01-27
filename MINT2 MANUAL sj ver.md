@@ -350,7 +350,7 @@ ie
 
 ### Basic arrays
 - MINT arrays are a type of data structure that can be used to store a collection of elements.
-- they are stored in the heap area of MINT until rebooted, once defined there size cannot be changed
+- they are stored in the heap area of MINT until rebooted, once defined, their size cannot be changed
 - Arrays are indexed, which means that each element in the array has a unique number associated with it. 
 - This number is called the index of the element.
 - In MINT, the array indexes start at 0
