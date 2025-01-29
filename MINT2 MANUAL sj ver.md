@@ -15,13 +15,16 @@ language.
 - Functions labelled from A to Z uppercase as single character followed by a space, they are created with beginning with `:` eg :F, there is strictly now space between : and F, and function ends with with `;`
 - if you run out of function letters you can use double letters, note it with comment //
 - if a variable is updated eg a b + and you want to store it, you cannot use ! on its own it must be with a variable, ie b!
+
+
 - Z is reserved for interrupt calls. You write your interrupt routine under this function.
 - eg :R 1 2 + . ;
 - do not enter a space between `:` and the function letter
 - this means we define a function with : and end with ;
 - when designing code use plenty comments per line and CRLF
 - but when uploading code into the interpreter put each function as a one whole line with no comments, strip all comments out
-- dont make long code, heap ram is limited, basic tec-1 has only 2k of ram, can add more
+- make all inline strings short, we only have 2k of ram
+- 
 - The mint can only handle signed 16-bit integers in decimal and unsigned in hexadecimal
 - to increase integer accuracy write your code by using signed 16-bit (2-byte) cells and store intermediate results using 32-bit (4-byte)
 - scale your number accordingly to prevent overflows where possible
@@ -909,6 +912,7 @@ all these tests hang or dont complete
 | <      | 16-bit comparison LT | n n -- b |
 | =      | 16 bit comparison EQ | n n -- b |
 | &      | 16-bit bitwise AND   | n n -- b |
+| |      | 8-bit bitwise OR     | n n -- b |
 | \|     | 16-bit bitwise OR    | n n -- b |
 | ^      | 16-bit bitwise XOR   | n n -- b |
 | ~      | 16-bit NOT           | n -- n   |
@@ -941,7 +945,7 @@ all these tests hang or dont complete
 
 | Symbol   | Description                     | Effect |
 | -------- | ------------------------------- | ------ |
-| :A ... ; | define a new command DEF        | --     |
+| :A ... ; | define a new command or function DEF        | --     |
 - where "A" represents any uppercase letter
 | :@ ... ; | define an anonymous command DEF | -- a   |
 | /G       | execute mint code at address    | a -- ? |
