@@ -1,7 +1,3 @@
-# source file is textfile.txt
-# run.bat to batch file it in windows
-# after press ctrl-7 you have 3 seconds before it starts
-
 from pynput.keyboard import Controller, Key
 import keyboard
 import time
@@ -69,7 +65,10 @@ def type_text():
                     kb.press(char)
                     kb.release(char)
                 
-                time.sleep(0.11)  # Delay between characters
+
+
+
+                time.sleep(0.1)  # Delay between characters
                 
             except Exception as e:
                 print(f"Error typing character '{char}': {e}")
