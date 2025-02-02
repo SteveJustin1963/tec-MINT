@@ -1,4 +1,4 @@
-# 74 distinct commands and system operations exit within MINT 2.0
+# 74 distinct commands and system operations 
 
 1. **Arithmetic Operations**: 6  
 2. **Stack Manipulation**: 5  
