@@ -1,10 +1,10 @@
 # 74 Commandments
 
 ```
-**"The Excessively Scribbled-Upon, Over-Explained,
+"The Excessively Scribbled-Upon, Over-Explained,
       and Possibly Bewildering Edition of the MINT Programming Language Manual
           (Now with 67% More Footnotes and Unnecessary Asides!)"
-                By Stephen Justin**
+                By Stephen Justin
 ```
 
 We went up the mountain and got the meat extraction https://github.com/SteveJustin1963/tec-MINT/blob/main/Meat%20extraction.md
