@@ -18,7 +18,7 @@
 This is the complete and verified list of all commands and features in this MINT implementation, organized by functional category. Each command performs a specific operation on the stack, controls program flow, or interacts with system resources.
 
 ### 1. ARITHMETIC OPERATIONS
-#### 1.1 `+` Add top two stack values
+#### `+` Add top two stack values
 Here's where the addition operation `+` is implemented in the code:
 
 ```assembly
