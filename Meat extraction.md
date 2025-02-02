@@ -14,7 +14,7 @@
 12. **Control Characters**: 6  
 13. **System Variables**: 10
 
-This is the complete and verified list of all commands and features in this MINT implementation, organized by functional category. Each command performs a specific operation on the stack, controls program flow, or interacts with system resources.
+This is the complete and verified list of all **74** commands and features in this MINT implementation, organized by functional category. Each command performs a specific operation on the stack, controls program flow, or interacts with system resources.
 
 ### 1. ARITHMETIC OPERATIONS
 #### `+` Add top two stack values
