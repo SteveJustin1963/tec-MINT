@@ -295,11 +295,158 @@ This is a fast way to divide by 2 using a right shift operation rather than full
 
 
 ### 2. STACK MANIPULATION
-- `"` Duplicate top stack value
-- `%` Duplicate second stack element
-- `$` Swap top two stack elements
-- `'` Discard top stack value
-- `~` Rotate (a b c -- b c a)
+
+#### `"` Duplicate top stack value
+Here's where duplicate `"` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01C6   71                     DB   lsb(dquote_)   ;   "
+
+; The actual DQUOTE routine:
+DQUOTE_:      
+0471   E1                     POP   hl         ; Duplicate the top member of the stack
+0472   E5                     PUSH   hl        ; Push it back
+0473   E5                     PUSH   hl        ; Push it again
+0474   FD E9                  JP   (iy)        ; Next instruction
+```
+
+When you use `"`, it:
+1. POPs top value into HL
+2. PUSHes it back twice
+
+So if you do:
+```
+5 "
+```
+The stack will contain:
+```
+5 5
+```
+
+It's a simple way to duplicate the top value on the stack. The sequence:
+1. Pop top value (5) into HL
+2. Push HL (5) back
+3. Push HL (5) again
+4. Result is two copies of the value on stack
+
+#### `%` Duplicate second stack element
+Here's where duplicate second element `%` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01C9   79                     DB   lsb(percent_)   ;   %
+
+; The actual PERCENT routine:
+PERCENT_:      
+0479   E1                     POP   hl         ; Pop top value
+047A   D1                     POP   de         ; Pop second value
+047B   D5                     PUSH   de        ; Push second value back
+047C   E5                     PUSH   hl        ; Push top value back
+047D   D5                     PUSH   de        ; Push second value again
+047E   FD E9                  JP   (iy)        ; Next instruction
+```
+
+When you use `%`, it:
+1. POPs top value into HL
+2. POPs second value into DE
+3. PUSHes second value (DE)
+4. PUSHes top value (HL)
+5. PUSHes second value again (DE)
+
+So if you do:
+```
+3 5 %
+```
+The stack will become:
+```
+3 5 3
+```
+
+The sequence:
+1. Pop 5 into HL
+2. Pop 3 into DE
+3. Push DE (3)
+4. Push HL (5)
+5. Push DE (3) again
+6. Result is original second value duplicated on top
+
+#### `$` Swap top two stack elements
+Here's where swap `$` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01C8   92                     DB   lsb(dollar_)   ;   $
+
+; The actual DOLLAR routine:
+DOLLAR_:      ; $ swap                    ; a b -- b a Swap the top 2 elements of the stack
+0492   E1                     POP   hl         ; Get first value
+0493   E3                     EX   (SP),hl     ; Swap with second value
+0494   18 9F                  JR   and2        ; Jump to push first value back
+
+AND2:        
+0435   E5                     PUSH   hl        ; Push result back onto stack
+0436   FD E9                  JP   (iy)        ; Next instruction
+```
+
+When you use `$`, it:
+1. POPs top value into HL
+2. EXchanges HL with value at top of stack
+3. PUSHes HL back
+
+So if you do:
+```
+3 5 $
+```
+The stack will become:
+```
+5 3
+```
+
+The sequence:
+1. Pop 5 into HL
+2. Exchange HL with 3 on stack
+3. Push HL (which now has 3)
+4. Result is values swapped
+
+#### `'` Discard top stack value
+Here's where discard `'` (quote) is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01CB   00                     DB   lsb(quote_)   ;   '
+
+; The actual QUOTE routine:
+QUOTE_:      ; Discard the top member of the stack
+0400   E1                     POP   hl         ; Remove top value
+0401                AT_:         
+0401                UNDERSCORE_:      
+0401   FD E9                  JP   (iy)        ; Next instruction
+```
+
+When you use `'`, it:
+1. POPs top value into HL (discarding it)
+2. Goes to next instruction without pushing anything back
+
+So if you do:
+```
+3 5 '
+```
+The stack will become:
+```
+3
+```
+
+The sequence:
+1. Pop 5 into HL
+2. Don't push anything back
+3. Result is top value removed from stack
+
+It's a simple way to drop/discard the top value from the stack.
+
+#### `~` Rotate (a b c -- b c a)
+
+
 
 ### 3. BITWISE OPERATIONS
 - `&` Bitwise AND
