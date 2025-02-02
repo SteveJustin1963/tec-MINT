@@ -2,8 +2,6 @@
 
 By Stephen Justin
 
- 
-# Moses went up the mountain to get the meat extraction from the source code 
 # Let there be 74 Commandments
 
 **74** distinct commands and system operations.
