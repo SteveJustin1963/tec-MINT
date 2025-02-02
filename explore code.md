@@ -1,21 +1,6 @@
-# 74 distinct commands and system operations 
+ 
 
-1. **Arithmetic Operations**: 6  
-2. **Stack Manipulation**: 5  
-3. **Bitwise Operations**: 4  
-4. **Comparison Operations**: 3  
-5. **Memory and Variables**: 5  
-6. **Program Flow**: 9  
-7. **Array Operations**: 3  
-8. **Input/Output Operations**: 9  
-9. **Function Calls**: 2  
-10. **Number Input**: 2  
-11. **No Operation Commands**: 10  
-12. **Control Characters**: 6  
-13. **System Variables**: 10
-
-This is the complete and verified list of all **74** commands and features in this MINT implementation, organized by functional category. Each command performs a specific operation on the stack, controls program flow, or interacts with system resources.
-
+ 
 ### 1. ARITHMETIC OPERATIONS
 #### `+` Add top two stack values
 Here's where the addition operation `+` is implemented in the code:
@@ -444,15 +429,56 @@ The sequence:
 
 It's a simple way to drop/discard the top value from the stack.
 
-#### `~` Rotate (a b c -- b c a)
-
+#### `??????` Rotate (a b c -- b c a)
+use other commands to construct
 
 
 ### 3. BITWISE OPERATIONS
-- `&` Bitwise AND
-- `|` Bitwise OR
-- `^` Bitwise XOR
-- `~` Bitwise invert
+
+#### `&` Bitwise AND
+Here's where bitwise AND `&` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01CA   2D                     DB   lsb(amper_)   ;   &
+
+; The actual AMPER routine:
+AMPER_:      ;     Bitwise and the top 2 elements of the stack
+042D   D1                     POP   de         ; Get first value
+042E   E1                     POP   hl         ; Get second value
+042F   7B                     LD   a,E         ; Get low byte of first
+0430   A5                     AND   L          ; AND with low byte of second
+0431   6F                     LD   L,A         ; Store result in L
+0432   7A                     LD   a,D         ; Get high byte of first
+0433   A4                     AND   H          ; AND with high byte of second
+0434                AND1:        
+0434   67                     LD   h,a         ; Store result in H
+0435                AND2:        
+0435   E5                     PUSH   hl        ; Push result onto stack
+0436   FD E9                  JP   (iy)        ; Next instruction
+```
+
+When you use `&`, it:
+1. POPs first value into DE
+2. POPs second value into HL
+3. ANDs the lower bytes together
+4. ANDs the upper bytes together
+5. PUSHes combined 16-bit result back onto stack
+
+So if you do:
+```
+%1111 %1010 &
+```
+It will AND the bits together:
+```
+1111 & 1010 = 1010
+```
+
+Performs a 16-bit bitwise AND between the top two stack values.
+
+#### `|` Bitwise OR
+#### `^` Bitwise XOR
+#### `~` Bitwise invert
 
 ### 4. COMPARISON OPERATIONS
 - `<` Less than
