@@ -1,4 +1,6 @@
-# **"The Excessively Scribbled-Upon, Over-Explained, and Possibly Bewildering Edition of the MINT Programming Language Manual (Now with 67% More Footnotes and Unnecessary Asides!)"** By Stephen Justin
+# **"The Excessively Scribbled-Upon, Over-Explained, and Possibly Bewildering Edition of the MINT Programming Language Manual (Now with 67% More Footnotes and Unnecessary Asides!)"** 
+
+By Stephen Justin
 
 # The 74 Commandments, Amen
 
