@@ -477,20 +477,377 @@ It will AND the bits together:
 Performs a 16-bit bitwise AND between the top two stack values.
 
 #### `|` Bitwise OR
+Here's where bitwise OR `|` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01EB   38                     DB   lsb(pipe_)   ;    |
+
+; The actual PIPE routine:
+PIPE_:       ; Bitwise or the top 2 elements of the stack
+0438   D1                     POP   de         ; Get first value
+0439   E1                     POP   hl         ; Get second value
+043A   7B                     LD   a,E         ; Get low byte of first
+043B   B5                     OR   L           ; OR with low byte of second
+043C   6F                     LD   L,A         ; Store result in L
+043D   7A                     LD   a,D         ; Get high byte of first
+043E   B4                     OR   h           ; OR with high byte of second
+043F   18 F3                  JR   and1        ; Jump to store H and push result
+
+AND1:        
+0434   67                     LD   h,a         ; Store result in H
+0435                AND2:        
+0435   E5                     PUSH   hl        ; Push result onto stack
+0436   FD E9                  JP   (iy)        ; Next instruction
+```
+
+When you use `|`, it:
+1. POPs first value into DE
+2. POPs second value into HL
+3. ORs the lower bytes together
+4. ORs the upper bytes together
+5. PUSHes combined 16-bit result back onto stack
+
+So if you do:
+```
+%1010 %0101 |
+```
+It will OR the bits together:
+```
+1010 | 0101 = 1111
+```
+
+Performs a 16-bit bitwise OR between the top two stack values.
+
+
 #### `^` Bitwise XOR
+Here's where bitwise XOR `^` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01E4   41                     DB   lsb(caret_)   ;    ^
+
+; The actual CARET routine:
+CARET_:      ; Bitwise XOR the top 2 elements of the stack
+0441   D1                     POP   de         ; Get first value
+0442                XOR1:        
+0442   E1                     POP   hl         ; Get second value
+0443   7B                     LD   a,E         ; Get low byte of first
+0444   AD                     XOR   L          ; XOR with low byte of second
+0445   6F                     LD   L,A         ; Store result in L
+0446   7A                     LD   a,D         ; Get high byte of first
+0447   AC                     XOR   H          ; XOR with high byte of second
+0448   18 EA                  JR   and1        ; Jump to store H and push result
+
+AND1:        
+0434   67                     LD   h,a         ; Store result in H
+0435                AND2:        
+0435   E5                     PUSH   hl        ; Push result onto stack
+0436   FD E9                  JP   (iy)        ; Next instruction
+```
+
+When you use `^`, it:
+1. POPs first value into DE
+2. POPs second value into HL
+3. XORs the lower bytes together
+4. XORs the upper bytes together
+5. PUSHes combined 16-bit result back onto stack
+
+So if you do:
+```
+%1111 %1010 ^
+```
+It will XOR the bits together:
+```
+1111 ^ 1010 = 0101
+```
+
+Performs a 16-bit bitwise XOR between the top two stack values.
+
 #### `~` Bitwise invert
+Here's where bitwise invert `~` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01ED   4A                     DB   lsb(tilde_)   ;    ~
+
+; The actual TILDE/INVERT routine:
+TILDE_:      
+INVERT:      ; Bitwise INVert the top member of the stack
+044A   11 FF FF               LD   de,$FFFF    ; Load $FFFF for XOR
+044D   18 F3                  JR   xor1        ; Jump to XOR routine
+
+XOR1:        ; The XOR routine used to invert
+0442   E1                     POP   hl         ; Get value to invert
+0443   7B                     LD   a,E         ; Get $FF
+0444   AD                     XOR   L          ; XOR low byte with $FF
+0445   6F                     LD   L,A         ; Store result in L
+0446   7A                     LD   a,D         ; Get $FF
+0447   AC                     XOR   H          ; XOR high byte with $FF
+0448   18 EA                  JR   and1        ; Jump to store and push result
+```
+
+When you use `~`, it:
+1. POPs value to invert from stack into HL
+2. XORs with $FFFF (which inverts all bits)
+3. PUSHes inverted result back onto stack
+
+So if you do:
+```
+%1010 ~
+```
+It will invert all bits:
+```
+1010 inverted becomes 0101
+```
+
+Performs a 16-bit bitwise inversion (NOT) of the top stack value.
 
 ### 4. COMPARISON OPERATIONS
-- `<` Less than
-- `=` Equal to
-- `>` Greater than
+#### `<` Less than
+Here's where less than `<` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01D9   BA                     DB   lsb(lt_)   ;    
+
+; The actual LT (less than) routine:
+LT_:         
+04BA   D1                     POP   de         ; Get first number
+04BB   E1                     POP   hl         ; Get second number
+04BC                LT1_:        
+04BC   B7                     OR   a           ; Reset carry flag
+04BD   ED 52                  SBC   hl,de      ; Subtract DE from HL
+04BF   DA E2 03               JP   c,true_     ; If carry (HL < DE) then true
+04C2   C3 DD 03               JP   false_      ; Otherwise false
+
+TRUE_:       
+03E2   21 FF FF               LD   hl,TRUE     ; Load TRUE ($FFFF)
+03E5   E5                     PUSH   hl        ; Push result
+03E6   FD E9                  JP   (iy)        ; Next instruction
+
+FALSE_:      
+03DD   21 00 00               LD   hl,FALSE    ; Load FALSE ($0000)
+03E0   18 03                  JR   true1       ; Jump to push result
+```
+
+When you use `<`, it:
+1. POPs first value into DE
+2. POPs second value into HL
+3. Subtracts DE from HL
+4. If result has carry (HL < DE):
+   - Pushes TRUE ($FFFF)
+5. Otherwise:
+   - Pushes FALSE ($0000)
+
+So if you do:
+```
+3 5 
+```
+It will:
+1. Pop 5 into DE
+2. Pop 3 into HL
+3. 3 < 5 is true, so pushes $FFFF (TRUE)
+
+The operation performs a signed 16-bit comparison, returning TRUE if second value is less than first value.
+
+#### `=` Equal to
+Here's where equal to `=` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01DA   AB                     DB   lsb(eq_)   ;    =
+
+; The actual EQ routine:
+EQ_:         
+04AB   E1                     POP   hl         ; Get first number
+04AC   D1                     POP   de         ; Get second number
+04AD   B7                     OR   a           ; Reset carry flag
+04AE   ED 52                  SBC   hl,de      ; Subtract HL = HL - DE
+04B0   CA E2 03               JP   z,true_     ; If zero (equal) then true
+04B3   C3 DD 03               JP   false_      ; Otherwise false
+
+TRUE_:       
+03E2   21 FF FF               LD   hl,TRUE     ; Load TRUE ($FFFF)
+03E5   E5                     PUSH   hl        ; Push result
+03E6   FD E9                  JP   (iy)        ; Next instruction
+
+FALSE_:      
+03DD   21 00 00               LD   hl,FALSE    ; Load FALSE ($0000)
+03E0   18 03                  JR   true1       ; Jump to push result
+```
+
+When you use `=`, it:
+1. POPs first value into HL
+2. POPs second value into DE
+3. Subtracts DE from HL
+4. If result is zero (values were equal):
+   - Pushes TRUE ($FFFF)
+5. Otherwise:
+   - Pushes FALSE ($0000)
+
+So if you do:
+```
+5 5 =
+```
+It will:
+1. Pop 5 into HL
+2. Pop 5 into DE
+3. 5 = 5 is true, so pushes $FFFF (TRUE)
+
+The operation performs a 16-bit comparison, returning TRUE if the values are equal.
+
+#### `>` Greater than
+Here's where greater than `>` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01DB   B6                     DB   lsb(gt_)   ;    >
+
+; The actual GT routine:
+GT_:         
+04B6   E1                     POP   hl         ; Get first number
+04B7   D1                     POP   de         ; Get second number
+04B8   18 02                  JR   lt1_        ; Jump to comparison
+
+LT1_:        
+04BC   B7                     OR   a           ; Reset carry flag
+04BD   ED 52                  SBC   hl,de      ; Subtract DE from HL
+04BF   DA E2 03               JP   c,true_     ; If carry then true
+04C2   C3 DD 03               JP   false_      ; Otherwise false
+
+TRUE_:       
+03E2   21 FF FF               LD   hl,TRUE     ; Load TRUE ($FFFF)
+03E5   E5                     PUSH   hl        ; Push result
+03E6   FD E9                  JP   (iy)        ; Next instruction
+
+FALSE_:      
+03DD   21 00 00               LD   hl,FALSE    ; Load FALSE ($0000)
+03E0   18 03                  JR   true1       ; Jump to push result
+```
+
+When you use `>`, it:
+1. POPs first value into HL
+2. POPs second value into DE
+3. Uses same comparison code as `<` but with operands swapped
+4. If result has carry:
+   - Pushes TRUE ($FFFF)
+5. Otherwise:
+   - Pushes FALSE ($0000)
+
+So if you do:
+```
+5 3 >
+```
+It will:
+1. Pop 3 into HL
+2. Pop 5 into DE
+3. 5 > 3 is true, so pushes $FFFF (TRUE)
+
+The operation performs a signed 16-bit comparison, returning TRUE if second value is greater than first value.
 
 ### 5. MEMORY AND VARIABLES
-- `!` Store value at address
-- `a-z` Variable access (26 variable slots)
-- `\` Set byte mode
-- `?` Array access
-- `/V` Get last variable access address
+
+#### `!` Store value at address
+Here's where store value `!` (bang) is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01C5   1D                     DB   lsb(bang_)   ;   !
+
+; The actual BANG/ASSIGN routine:
+BANG_:       ; Store the value at the address placed on the top of the stack
+ASSIGN:      
+041D   E1                     POP   hl         ; Discard value of last accessed variable
+041E   D1                     POP   de         ; Get new value
+041F   2A 9C 13               LD   hl,(vPointer)  ; Get variable address
+0422   73                     LD   (hl),e      ; Store low byte
+0423   3A 6A 13               LD   a,(vByteMode)  ; Check if byte mode
+0426   3C                     INC   a          ; Is it byte?
+0427   28 02                  JR   z,assign1   ; If byte mode, skip high byte
+0429   23                     INC   hl         ; Point to high byte
+042A   72                     LD   (hl),d      ; Store high byte
+042B                ASSIGN1:      
+042B   18 A7                  JR   resetByteMode  ; Reset byte mode and return
+```
+
+When you use `!`, it:
+1. POPs address from stack
+2. POPs value to store from stack
+3. Checks byte mode:
+   - If byte mode: stores only low byte
+   - If word mode: stores both bytes
+4. Resets byte mode
+
+So if you do:
+```
+42 x !    ( Store 42 in variable x )
+```
+It will:
+1. Pop address of x
+2. Pop value 42
+3. Store 42 at x's address
+
+The operation handles both byte and word storage based on byte mode setting.
+
+
+#### `a-z` Variable access (26 variable slots)
+Here's where variable access (a-z) is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01E7   9A                     DB   (26 | $80)   ; a b c .....z
+01E8   05                     DB   lsb(var_)   
+
+; The actual VAR routine:
+VAR_:        
+0405   0A                     LD   a,(bc)      ; Get variable name (a-z)
+0406   21 00 13               LD   hl,vars     ; Point to variables area
+0409   CD 30 03               CALL   lookupRef  ; Calculate variable address
+
+VAR1:        
+040C   22 9C 13               LD   (vPointer),hl   ; Save var address for later
+040F   16 00                  LD   d,0   
+0411   5E                     LD   e,(hl)      ; Get low byte
+0412   3A 6A 13               LD   a,(vByteMode)  ; Check byte mode
+0415   3C                     INC   a          ; Is it byte mode?
+0416   28 02                  JR   z,var2      ; If yes, skip high byte
+0418   23                     INC   hl         ; Point to high byte
+0419   56                     LD   d,(hl)      ; Get high byte
+
+VAR2:        
+041A   D5                     PUSH   de        ; Push value onto stack
+041B   18 B7                  JR   resetByteMode  ; Reset byte mode and return
+```
+
+Variables are allocated in memory:
+```assembly
+; Variable storage area:
+1300                VARS:     DS   VARS_SIZE   ; 26*2 bytes for a-z
+```
+
+When you use a variable (a-z), it:
+1. Gets the variable letter (a-z)
+2. Calculates offset in VARS area
+3. Retrieves value:
+   - In byte mode: gets one byte
+   - In word mode: gets two bytes
+4. Pushes value onto stack
+5. Saves variable address for potential later store (!)
+
+So if you do:
+```
+42 a !    ( Store 42 in a )
+a        ( Get value of a - pushes 42 )
+```
+
+Each variable (a-z) has a 2-byte slot available for storage, and the byte/word mode affects how many bytes are accessed.
+
+#### `\` Set byte mode
+
+#### `?` Array access
+
+#### `/V` Get last variable access address
 
 ### 6. PROGRAM FLOW
 - `:` Begin definition
