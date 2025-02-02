@@ -1,4 +1,10 @@
-MINT Programming Language version 2.0
+*"The Excessively Scribbled-Upon, Over-Explained, and Possibly Bewildering Edition of the MINT Programming Language Manual (Now with 67% More Footnotes and Unnecessary Asides!)"*
+MINT version 2.0
+
+By Stephen Justin
+
+
+
 
 - if a program, function or command has any type of logical or syntax error, it will corrupt MINTS ability accept even correct input and or run correct input
 - all input MUST be prefect and error free for the code to run error free unless there is a bug in the code.
