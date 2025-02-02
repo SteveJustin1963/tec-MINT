@@ -1,5 +1,6 @@
-*"The Excessively Scribbled-Upon, Over-Explained, and Possibly Bewildering Edition of the MINT Programming Language Manual (Now with 67% More Footnotes and Unnecessary Asides!)"*
-MINT version 2.0
+**"The Excessively Scribbled-Upon, Over-Explained, 
+and Possibly Bewildering Edition of the MINT Programming Language Manual (Now with 67% More Footnotes and Unnecessary Asides!)"**
+
 
 By Stephen Justin
 
