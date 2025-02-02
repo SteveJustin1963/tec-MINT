@@ -1,4 +1,4 @@
-# 74 Commandments
+# THE 74 Commandments
 
 ```
 "The Excessively Scribbled-Upon, Over-Explained,
