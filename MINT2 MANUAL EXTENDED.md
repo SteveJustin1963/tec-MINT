@@ -527,7 +527,7 @@ Then
 >
 ```
 
-### Leaving byte mode (and return to normal word mode) 
+### Leaving byte mode (and return to 16bit word mode) 
 - when it executes a `]`, `?` or `!`
 
 
