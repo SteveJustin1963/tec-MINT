@@ -1,6 +1,5 @@
-# Let there be 74 Commandments
+# 74 distinct commands and system operations follow
 
-**74** distinct commands and system operations.
 1. **Arithmetic Operations**: 6  
 2. **Stack Manipulation**: 5  
 3. **Bitwise Operations**: 4  
