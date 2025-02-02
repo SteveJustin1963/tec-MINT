@@ -351,12 +351,12 @@ ie
 ### Arrays
 
 ### Basic arrays
-- MINT arrays are a type of data structure that can be used to store a collection of elements.
+- arrays are a type of data structure that can be used to store a collection of elements.
 - they are stored in the heap area of MINT until rebooted, once defined, their size cannot be changed
 - Arrays are indexed, which means that each element in the array has a unique number associated with it. 
 - This number is called the index of the element.
-- In MINT, the array indexes start at 0
-- To create a MINT array, you can use the following syntax:  
+- the array indexes start at 0
+- To create an array, use the following syntax:  
 - v = variable i.e. single lowercase single letter
 - n= number 
 
@@ -364,7 +364,7 @@ ie
 > [n n n] // multi n can be used until heap memory is used up.
           // note there must be no space between [n and n]
 > [n v]   // you can mixed numbers with variables
-
+// each time this is done the heap address is placed on the stack, always save it immediately into a new variable, not one that has been used. self referencing is not allowed 
 ```
 
 
@@ -385,18 +385,18 @@ next we
 ```
 > [1 2 3 4 5 6 7 8 9 0] 
 > .
-3254 // we get the memory location, we do use it this way, so save it to a variable like a!
+3254 // we get the memory location of the heap where the array is stored, but we do not use it this way, so save it to a variable like a!
 >
 ```
 - when defining an array, its contents is placed in the heap and its address onto the stack unless stored in a variable, which is recommended.
-- once defined the array size cannot change.
+- once defined that array size cannot change. make more arrays as needed.
 - for example `> [1] ` will place its address on stack, we can see it with `>.` showing 3234 
 - if we add another array [4] then `>.` shows 3238 
 - we should save the address that points to the array in a variable, so it acts as a pointer to the array in the heap memory
 
 ie
 ```
-> [1 2 3 4 5 6 7 8 9 0]a!
+> [1 2 3 4 5 6 7 8 9 0] a!
 
 >
 ```
@@ -406,7 +406,7 @@ then
 
 eg
 ```
-> [1 2 3]2? .
+> [1 2 3] 2? .
 3
 >
 ```
@@ -415,10 +415,10 @@ eg
 eg
 
 ```
-> [1 2 3]p!  // save to p                                            
+> [1 2 3] p!  // save to p                                            
 > p 0?.  // let recall p and check location 0                                                                         
 1        // correct
-> p0? -222 p0?!        // lets call p0? then replace with -222 then save it again
+> p0? -222 p0?!        // lets call p0? then replace with -222 then save it again with !
 
 // lets test it
 > p 0?.        // lets check if it updated
@@ -452,16 +452,15 @@ it should work like this
 ### Nested arrays 
 
 - In MINT arrays can be nested inside one another.
-
-- this works
+- do not use the  variables that save the heap address in a variable
 ```
 > [1 2 3 4] a !
 > [2 a 3] b!
-The syntax to access the third element of a from b is
+
+// to access the third element of a from b is
 > b 1? 3? .
 4
 >
-// note the result, it works
 ```
 
 
@@ -473,34 +472,30 @@ eg
 ```
 > [1 [ 2 3 ] ] a!                                                
 > [1 2 3 ] b!
-> b 0?.
-1
-// looks correct
-> b 2?.
-3
-> // looks correct
-> a 0?. 
-1
-> // looks correct
-> a 1?.               
-3246
-> // Bug!! dont use
+
+> b0?.  
+1  // looks correct
+
+> b2?.
+3  // looks correct
+
+> a0?. 
+1 // looks correct
+
+> a1?.           
+3246 // thats the heap address for the `first` nested array in `a`.
+> // to access first nested array and its first location use `a1?01?.`
+> a1?0?.
+2 //correct
+> a1?1?.
+3 //correct
+
 >
 
-> // tried
+this is incorrect
 > [ 3 4 [1 2] a!] b!                                                            
-                                                                                
-> a 0?.                                                                         
-1     //good                                                                          
-> b 1?.                                                                         
-4     //good                                                                          
-> b 2?.                                                                         
-2     // ????? bug
-> b 3?.                                                                         
-3     // ????? bug
-> b 4?.                                                                         
-2    // ?????? bug
->    
+ this is wrong because we dont save an nested array while making the main array                                                                                 
+   
 ```
 
 ### Byte arrays
