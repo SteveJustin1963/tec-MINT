@@ -94,16 +94,16 @@ Here's the complete, organized documentation of every command in the MINT implem
 
 ### 13. SYSTEM VARIABLES
 Built-in system variables (accessed as a-z):
-- `h` Heap pointer variable
-- `k` Address of text input buffer
-- `r` Remainder of last division
-- `s` Address of start of stack
-- `v` Interrupt ID
-- `z` Name of last defined function
-- `b` Byte mode flag
-- `c` Carry flag
-- `f` Interrupt function
-- `i` Loop variable
-- `j` Outer loop variable
+- `/h` Heap pointer variable
+- `/k` Address of text input buffer
+- `/r` Remainder of last division
+- `/s` Address of start of stack
+- `/v` Interrupt ID
+- `/z` Name of last defined function
+- `/b` Byte mode flag
+- `/c` Carry flag
+- `/f` Interrupt function
+- `/i` Loop variable
+- `/j` Outer loop variable
 
 This is the complete and verified list of all commands and features in this MINT implementation, organized by functional category. Each command performs a specific operation on the stack, controls program flow, or interacts with system resources.
