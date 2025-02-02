@@ -1,4 +1,4 @@
-**"The Excessively Scribbled-Upon, Over-Explained, 
+# **"The Excessively Scribbled-Upon, Over-Explained, 
 and Possibly Bewildering Edition of the MINT Programming Language Manual (Now with 67% More Footnotes and Unnecessary Asides!)"**
 
 
