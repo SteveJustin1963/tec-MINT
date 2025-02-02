@@ -1,11 +1,25 @@
-# **"The Excessively Scribbled-Upon, Over-Explained, and Possibly Bewildering Edition of the MINT Programming Language Manual (Now with 67% More Footnotes and Unnecessary Asides!)"**
+# **"The Excessively Scribbled-Upon, Over-Explained, and Possibly Bewildering Edition of the MINT Programming Language Manual (Now with 67% More Footnotes and Unnecessary Asides!)"** By Stephen Justin
 
+# The 74 Commandments, Amen
 
-# By Stephen Justin
+1. **Arithmetic Operations**: 6  
+2. **Stack Manipulation**: 5  
+3. **Bitwise Operations**: 4  
+4. **Comparison Operations**: 3  
+5. **Memory and Variables**: 5  
+6. **Program Flow**: 9  
+7. **Array Operations**: 3  
+8. **Input/Output Operations**: 9  
+9. **Function Calls**: 2  
+10. **Number Input**: 2  
+11. **No Operation Commands**: 10  
+12. **Control Characters**: 6  
+13. **System Variables**: 10  
 
+### **Total Commands & Features:**
+**74** distinct commands and system operations.
 
-
-# The 
+# Thou shalt... 
 - if a program, function or command has any type of logical or syntax error, it will corrupt MINTS ability accept even correct input and or run correct input
 - all input MUST be prefect and error free for the code to run error free unless there is a bug in the code.
 - MINT is a minimalist character-based interpreter but one which aims at fast performance, readability and ease of use. 
