@@ -18,12 +18,282 @@
 This is the complete and verified list of all commands and features in this MINT implementation, organized by functional category. Each command performs a specific operation on the stack, controls program flow, or interacts with system resources.
 
 ### 1. ARITHMETIC OPERATIONS
-- `+` Add top two stack values
-- `-` Subtract top stack value from second value
-- `*` Multiply top two stack values
-- `/` Divide second value by top value
-- `{` Left shift (multiply by 2)
-- `}` Right shift (divide by 2)
+#### `+` Add top two stack values
+Here's where the addition operation `+` is implemented in the code:
+
+```assembly
+; In the IOPCODES table, + is mapped:
+01CF   4F                     DB   lsb(plus_)   ;   +
+
+; The actual PLUS routine:
+PLUS_:       ; add the top 2 members of the stack
+044F   D1                     POP   de         ; Get first number
+0450   E1                     POP   hl         ; Get second number
+0451   19                     ADD   hl,de      ; Add them
+0452   E5                     PUSH   hl        ; Push result
+0453   C3 C6 03               JP   carry      ; Handle any carry
+```
+
+The operation:
+1. POPs first value into DE register
+2. POPs second value into HL register
+3. Adds HL and DE together
+4. Pushes result back onto stack
+5. Checks for carry flag
+
+So if you do:
+```
+3 4 +
+```
+It will:
+1. Pop 4 into DE
+2. Pop 3 into HL
+3. Add them (HL = HL + DE)
+4. Push result (7) back on stack
+
+The carry jump at the end handles any overflow from the addition.
+
+
+#### `-` Subtract top stack value from second value
+Here's where subtraction `-` is implemented in the code:
+
+```assembly
+; In the IOPCODES table, - is mapped:
+01D1   96                     DB   lsb(minus_)   ;   -
+
+; The actual MINUS routine:
+MINUS_:      ; Subtract the value 2nd on stack from top of stack
+0496   03                     INC   bc   ; check if sign of a number
+0497   0A                     LD   a,(bc)   
+0498   0B                     DEC   bc   
+0499   FE 30                  CP   "0"   
+049B   38 05                  JR   c,sub1   
+049D   FE 3A                  CP   "9"+1   
+049F   DA 3E 07               JP   c,num   
+
+SUB1:        
+04A2   D1                     POP   de         ; Get first number
+04A3   E1                     POP   hl         ; Get second number
+04A4   SUB2:        
+04A4   A7                     AND   A          ; Clear carry flag
+04A5   ED 52                  SBC   hl,de      ; Subtract hl = hl - de
+04A7   E5                     PUSH   hl        ; Push result
+04A8   C3 C6 03               JP   carry       ; Handle carry flag
+```
+
+The operation:
+1. Checks if it's part of a number input first
+2. If not a number:
+   - POPs first value into DE register
+   - POPs second value into HL register
+   - Clears carry flag
+   - Subtracts DE from HL
+   - Pushes result back onto stack
+   - Updates carry flag
+
+So if you do:
+```
+5 3 -
+```
+It will:
+1. Pop 3 into DE
+2. Pop 5 into HL
+3. Subtract (HL = HL - DE)
+4. Push result (2) back on stack
+
+The initial number check is there because '-' can also be used for negative numbers.
+
+#### `*` Multiply top two stack values
+Here's where multiplication `*` is implemented in the code:
+
+```assembly
+; In the IOPCODES table, * is mapped:
+01CE   F0                     DB   lsb(star_)   ;   *
+
+; The actual multiplication code:
+MUL:         ; Called by STAR_
+056A   D1                     POP   de         ; de = 2nd arg
+056B   E1                     POP   hl         ; hl = 1st arg
+056C   C5                     PUSH   bc        ; save IP
+056D   7D                     LD   a,l   
+056E   4C                     LD   c,h   
+056F   06 10                  LD   b,16        ; 16-bit multiplication
+0571   21 00 00               LD   hl,0        ; clear result
+0574                MUL1:        
+0574   29                     ADD   hl,hl      ; shift left
+0575   17                     RLA      
+0576   CB 11                  RL   c   
+0578   30 07                  JR   nc,mul2   
+057A   19                     ADD   hl,de      ; add if bit was 1
+057B   CE 00                  ADC   a,0   
+057D   D2 81 05               JP   nc,mul2   
+0580   0C                     INC   c   
+0581                MUL2:        
+0581   10 F1                  DJNZ   mul1      ; loop 16 times
+0583   EB                     EX   de,hl       ; de = lsw result
+0584   61                     LD   h,c   
+0585   6F                     LD   l,a         ; hl = msw result
+0586   C1                     POP   bc         ; restore IP
+0587   C3 F8 07               JP   divExit     ; pushes lsw, puts msw in vRemain
+```
+
+This implements 16-bit multiplication. When you use `*`, it:
+
+1. Pops two values from stack
+2. Does 16-bit multiplication algorithm:
+   - Uses shift and add method
+   - Processes 16 bits
+   - Handles overflow into 32-bit result
+3. Pushes lower 16 bits of result onto stack
+4. Stores upper 16 bits in remainder variable
+
+So if you do:
+```
+4 5 *
+```
+It will:
+1. Pop 5 and 4
+2. Multiply them
+3. Push 20 (result) onto stack
+
+Note: This can handle 16-bit by 16-bit multiplication, producing up to 32-bit results.
+
+#### `/` Divide second value by top value
+Here's where division `/` is implemented in the code:
+
+```assembly
+; In the IOPCODES table, / can map to division or alternate command:
+01D3   F2                     DB   lsb(slash_)   ;   /  
+
+; The actual division code:
+DIV:                ; Called if not alternate command
+07B7   60 69                  LD   hl,bc   ; hl = IP
+07B9   C1                     POP   bc   ; bc = denominator
+07BA   E3                     EX   (sp),hl   ; save IP, hl = numerator
+07BB   7C                     LD   a,h   
+07BC   A8                     XOR   b   
+07BD   F5                     PUSH   af   
+07BE   A8                     XOR   b   
+07BF   F2 C8 07               JP   p,absbc   
+07C2                             ;absHL
+07C2   AF                     XOR   a   
+07C3   95                     SUB   l   
+07C4   6F                     LD   l,a   
+07C5   9F                     SBC   a,a   
+07C6   94                     SUB   h   
+07C7   67                     LD   h,a   
+
+; Division loop:
+07DB                LOOP1:       
+07DB   09                     ADD   hl,bc   ;--
+07DC                LOOP2:       
+07DC   3D                     DEC   a   ;4
+07DD   28 0E                  JR   z,EndSDiv   ;12|7
+...
+07F8                DIVEXIT:      
+07F8   D5                     PUSH   de   ; quotient
+07F9   22 8A 13               LD   (vRemain),hl   ; remainder
+07FC   FD E9                  JP   (iy)   
+```
+
+When you use `/` for division, it:
+1. Gets two values from stack (dividend and divisor)
+2. Performs division using a shift and subtract algorithm 
+3. Pushes quotient onto stack
+4. Stores remainder in vRemain variable
+
+So if you do:
+```
+20 5 /
+```
+It will:
+1. Pop 5 (divisor)
+2. Pop 20 (dividend)
+3. Divide: 20 ÷ 5
+4. Push 4 (quotient) onto stack
+5. Store 0 (remainder) in vRemain
+
+The code handles:
+- Sign of result based on operands
+- Division by converting to positive numbers first
+- Stores both quotient and remainder
+
+If it's not a division operation (starts with / but followed by letter), it becomes an alternate command instead.
+
+
+#### `{` Left shift (multiply by 2)
+Here's where left shift `{` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01EA   87                     DB   lsb(lbrace_)   ;    {
+
+; The actual LBRACE routine:
+LBRACE_:      ;  Left shift { is multiply by 2	
+0487   E1                     POP   hl         ; Get number from stack
+0488   29                     ADD   hl,hl      ; Shift left (multiply by 2)
+0489   18 AA                  JR   and2        ; Jump to push result back
+
+AND2:        
+0435   E5                     PUSH   hl        ; Push result onto stack
+0436   FD E9                  JP   (iy)        ; Next instruction
+```
+
+When you use `{`, it:
+1. Pops a value from stack into HL
+2. Shifts it left (ADD HL,HL = multiply by 2)
+3. Pushes result back onto stack
+
+So if you do:
+```
+5 {
+```
+It will:
+1. Pop 5
+2. Multiply by 2 (shift left)
+3. Push 10 back onto stack
+
+This is a fast way to multiply by 2 using a left shift operation rather than full multiplication.
+
+#### `}` Right shift (divide by 2)
+Here's where right shift `}` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01EC   8B                     DB   lsb(rbrace_)   ;    }
+
+; The actual RBRACE routine:
+RBRACE_:      ;  Right shift } is a divide by 2		
+048B   E1                     POP   hl         ; Get the top member of the stack
+048C                SHR1:        
+048C   CB 3C                  SRL   H          ; Shift right H register
+048E   CB 1D                  RR   L           ; Rotate right L register
+0490   18 A3                  JR   and2        ; Jump to push result
+
+AND2:        
+0435   E5                     PUSH   hl        ; Push result back onto stack
+0436   FD E9                  JP   (iy)        ; Next instruction
+```
+
+When you use `}`, it:
+1. Pops a value from stack into HL
+2. Shifts H register right (SRL H)
+3. Rotates L register right (RR L)
+4. Pushes result back onto stack
+
+So if you do:
+```
+10 }
+```
+It will:
+1. Pop 10
+2. Divide by 2 (shift right)
+3. Push 5 back onto stack
+
+This is a fast way to divide by 2 using a right shift operation rather than full division.
+
+
+
 
 ### 2. STACK MANIPULATION
 - `"` Duplicate top stack value
