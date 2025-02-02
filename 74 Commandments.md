@@ -1163,9 +1163,7 @@ all these tests hang or dont complete
 | ^S     | print stack       |
 
 
-### Algorithm Examples
-- Do not use 
-- they are untested but they do provide some examples
+ 
 
 ### 1. Fibonacci Sequence
 A loop that prints the first 10 numbers of the Fibonacci sequence.
@@ -1181,14 +1179,14 @@ n (           // Loop n times
 )
 ;
 ```
-- **`n !`**: Pops the number of iterations from the stack and assigns it to `n`.
+- `n!` Pops the number of iterations from the stack and assigns it to `n`.
 - The loop runs `n` times, printing `a` and updating `a` and `b` in each iteration.
 
-### Calling the Function:
+Calling the Function:
 ```
 10 F  // Print the first 10 Fibonacci numbers
 ```
-
+its works to a max of 24 F until the result rolls over, then we need to add extra code to account for carry flag and combine the result. 
 
 ### 2. Factorial Function
 - A recursive function that calculates the factorial of a number.
