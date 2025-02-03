@@ -9,18 +9,15 @@
 
 ![image](https://github.com/user-attachments/assets/2dedb642-9c9e-4c19-9cf5-f6345052792c)
 
-- A small and fast forth like system for the TEC-1 and SCC, and others
-- 400,000 commands /sec (4Mhz clock)
-- Rapid prototyping of code, easy concatenation, no compiling, runs instantly
-- Never works as expected until it does
-
-- [https://github.com/orgMINT  ](https://github.com/orgMINT/MINT)       ..THE SOURCE ! 
-
-  
-- https://github.com/monsonite/MINT 
-- https://www.facebook.com/groups/623556744820045/search/?q=mint   Search 
-- https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/
-- https://github.com/SteveJustin1963/tec-MINT/tree/main/code WIP
+- A small and fast [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) like system for the TEC-1 and SCC, and more 
+- Incredible 400,000 commands /sec (4Mhz clock) or one order of power slower than your clock speed
+- Allows rapid prototyping of code, easy concatenation, no compiling, runs instantly, test as you build
+- It Never works as expected until it does! Bam!
+- [THE SOURCE CODE](https://github.com/orgMINT/MINT)
+- [monsonite site](https://github.com/monsonite/MINT)
+- [{FB Search](https://www.facebook.com/groups/623556744820045/search/?q=mint)
+- [spreadsheet help files](https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/)
+- [Programs I wrote and still suffer with](https://github.com/SteveJustin1963/tec-MINT/tree/main/code)
 
 
 ## Honour Roll 
