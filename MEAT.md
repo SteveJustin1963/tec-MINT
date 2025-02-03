@@ -2241,13 +2241,127 @@ Example usage:
 
 This command allows you to pull a function definition back into the text buffer for editing.
 
-/////
+ 
 
 
 ### 10. NUMBER INPUT
-- `0-9` Decimal number input
-- `#` Begin hexadecimal number input
+#### `0-9` Decimal number input
+Here's where decimal number input (0-9) is implemented in the code:
 
+```assembly
+; In the IOPCODES table for 0-9:
+01D4   8A                     DB   (10 | $80)   ; 10 x repeat lsb of add to the num routine
+01D5   DD                     DB   lsb(num_)   
+
+; The actual number parsing routine:
+NUM:         
+073E   21 00 00               LD   hl,$0000    ; Clear hl to accept the number
+0741   0A                     LD   a,(bc)      ; Get numeral or -
+0742   FE 2D                  CP   "-"         ; Check for minus sign
+0744   20 01                  JR   nz,num0     
+0746   03                     INC   bc         ; Move past minus
+
+NUM0:        
+0747   08                     EX   af,af'      ; Save zero flag for later
+
+NUM1:        
+0748   0A                     LD   a,(bc)      ; Read digit
+0749   D6 30                  SUB   "0"        ; Less than 0?
+074B   38 13                  JR   c,num2      ; Not a digit, exit
+074D   FE 0A                  CP   10          ; Greater than 9?
+074F   30 0F                  JR   nc,num2     ; Not a digit, exit
+0751   03                     INC   bc         ; Inc IP
+0752   54 5D                  LD   de,hl       ; Multiply hl * 10
+0754   29                     ADD   hl,hl   
+0755   29                     ADD   hl,hl   
+0756   19                     ADD   hl,de   
+0757   29                     ADD   hl,hl   
+0758   85                     ADD   a,l        ; Add digit
+0759   6F                     LD   l,a   
+075A   3E 00                  LD   a,0   
+075C   8C                     ADC   a,h   
+075D   67                     LD   h,a   
+075E   18 E8                  JR   num1        ; Get next digit
+```
+
+When a digit (0-9) is encountered:
+1. Starts building a number
+2. Checks for minus sign
+3. For each digit:
+   - Converts ASCII to value (0-9)
+   - Multiplies current value by 10
+   - Adds new digit
+4. Handles negative numbers
+5. Pushes final value onto stack
+
+Example usage:
+```
+123     ; Pushes decimal 123 onto stack
+-456    ; Pushes decimal -456 onto stack
+```
+
+The routine:
+- Accepts multiple digits
+- Handles negative numbers
+- Accumulates value digit by digit
+- Stops at non-digit character
+
+
+#### `#` Begin hexadecimal number input
+Here's where hexadecimal number input `#` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01C7   EE                     DB   lsb(hash_)   ;   #
+
+; The actual HEX input routine:
+HEX:         
+054B   21 00 00               LD   hl,0         ; Clear hl to accept the number
+
+HEX1:        
+054E   03                     INC   bc   
+054F   0A                     LD   a,(bc)       ; Get the character 
+0550   CB 77                  BIT   6,A         ; Is it uppercase alpha?
+0552   CA 57 05               JP   Z,hex2       ; No a decimal
+0555   D6 07                  SUB   7           ; Sub 7 to make $A - $F
+
+HEX2:        
+0557   D6 30                  SUB   $30         ; Form decimal digit
+0559   DA 60 07               JP   C,num2       ; Exit if not hex digit
+055C   FE 10                  CP   $0F+1   
+055E   D2 60 07               JP   NC,num2      ; Exit if not hex digit
+0561   29                     ADD   hl,hl       ; Multiply previous value by 16
+0562   29                     ADD   hl,hl   
+0563   29                     ADD   hl,hl   
+0564   29                     ADD   hl,hl   
+0565   85                     ADD   a,L         ; Add in new digit
+0566   6F                     LD   L,A   
+0567   C3 4E 05               JP   hex1         ; Get next digit
+```
+
+When you use `#`, it:
+1. Starts hex number mode
+2. For each character:
+   - If A-F, adjusts value (minus 7)
+   - Subtracts $30 to get value
+   - Checks if valid hex digit
+   - Shifts previous value left 4 bits (*16)
+   - Adds new digit
+3. Continues until non-hex character
+
+Example usage:
+```
+#FF      ; Puts 255 on stack
+#1234    ; Puts 4660 on stack
+```
+
+The routine:
+- Accepts 0-9 and A-F
+- Builds number in base 16
+- Shifts and adds each digit
+- Stops at non-hex character
+
+  
 ### 11. NO OPERATION COMMANDS
 #### `@` No operation
 Here's where no operation `@` is implemented in the code:
@@ -2271,8 +2385,66 @@ The code combines the AT (@) and UNDERSCORE (_) routines since they both do the 
 
 
 
-- `_` No operation
-- `/B` No operation
+#### `_` No operation
+
+Here's where no operation `_` (underscore) is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01E5   01                     DB   lsb(underscore_)   ;    _
+
+; The actual UNDERSCORE routine (combined with AT_):
+UNDERSCORE_:      
+AT_:         
+0401   FD E9                  JP   (iy)        ; Just skip to next instruction
+```
+
+When you use `_`, it:
+1. Simply jumps to next instruction (does nothing)
+
+The underscore shares the same code as the `@` command since they both do exactly the same thing - nothing.
+
+Both `_` and `@` are no-operation commands that just continue to the next instruction without performing any action.
+
+Example usage:
+```
+_ 1 2 3    ; The _ does nothing, same as just writing: 1 2 3
+```
+
+The underscore provides a way to add a visible "do nothing" in MINT code, which can be useful for readability or placeholders.
+
+
+#### `/B` No operation
+Here's where no operation `/B` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+01F0   09     DB   lsb(aNop_)   ;B
+
+; The actual ANOP routine:
+ANOP_:       
+0609   FD E9                  JP   (iy)        ; Just skip to next instruction
+```
+
+When you use `/B`, it:
+1. Simply jumps to next instruction (does nothing)
+
+This is one of several "no operation" alternate commands. Others include:
+- `/H`
+- `/J`
+- `/L`
+- `/M`
+- `/Q`
+- `/R`
+- `/Y`
+
+All of these use the same ANOP_ routine that does nothing but continue to the next instruction.
+
+Example usage:
+```
+/B 1 2 3    ; The /B does nothing, same as just writing: 1 2 3
+```
+
 - `/H` No operation
 - `/J` No operation
 - `/L` No operation
@@ -2312,7 +2484,62 @@ And we can see CTRL-C is defined as:
 CTRL_C:   EQU   3   
 ```
 
-So when you press CTRL-C, it forces a return to the main MINT interpreter, effectively ending whatever was being processed.
+So when you press CTRL-C, it forces a return to the main MINT interpreter, effectively ending whatever was being processed while taking input.
+
+Lets explain how CTRL-C works (and doesn't work) in this MINT implementation:
+
+How it works:
+1. CTRL-C is only checked during input processing
+2. When detected:
+   - Checks and fixes stack if needed
+   - Returns to MINT interpreter
+
+Why it doesn't work during execution:
+- MINT is only checking for CTRL-C during input
+- Once code starts executing, there's no check for CTRL-C
+- The system is busy executing code and not monitoring input
+
+The code would need to be modified to check for CTRL-C during execution if you wanted to be able to interrupt running code. This would require adding input checks in the main execution loop.
+
+Let me propose a modification to implement proper CTRL-C handling during execution. We need to:
+1. Check for CTRL-C during the main execution loop
+2. Make sure the check is fast so it doesn't slow down execution
+
+Here's how we **could** modify the code:
+
+```assembly
+; Add interrupt check to NEXT routine where every instruction goes through:
+NEXT:        
+02B4   03                     INC   bc         ; Increment the IP
+02B5   0A                     LD   a,(bc)      ; Get the next character
+; Add CTRL-C Check here:
+02B6   F5                     PUSH   af        ; Save next character
+02B7   DB 80                  IN   a,(STATUS)  ; Check ACIA status
+02B9   CB 47                  BIT   0,a        ; Data ready?
+02BB   28 06                  JR   z,next1     ; No data, continue
+02BD   DB 81                  IN   a,(RDR)     ; Get character
+02BF   FE 03                  CP   CTRL_C      ; Is it CTRL-C?
+02C1   28 0E                  JR   z,next_etx  ; Yes, handle it
+02C3   F1                     next1: POP   af  ; Restore next character
+02C4   B7                     OR   a           ; Continue normal NEXT...
+; Rest of NEXT routine...
+
+; Add new ETX handler for execution break
+next_etx:
+02D0   F1                     POP   af         ; Clean up stack
+02D1   21 00 EF               LD   hl,-DSTACK  ; Check stack health
+02D4   39                     ADD   hl,SP   
+02D5   30 03                  JR   NC,next_etx1
+02D7   31 00 11               LD   SP,DSTACK   ; Reset if needed
+02DA   next_etx1:
+02DA   C3 2B 02               JP   interpret   ; Return to interpreter
+```
+
+This modification:
+1. Checks input port at each instruction
+2. Only reads input if data is ready (fast check)
+3. Checks for CTRL-C and breaks if found
+4. Cleans up and returns to interpreter
 
 
 
@@ -2574,8 +2801,69 @@ So the heap pointer is used internally for:
 The system maintains the heap pointer automatically during these operations, even though we can access it as variable 'h'.
 
 
-- `/k` Address of text input buffer
-- `/r` Remainder of last division
+#### `/k` Address of text input buffer
+Looking at the code, `k` is actually a variable, not a `/k` command. Here's how it's defined and used:
+
+```assembly
+; In the variables section:
+137C                VTIBPTR:   DS   2   ; k address of text input buffer
+
+; The Text Input Buffer itself:
+0800                TIB:      DS   TIBSIZE   ; Text Input Buffer
+
+; When TIB pointer is used:
+022B                INTERPRET:      
+022B   CD 82 03               CALL   prompt   
+022E   01 00 00               LD   bc,0        ; load bc with offset into TIB
+0231   ED 43 7C 13            LD   (vTIBPtr),bc  ; Store in k (VTIBPTR)
+```
+
+There is no `/k` command. Instead:
+1. 'k' is a variable that holds TIB pointer
+2. TIB starts at $0800
+3. 'k' tracks where we are in the buffer
+
+You access it like any other variable:
+```
+k      ; Get current TIB pointer
+k !    ; Set TIB pointer
+```
+
+The TIB and its pointer (k) are used internally by MINT to handle text input.
+
+#### `/r` Remainder of last division
+
+////
+
+Looking at the code, `r` is actually a variable, not a `/r` command. Here's how it's defined and used:
+
+```assembly
+; In the variables section:
+138A                VREMAIN:   DS   2   ; r remainder of last division
+
+; Where remainder is stored after division:
+DIV:
+...
+07F8                DIVEXIT:      
+07F8   D5                     PUSH   de         ; quotient
+07F9   22 8A 13               LD   (vRemain),hl ; remainder
+07FC   FD E9                  JP   (iy)   
+```
+
+There is no `/r` command. Instead:
+1. 'r' is a variable that contains remainder after division
+2. It's automatically set after division operations
+3. You access it like any variable
+
+Example usage:
+```
+5 2 /    ; Divide 5 by 2, quotient (2) goes on stack
+r        ; Get remainder (1) from variable r
+```
+
+The 'r' variable is updated after any division operation to hold the remainder.
+
+
 - `/s` Address of start of stack
 - `/v` Interrupt ID
 - `/z` Name of last defined function
