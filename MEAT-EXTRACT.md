@@ -400,7 +400,8 @@ next we
 ```
 > [1 2 3 4 5 6 7 8 9 0] 
 > .
-3254 // we get the memory location of the heap where the array is stored, but we do not use it this way, so save it to a variable like a!
+3254 // we get the memory location of the heap where the array is stored,
+// but we do not use it this way, so save it to a variable like a!
 >
 ```
 - when defining an array, its contents is placed in the heap and its address onto the stack unless stored in a variable, which is recommended.
