@@ -2234,7 +2234,73 @@ showing the stack contents in hex.
 
 ### 13. SYSTEM VARIABLES
 Built-in system variables (accessed as a-z):
-- `/h` Heap pointer variable
+
+#### `/h` Heap pointer variable
+Looking at the code again, you are correct in questioning `/h` - there is no `/h` command in the MINT implementation.
+
+Let's look at the variable 'h':
+
+```assembly
+; VHEAPPTR:           1376 DEFINED AT LINE 51 IN ram.asm
+; In the variables section:
+1376                VHEAPPTR:   DS   2   ; h heap pointer variable
+```
+
+'h' is just a regular variable accessed like any other a-z variable, not an alternate command with '/'.
+
+So to use the heap pointer:
+```
+h      ; Get heap pointer value
+h !    ; Store to heap pointer
+```
+
+There is no special `/h` command. I apologize for any confusion in my earlier responses. The 'h' variable is used internally by the system to track heap allocation, but it's accessed just like any other MINT variable.
+
+Let me trace all internal uses of the heap pointer (VHEAPPTR) in the code:
+
+1. Initialization:
+```assembly
+INIT:        
+...
+02FF   21 A0 13               LD   hl,HEAP      ; Point to start of heap
+0302   22 76 13               LD   (vHeapPtr),hl ; Initialize heap pointer
+```
+
+2. Array Creation (`]` command):
+```assembly
+ARREND:      
+...
+0783   2A 76 13               LD   hl,(vHeapPtr)  ; Get space for array
+...
+07AC   ED 53 76 13            LD   (vHeapPtr),de  ; Update after array
+```
+
+3. Memory Allocation (`/A` command):
+```assembly
+ALLOC_:      
+0601   2A 76 13               LD   hl,(vHeapPtr)  ; Get current pointer
+...
+0606   22 76 13               LD   (vHeapPtr),hl  ; Update after allocation
+```
+
+4. Definition Creation (`:` command):
+```assembly
+DEF:         
+...
+0718   ED 5B 76 13            LD   de,(vHeapPtr)  ; Get space for definition
+...
+0738   ED 53 76 13            LD   (vHeapPtr),de  ; Update after definition
+```
+
+So the heap pointer is used internally for:
+- Array storage
+- Memory allocation
+- Function definitions
+- Initial heap setup
+
+The system maintains the heap pointer automatically during these operations, even though we can access it as variable 'h'.
+
+
 - `/k` Address of text input buffer
 - `/r` Remainder of last division
 - `/s` Address of start of stack
