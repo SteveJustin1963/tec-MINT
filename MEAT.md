@@ -2996,7 +2996,46 @@ Like `/r`, this is an alternate variable accessed with forward slash because it'
 ////   redo from here as answers are sus --------------////////////////////////////////////////////////////////////////////////////////////////////
 
 #### `/v` Interrupt ID
- Let me help you understand the interrupt ID handling in this Z80 assembly code.
+Here's where `/v` (interrupt ID) is implemented in the code:
+
+```assembly
+; In the variables section (alt vars):
+1392                VINTID:   DS   2   ; v interrupt id
+
+; Set during interrupt handling:
+ISR:         
+008B   26 00                  LD   h,0   
+008D   22 92 13               LD   (vIntID),hl   ; Store interrupt ID
+0090   CD BD 03               CALL   enter   
+0093   5A 00                  .CSTR   "Z"   
+0095   C9                     RET      
+```
+
+When `/v` is used:
+1. Accesses VINTID through alt variable access
+2. Returns the ID of the last interrupt that occurred
+
+The interrupt handling:
+1. H is cleared to 0
+2. L contains the interrupt ID (from RST handling)
+3. This is stored in vIntID
+
+The RST (interrupt) vectors set different IDs:
+```assembly
+RST1:        
+0008   2E 01                  LD   l,1   
+000A   C3 8B 00               JP   ISR   
+
+RST2:        
+0010   2E 02                  LD   l,2   
+0012   C3 8B 00               JP   ISR   
+...
+```
+
+Like `/r` and `/s`, this is an alternate variable accessed with forward slash because it's in the ALTVARS space.
+
+//
+
 
 In the listing, the interrupt ID is managed through the variable `VINTID` located at memory address `0x1392`. This is part of the MINT (Minimal Interpreter) system for the Z80 microprocessor.
 
@@ -3144,6 +3183,39 @@ The beauty of this design is its simplicity and extensibility. You can easily ad
 
 
 #### `/z` Name of last defined function
+Here's where `/z` (name of last defined function) is implemented in the code:
+
+```assembly
+; In the variables section (alt vars):
+139A                VLASTDEF:   DS   2   ; z name of last defined function
+
+; Set during function definition:
+DEF0:        
+071F   32 9A 13               LD   (vLastDef),a   ; Save name of last defined function
+
+; Used in the REEDIT macro:
+REEDIT_:      
+0180   2F 7A 2F 5A 3B         DB   "/z/Z;"   ; remembers last line edited
+```
+
+When `/z` is used:
+1. Accesses VLASTDEF through alt variable access
+2. Returns the letter (A-Z) of the last function defined
+
+The system uses this to remember:
+- What function was last defined
+- What function to edit when CTRL-R is pressed
+
+For example:
+```
+: T 123 ;    ; Define function T
+/z          ; Will return 'T'
+```
+
+Like other system variables (`/r`, `/s`, `/v`), this is an alternate variable accessed with forward slash because it's in the ALTVARS space.
+
+/////
+
 
 In the MINT system, `/z` is a system variable that represents the name (single character) of the last defined function.
 
@@ -3189,6 +3261,51 @@ The `/z` mechanism provides a quick way to review and modify the most recently d
 
 
 #### `/b` Byte mode flag
+Here's where `/b` (byte mode flag) is implemented in the code:
+
+```assembly
+; In the variables section (alt vars):
+136A                VBYTEMODE:   DS   2   ; b byte mode flag
+
+; Used when checking byte mode:
+VAR2:        
+041A   D5                     PUSH   de   
+041B   18 B7                  JR   resetByteMode   
+
+SETBYTEMODE:      
+03D0   3E FF                  LD   a,$FF       ; Set byte mode
+03D2   18 01                  JR   assignByteMode  
+
+RESETBYTEMODE:      
+03D4   AF                     XOR   a          ; Clear to 0
+03D5                ASSIGNBYTEMODE:      
+03D5   32 6A 13               LD   (vByteMode),a   ; Store byte mode flag
+03D8   32 6B 13               LD   (vByteMode+1),a   
+03DB   FD E9                  JP   (iy)   
+```
+
+When `/b` is used:
+1. Accesses VBYTEMODE through alt variable access
+2. Returns current byte mode status:
+   - $FF = byte mode on
+   - $00 = byte mode off
+
+Byte mode affects:
+- Variable access (1 vs 2 bytes)
+- Array operations
+- It's set by the `\` command
+- Reset by many operations
+
+Example usage:
+```
+/b    ; Get current byte mode status
+```
+
+Like other system variables, this is an alternate variable accessed with forward slash because it's in the ALTVARS space.
+
+//////
+
+
 In the MINT system, `/b` (actually `vByteMode`) is a system variable that controls whether the interpreter is in byte mode or word mode.
 
 Location and Details:
@@ -3254,12 +3371,978 @@ The `/b` byte mode flag provides flexibility in data storage and manipulation, a
 
 
 #### `/c` Carry flag
+Here's where `/c` (carry flag) is implemented in the code:
+
+```assembly
+; In the variables section (alt vars):
+136C                VCARRY:   DS   2   ; c carry variable
+
+; Carry flag is set after arithmetic:
+CARRY:       
+03C6   21 00 00               LD   hl,0   
+03C9   CB 15                  RL   l           ; Move carry into L
+03CB   22 6C 13               LD   (vCarry),hl ; Store carry flag
+
+; Used after operations like plus:
+PLUS_:       ; add the top 2 members of the stack
+044F   D1                     POP   de   
+0450   E1                     POP   hl   
+0451   19                     ADD   hl,de   
+0452   E5                     PUSH   hl   
+0453   C3 C6 03               JP   carry       ; Update carry flag
+```
+
+When `/c` is used:
+1. Accesses VCARRY through alt variable access
+2. Returns carry flag state after last arithmetic:
+   - Non-zero if carry occurred
+   - Zero if no carry
+
+Used to check for:
+- Overflow in addition
+- Borrow in subtraction
+- Results of comparisons
+
+Like other system variables, this is an alternate variable accessed with forward slash because it's in the ALTVARS space.
+
+////
+Here's a practical example of using `/c` to check the carry flag:
+
+For addition overflow:
+```
+32767 1 +    ; Try to add 1 to max positive number
+/c .         ; Print carry flag - will be non-zero due to overflow
+```
+
+For checking borrow in subtraction:
+```
+5 10 -       ; Subtract 10 from 5
+/c .         ; Print carry flag - will be non-zero due to borrow
+```
+
+For comparisons:
+```
+10 5 -       ; 10 minus 5
+/c .         ; No borrow, carry will be 0
+
+5 10 -       ; 5 minus 10
+/c .         ; Borrow occurred, carry will be non-zero
+```
+
+You can store the carry result:
+```
+5 10 -       ; Do subtraction
+/c c !       ; Store carry flag in variable c
+c .          ; Print the stored carry
+```
+
+The carry flag gets updated after arithmetic operations, and `/c` lets you access that flag to check what happened in the operation.
 
 #### `/f` Interrupt function
+Here's where `/f` (interrupt function) is implemented in the code:
+
+```assembly
+; In the variables section (alt vars):
+1372                VINTFUNC:   DS   2   ; f interrupt func
+
+; The variable stores the address of function to call on interrupt
+
+; Example usage would be:
+; Store interrupt handler address:
+handler_addr /f !    ; Set interrupt function address
+
+; When interrupt occurs:
+ISR:         
+008B   26 00                  LD   h,0         ; clear h
+008D   22 92 13               LD   (vIntID),hl  ; store interrupt id
+0090   CD BD 03               CALL   enter     ; Call function
+```
+
+When `/f` is used:
+1. Accesses VINTFUNC through alt variable access
+2. Gets/sets the address of interrupt handler function
+
+Like other system variables, this is an alternate variable accessed with forward slash because it's in the ALTVARS space.
+
+Would you like me to show an example of how to set up an interrupt handler using `/f`?
+
+Here's an example of how to use `/f` with interrupt handling:
+
+```
+; Define an interrupt handler
+: H                ; Define handler function
+  /v .            ; Print interrupt ID that occurred
+  /N              ; Print newline
+;
+
+; Set up the handler
+H /f !             ; Store address of H in interrupt function variable
+```
+
+Now when an interrupt occurs:
+1. System stores interrupt ID in `/v`
+2. Calls function whose address is in `/f`
+3. Our handler H prints which interrupt occurred
+
+For RST (restart) interrupts:
+```
+RST 08: ID = 1
+RST 10: ID = 2
+RST 18: ID = 3
+RST 20: ID = 4
+RST 28: ID = 5
+RST 30: ID = 6
+RST 38: ID = 7
+NMI:    ID = 8
+```
+
+We can see this in the code:
+```assembly
+RST1:        
+0008   2E 01                  LD   l,1   ; Set ID 1
+000A   C3 8B 00               JP   ISR   
+
+RST2:        
+0010   2E 02                  LD   l,2   ; Set ID 2
+0012   C3 8B 00               JP   ISR   
+```
+
+Would you like me to show how to handle specific types of interrupts?
+
+Let me show you how to handle specific interrupts with examples:
+
+```
+; Handler for all interrupts - print ID and type
+: H 
+  `RST `         ; Print "RST "
+  /v .           ; Print interrupt ID
+  /v 1 = (       ; If ID = 1
+    ` - Clock`   ; Print type
+  ) /v 2 = (
+    ` - Keyboard`
+  ) /v 7 = (
+    ` - Serial`
+  )
+  /N
+;
+
+; Install handler
+H /f !
+```
+
+More specific handlers:
+
+```
+; Keyboard handler (RST 10)
+: KEY
+  /v 2 = (       ; If it's RST 10 (ID 2)
+    /K .         ; Read and print key
+    /N
+  )
+;
+
+; Serial handler (RST 38)
+: SER
+  /v 7 = (       ; If it's RST 38 (ID 7)
+    /I .         ; Read and print serial input
+    /N
+  )
+;
+
+; Clock tick handler (RST 08)
+: TICK
+  /v 1 = (       ; If it's RST 08 (ID 1)
+    `.`          ; Print dot for each tick
+  )
+;
+```
+
+To change handlers:
+```
+H /f !     ; General handler
+KEY /f !   ; Just keyboard
+SER /f !   ; Just serial
+TICK /f !  ; Just clock
+```
+
+Would you like me to explain the interrupt vector setup as well?
+
+Let me show the complete interrupt setup in the code:
+
+```assembly
+; Reset/NMI vectors
+0000                RSTVEC:      
+0000   C3 96 00               JP   RESET   
+
+; RST 08 (ID=1)
+0008                          .ORG   ROMSTART+$08   
+0008   2E 01                  LD   l,1   
+000A   C3 8B 00               JP   ISR   
+
+; RST 10 (ID=2)
+0010                          .ORG   ROMSTART+$10   
+0010   2E 02                  LD   l,2   
+0012   C3 8B 00               JP   ISR   
+
+; RST 18 (ID=3)
+0018                          .ORG   ROMSTART+$18   
+0018   2E 03                  LD   l,3   
+001A   C3 8B 00               JP   ISR   
+
+; RST 20 (ID=4)
+0020                          .ORG   ROMSTART+$20   
+0020   2E 04                  LD   l,4   
+0022   C3 8B 00               JP   ISR   
+
+; RST 28 (ID=5)
+0028                          .ORG   ROMSTART+$28   
+0028   2E 05                  LD   l,5   
+002A   C3 8B 00               JP   ISR   
+
+; RST 30 (ID=6)
+0030                          .ORG   ROMSTART+$30   
+0030   2E 06                  LD   l,6   
+0032   C3 8B 00               JP   ISR   
+
+; RST 38 (ID=7)
+0038                          .ORG   ROMSTART+$38   
+; Masked interrupt handler...
+
+; NMI (ID=8)
+0066                          .ORG   ROMSTART+$66   
+0066   2E 08                  LD   l,8   
+0068   C3 8B 00               JP   ISR   
+
+; Main ISR that all interrupts jump to:
+ISR:         
+008B   26 00                  LD   h,0         ; Clear high byte
+008D   22 92 13               LD   (vIntID),hl ; Store interrupt ID
+0090   CD BD 03               CALL   enter     ; Enter MINT
+0093   5A 00                  .CSTR   "Z"      
+0095   C9                     RET      
+```
+
+When an interrupt occurs:
+1. CPU jumps to appropriate RST vector
+2. Vector loads interrupt ID into L
+3. Jumps to ISR
+4. ISR:
+   - Clears H
+   - Stores ID in `/v`
+   - Gets handler from `/f`
+   - Calls handler
+   - Returns to interrupted code
+
+You can see how each interrupt has:
+- Fixed address in low memory
+- Unique ID loaded into L
+- Common path through ISR
+- Access to handler via `/f`
+
+Would you like me to explain how to enable/disable specific interrupts?
+
+Let's look at how to enable/disable interrupts in the code. First, the initialization:
+
+```assembly
+RESET:       
+0096   31 00 11               LD   SP,stack   
+...
+00C7   ED 56                  IM   1           ; Set Interrupt Mode 1
+00C9   FB                     EI               ; Enable interrupts globally
+
+; For serial interrupts (6850 ACIA):
+00CA                          IF   TEC_1   
+00CA                          IF   BITBANG = 0   
+00CA   3E 03                  LD   a,MRESET      ; Reset ACIA
+00CC   D3 80                  OUT   (CONTROL),a   
+00CE   3E 12                  LD   a,RTSLID+F8N2+DIV_64  ; Initialize ACIA
+00CC   D3 80                  OUT   (CONTROL),a   ; 8N2, /64 for 115200 baud
+```
+
+To control interrupts in MINT code:
+
+```
+: DI      ; Disable all interrupts
+  #F3 /X  ; Execute DI instruction
+;
+
+: EI      ; Enable all interrupts
+  #FB /X  ; Execute EI instruction
+;
+
+; For serial interrupts:
+; Get control register current value
+#80 /I    ; Read ACIA control
+#80 /O    ; Write back to control to disable interrupts
+
+; To enable serial interrupts:
+MRESET RTSLIE + F8N1 + DIV_64 + ; Build control value
+#80 /O    ; Write to ACIA control
+```
+
+The hardware supports:
+- Global enable/disable (EI/DI)
+- RST vector interrupts (always enabled if EI)
+- Serial interrupts (controlled by ACIA)
+- NMI (cannot be disabled)
+
+Would you like me to explain more about the ACIA interrupt control bits?
+
+Let's look at the ACIA (6850) interrupt control bits in the code:
+
+```assembly
+; 6850 ACIA control register bits
+; Control bits for interrupts:
+0000                RTSLID:   EQU   $00   ;RTS LOW, transmit interrupt disabled
+0000                RTSLIE:   EQU   $20   ;RTS LOW, transmit interrupt enabled
+0000                RTSHID:   EQU   $40   ;RTS HIGH, transmit interrupt disabled
+0000                RTSLIDB:   EQU   $60   ;RTS LOW, transmit interrupt disabled and "break"
+0000                RIE:      EQU   $80   ;receiver interrupt enabled
+
+; Status register bits to check interrupts:
+0000                RDRF:     EQU   0   ;receive data register full
+0000                TDRE:     EQU   1   ;transmit data register empty
+0000                DCD:      EQU   2   ;data carrier detect
+0000                CTS:      EQU   3   ;clear to send
+0000                FE:       EQU   4   ;framing error
+0000                OVRN:     EQU   5   ;overrun
+0000                PE:       EQU   6   ;parity error
+0000                IRQ:      EQU   7   ;interrupt request
+```
+
+Example MINT code to control ACIA interrupts:
+
+```
+; Enable receiver interrupts only
+MRESET RIE + F8N1 + DIV_64 +    ; Master reset + Receive interrupts + 8N1 + /64
+#80 /O                          ; Write to control register
+
+; Enable transmit interrupts
+MRESET RTSLIE + F8N1 + DIV_64 + ; Master reset + Transmit interrupts + 8N1 + /64
+#80 /O                          ; Write to control register
+
+; Check interrupt status
+#80 /I                          ; Read status register
+1 AND                           ; Mask TDRE bit
+```
+
+Would you like me to show how to write an interrupt handler for serial I/O?
+
+Here's how to write a serial interrupt handler in MINT:
+
+```
+; Define serial handler
+: SER
+  /v 7 = (           ; If RST 38 (serial interrupt)
+    #80 /I           ; Read ACIA status
+    1 AND (          ; Check TDRE (transmit ready)
+      `T`            ; Print T if transmit ready
+    ) 
+    RDRF AND (       ; Check RDRF (receive ready)
+      #81 /I         ; Read received character
+      /C             ; Print it
+    )
+    /N
+  )
+;
+
+; Install handler
+SER /f !             ; Set as interrupt handler
+
+; Enable serial interrupts in ACIA
+MRESET              ; Reset ACIA first
+RIE RTSLIE + +      ; Enable RX and TX interrupts
+F8N1 + DIV_64 +     ; 8N1 format, divide by 64
+#80 /O              ; Write to control register
+
+EI                  ; Enable interrupts globally
+```
+
+This handler:
+1. Checks if it's serial interrupt
+2. Tests transmit ready flag
+   - Prints 'T' if ready to transmit
+3. Tests receive ready flag
+   - Gets and prints character if received
+4. Returns to main code
+
+The serial port runs at:
+```
+4MHz / 64 = 62.5KHz base rate
+÷16 = 3906.25 baud
+```
+
+Would you like me to explain how to modify the baud rate or add buffer handling?
+
+Let's look at how to modify baud rate and add buffer handling:
+
+```assembly
+; Baud rate control via divider:
+0000                DIV_64:   EQU   $02   ;CLOCK/64
+```
+
+First, let's create a circular buffer for RX:
+```
+; Define RX buffer
+100 /A              ; Allocate 256 bytes
+DUP rx_buf !        ; Save buffer start
+0 rx_in !           ; Input pointer
+0 rx_out !          ; Output pointer
+
+; Improved serial handler with buffering
+: SER               ; Serial interrupt handler
+  /v 7 = (          ; If serial interrupt
+    #80 /I          ; Read status
+    RDRF AND (      ; If receive data ready
+      #81 /I        ; Get character
+      rx_buf @      ; Get buffer base
+      rx_in @  +    ; Add input pointer
+      !             ; Store character
+      rx_in @       ; Get input pointer
+      1 +           ; Increment
+      255 AND       ; Keep in range 0-255
+      rx_in !       ; Save new pointer
+    )
+  )
+;
+
+; Get character from buffer
+: GETC             ; Get buffered character
+  rx_in @ rx_out @ = ( ; If buffer empty
+    0              ; Return 0
+  ) (              ; Else
+    rx_buf @       ; Get buffer base
+    rx_out @ +     ; Add output pointer
+    @              ; Get character
+    rx_out @       ; Get output pointer
+    1 +           ; Increment
+    255 AND       ; Keep in range 0-255
+    rx_out !      ; Save new pointer
+  )
+;
+
+; Change baud rate
+: SETBAUD         ; Set new baud rate
+  MRESET          ; Reset ACIA
+  RIE +           ; Enable RX interrupt
+  F8N1 +          ; 8N1 format
+  SWAP +          ; Add divider
+  #80 /O          ; Write to control
+;
+```
+
+Usage:
+```
+; Set different baud rates
+DIV_64 SETBAUD    ; 3906.25 baud at 4MHz
+DIV_16 SETBAUD    ; 15625 baud at 4MHz
+
+; Read characters
+GETC /C           ; Get and print buffered character
+```
+
+Would you like me to explain more about the buffer management or add transmit buffering as well?
+
+Let's add transmit buffering. Here's the complete buffered serial I/O system:
+
+```
+; Allocate RX and TX buffers
+: BUFINIT
+  100 /A          ; 256 bytes for RX
+  DUP rx_buf !    ; Save RX buffer address
+  100 /A          ; 256 bytes for TX
+  DUP tx_buf !    ; Save TX buffer address
+  0 rx_in !       ; RX input pointer
+  0 rx_out !      ; RX output pointer
+  0 tx_in !       ; TX input pointer
+  0 tx_out !      ; TX output pointer
+;
+
+; Enhanced serial handler
+: SER
+  /v 7 = (         ; If serial interrupt
+    #80 /I         ; Read status
+
+    RDRF AND (     ; If receive ready
+      #81 /I       ; Get character
+      rx_buf @     ; Buffer base
+      rx_in @ +    ; Add input pointer
+      !            ; Store character
+      rx_in @      ; Update
+      1 +          ; input
+      255 AND      ; pointer
+      rx_in !      
+    )
+
+    1 AND (        ; If transmit ready
+      tx_in @ tx_out @ = NOT ( ; If TX data available
+        tx_buf @   ; Get buffer base
+        tx_out @ + ; Add output pointer
+        @          ; Get character
+        #81 /O     ; Send it
+        tx_out @   ; Update
+        1 +        ; output
+        255 AND    ; pointer
+        tx_out !
+      )
+    )
+  )
+;
+
+; Put character in TX buffer
+: PUTC            ; ( char -- )
+  tx_buf @        ; Get buffer base
+  tx_in @ +       ; Add input pointer
+  !               ; Store character
+  tx_in @         ; Update
+  1 +             ; input
+  255 AND         ; pointer
+  tx_in !         
+  RTSLIE #80 /O   ; Enable TX interrupt
+;
+
+; Get character from RX buffer
+: GETC            ; ( -- char )
+  rx_in @ rx_out @ = ( ; If empty
+    0             ; Return 0
+  ) (             ; Else
+    rx_buf @      ; Get buffer base
+    rx_out @ +    ; Add output pointer
+    @             ; Get character
+    rx_out @      ; Update
+    1 +           ; output
+    255 AND       ; pointer
+    rx_out !
+  )
+;
+
+; Initialize everything
+: INIT
+  BUFINIT         ; Setup buffers
+  SER /f !        ; Install handler
+  MRESET          ; Reset ACIA
+  RIE RTSLIE + +  ; Enable RX & TX interrupts
+  F8N1 + DIV_64 + ; 8N1 format, /64 divider
+  #80 /O          ; Set ACIA control
+  EI              ; Enable interrupts
+;
+```
+
+Usage:
+```
+INIT             ; Setup system
+
+; Send string
+: STR
+  /K DUP 13 = NOT (  ; Until CR
+    DUP PUTC         ; Buffer character
+    /C               ; Echo it
+    STR              ; Recurse
+  ) DROP
+;
+
+; Echo received chars
+: ECHO
+  GETC DUP (        ; Get char, if non-zero
+    /C              ; Print it
+    ECHO            ; Recurse
+  ) DROP
+;
+```
+
+This provides:
+1. 256-byte circular buffers for RX and TX
+2. Interrupt-driven I/O
+3. Buffer overflow protection
+4. Easy high-level interface (GETC/PUTC)
+
+Would you like me to explain more about the circular buffer logic or add error handling?
 
 #### `/i` Loop variable
 
+Here's where loop variable `/i` (i) is implemented in the code:
+
+```assembly
+; In the variables section (alt vars):
+1378                          DS   2   ; i loop variable
+
+; Used in loop processing:
+ALTVAR:      
+0508   FE 69                  CP   "i"          ; Check for 'i'
+050A   2E 00                  LD   l,0   
+050C   CA 1E 05               JP   z,loopVar    ; Handle i variable
+
+LOOPVAR:      
+051E   26 00                  LD   h,0          ; Clear H
+0520   DD 54                  LD   d,ixh        ; Get loop frame pointer
+0522   DD 5D                  LD   e,ixl
+0524   19                     ADD   hl,de       ; Add offset (0 for i)
+0525   C3 0C 04               JP   var1         ; Handle as variable
+```
+
+The `/i` variable holds current loop counter. Example usage:
+
+```
+10 (           ; Start loop 0 to 9
+  /i .         ; Print current counter
+) 
+
+5 (            ; Loop 5 times
+  `Count: ` /i . ; Print: Count: 0,1,2,3,4
+  /N
+)
+```
+
+The loop counter `/i`:
+- Starts at 0
+- Increments each loop
+- Accessed via `/i`
+- Is part of loop stack frame
+
+It's accessed through the alternate variable system like other system variables.
+
+Here are practical examples of using `/i` in MINT:
+
+```
+; Simple counting example
+10 (           ; Loop 10 times
+  `Loop # ` /i . /N  ; Will print: Loop # 0, Loop # 1, etc
+)
+
+; Making a multiplication table
+10 (           ; Outer loop 0-9
+  10 (         ; Inner loop 0-9
+    /i .       ; Print row number
+    ` x `      ; Print x
+    /j .       ; Print column number (outer loop counter)
+    ` = `      ; Print =
+    /i /j * .  ; Print product
+    /N         ; New line
+  )
+)
+
+; Creating an array with index values
+[ 
+  5 (          ; Loop 5 times
+    /i         ; Push loop counter
+  )            ; Creates array [0,1,2,3,4]
+]
+
+; Selective processing
+10 (
+  /i 2 MOD 0 = (  ; If counter is even
+    /i .          ; Print it
+  )
+)
+
+; Countdown
+10 (
+  9 /i - .     ; Print 9,8,7,6,5,4,3,2,1,0
+  /N
+)
+```
+
+Would you like me to show more complex examples using `/i` with arrays or nested loops?
+
+Here are more complex examples using `/i` with arrays and nested loops:
+
+```
+; Create 2D array [row,col] using nested loops
+[
+  5 (          ; 5 rows
+    [          ; Create row array
+      3 (      ; 3 columns
+        /i 10 * /j +  ; Row*10 + Col
+      )
+    ]
+  )
+]              ; Creates: [[0,1,2],[10,11,12],[20,21,22],[30,31,32],[40,41,42]]
+
+; Print a box using nested loops
+10 (           ; Height
+  10 (         ; Width
+    /i 0 = /i 9 = OR    ; If first or last row
+    /j 0 = /j 9 = OR OR ; Or first or last column
+    ( `*` ) ( ` ` ) /C  ; Print * or space
+  )
+  /N           ; New line at end of each row
+)
+
+; Fill array with pattern based on index
+[
+  16 (         ; 16 elements
+    /i DUP * ; Square of index
+  )
+]              ; Creates: [0,1,4,9,16,25,36,49,64,81,100,121,144,169,196,225]
+
+; Process array with index
+: SHOWARRAY    ; ( array -- )
+  DUP /S (     ; Get size and loop that many times
+    DUP /i ?   ; Get element at index i
+    ` Element ` /i . ` is: ` . /N  ; Print with index
+  ) DROP
+;
+```
+
+The patterns shown above demonstrate:
+1. Nested loops with `/i` and `/j`
+2. Array creation with computed values
+3. Index-based pattern generation
+4. Array processing using index
+
+Would you like me to show more examples of specific patterns or techniques?
+
+Here are more advanced patterns and techniques using `/i` and arrays:
+
+```
+; Create a triangular number sequence
+[
+  8 (          ; First 8 triangular numbers
+    /i 1 +     ; n = i + 1
+    DUP        ; Duplicate n
+    1 + *      ; Multiply by (n+1)
+    2 /        ; Divide by 2
+  )            ; Creates [1,3,6,10,15,21,28,36]
+]
+
+; Pascal's triangle row generator
+: PASCAL       ; ( row# -- )
+  DUP 1 + [    ; Create array size row#+1
+    DUP (      ; For each position
+      /i DUP   ; Get current position
+      ROT      ; Get row number to top
+      OVER     ; Copy position
+      - DUP    ; Position from end
+      0 < NOT  ; Check if valid
+      SWAP 0 = OR ( ; Or if first position
+        1       ; Edge is 1
+      ) (       ; Else
+        0       ; Fill with 0
+      )
+    ) DROP
+  ]
+;
+
+; Multiplication table as array of arrays
+[
+  10 (         ; 10 rows
+    [          ; Create row array
+      10 (     ; 10 columns
+        /i 1 + /j 1 + *  ; (row+1)*(col+1)
+      )
+    ]
+  )
+]
+
+; Print array with formatting
+: PRINTARRAY   ; ( array -- )
+  DUP /S (     ; For each element
+    /i 4 MOD 0 = /i 0 = NOT AND ( ; Every 4 items except first
+      /N       ; New line
+    )
+    DUP /i ?   ; Get element
+    5 SPACES   ; Pad with spaces
+    .          ; Print number
+  ) DROP
+  /N
+;
+```
+
+These examples show:
+1. Mathematical sequence generation
+2. Complex array building
+3. Nested array structures
+4. Matrix-like operations
+5. Formatted output using indices
+
+Would you like to see more examples of specific mathematical patterns or data structures?
+
+Here are more advanced mathematical patterns and data structures using `/i`:
+
+```
+; Fibonacci sequence in array
+[
+  10 (                    ; First 10 Fibonacci numbers
+    /i 2 < (              ; If index < 2
+      1                   ; Push 1 for first two numbers
+    ) (                   ; Else
+      DUP /i 1 - ?       ; Get F(n-1)
+      OVER /i 2 - ?      ; Get F(n-2)
+      +                   ; Add them
+    )
+  )
+]                        ; Creates [1,1,2,3,5,8,13,21,34,55]
+
+; Prime number sieve
+: SIEVE                 ; ( size -- array )
+  [                     ; Create initial array
+    OVER (              ; Loop size times
+      /i 2 <  (         ; If index < 2
+        0               ; Not prime
+      ) (               ; Else
+        1               ; Potentially prime
+      )
+    )
+  ]
+  DUP ROT (            ; For each number up to size
+    /i 2 >= (          ; If index >= 2
+      DUP /i ?         ; Check if still marked prime
+      (                ; If it is
+        /i DUP +       ; Start at i*2
+        ROT DUP ROT (  ; Up to size
+          OVER OVER    ; Get array and index
+          0 SWAP       ; Mark as not prime
+          !            ; Store it
+          OVER +       ; Next multiple
+        ) DROP DROP
+      ) DROP
+    )
+  ) 
+;
+
+; Create a spiral array pattern
+: SPIRAL                ; ( size -- array )
+  DUP DUP * [          ; Create square array
+    OVER (             ; For each row
+      OVER (           ; For each column
+        /i /j          ; Get coordinates
+        2DUP           ; Calculate spiral value
+        MIN OVER
+        MIN ROT ROT
+        OVER OVER -
+        ROT ROT -
+        MIN 4 *
+        OVER OVER 
+        SWAP - SWAP
+        OVER - +
+      )
+    )
+  ]
+;
+```
+
+Would you like me to:
+1. Explain how any of these patterns work in detail?
+2. Show more mathematical sequences?
+3. Show how to manipulate these structures once created?
+
+
 #### `/j` Outer loop variable
+
+Here's where outer loop variable `/j` is implemented in the code:
+
+```assembly
+; In the variables section (alt vars):
+137A                          DS   2   ; j outer loop variable
+
+; Used in loop processing:
+ALTVAR:      
+050F   FE 6A                  CP   "j"          ; Check for 'j'
+0511   2E 08                  LD   l,8          ; Offset 8 for outer loop
+0513   28 09                  JR   z,loopVar    ; Handle j variable
+
+LOOPVAR:      
+051E   26 00                  LD   h,0          ; Clear H
+0520   DD 54                  LD   d,ixh        ; Get loop frame pointer
+0522   DD 5D                  LD   e,ixl
+0524   19                     ADD   hl,de       ; Add offset (8 for j)
+0525   C3 0C 04               JP   var1         ; Handle as variable
+```
+
+Example usage in nested loops:
+```
+5 (            ; Outer loop - j
+  3 (          ; Inner loop - i
+    `/j=/i: `  ; Print label
+    /j .       ; Print outer counter
+    ` `       ; Space
+    /i .       ; Print inner counter
+    /N         ; Newline
+  )
+)
+```
+
+This will print:
+```
+/j=/i: 0 0
+/j=/i: 0 1
+/j=/i: 0 2
+/j=/i: 1 0
+/j=/i: 1 1
+/j=/i: 1 2
+...etc
+```
+
+Would you like me to show more examples of using `/j` with `/i` in nested loops?
+
+Here are more examples of using `/j` with `/i` in nested loops:
+
+```
+; Multiplication table with formatting
+10 (                   ; Outer loop (j) - rows
+  /j 0 = (            ; If first row, print header
+    `   `             ; Space for alignment
+    10 (              ; Print column headers
+      /i 1 + 3 .R     ; Right-aligned numbers
+    ) /N
+    `   `             ; Separator line
+    30 (              ; Print 30 dashes
+      `-`
+    ) /N
+  )
+  /j 1 + 2 .R ` |`    ; Print row number and separator
+  10 (                ; Inner loop (i) - columns
+    /j 1 + /i 1 + *   ; Multiply (row+1)*(col+1)
+    4 .R              ; Print right-aligned
+  )
+  /N                  ; New line after each row
+)
+
+; Create checkerboard pattern
+8 (                    ; 8 rows
+  8 (                  ; 8 columns
+    /i /j + 1 AND     ; If sum of indices is odd
+    ( `▓` ) ( `░` )   ; Print dark or light square
+  )
+  /N
+)
+
+; Create pyramid pattern
+10 (                   ; Height
+  /j 9 SWAP - (       ; Spaces before stars
+    ` `
+  )
+  /j 1 + 2 * (        ; Stars (2n+1 per row)
+    `*`
+  )
+  /N
+)
+```
+
+More complex example using arrays:
+```
+; Create 2D array with row/column sums
+: MATRIX
+  5 (                  ; 5 rows
+    [                  ; Create row array
+      5 (              ; 5 columns
+        /i /j +        ; Value is sum of indices
+      )
+      DUP /S          ; Get size
+      0 SWAP (        ; Sum all elements
+        DUP ROT +     ; Add to sum
+      ) SWAP DROP     ; Keep sum
+    ]                 ; Push row with sum
+  )
+;
+```
+
+Would you like to see:
+1. More pattern examples?
+2. How to process these 2D structures?
+3. Different mathematical patterns using both indices?
+
+   
 
 
 
