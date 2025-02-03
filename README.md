@@ -12,38 +12,38 @@
 - A small and fast [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) like system for the TEC-1 and SCC, and more 
 - Incredible 400,000 commands /sec (4Mhz clock) or one order of power slower than your clock speed
 - Allows rapid prototyping of code, easy concatenation, no compiling, runs instantly, test as you build
-- It Never works as expected until it does! Bam!
+- We never get an undetected error because it never works as expected until it does, punch! 
 - [THE SOURCE CODE](https://github.com/orgMINT/MINT)
 - [monsonite site](https://github.com/monsonite/MINT)
-- [{FB Search](https://www.facebook.com/groups/623556744820045/search/?q=mint)
+- [FB Search](https://www.facebook.com/groups/623556744820045/search/?q=mint)
 - [spreadsheet help files](https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/)
 - [Programs I suffer with may or may not work, punch!!](https://github.com/SteveJustin1963/tec-MINT/tree/main/code)
 
 
-## Honour Roll 
+# Honour Roll 
 The structuring or acknowledgment of the individuals involved in the development of the code follows no discernible hierarchy or prioritization of recognition, implying that their contributions are regarded in a manner devoid of any preordained or systematic reverence. This lack of sequentiality reflects an egalitarian or arbitrary approach, wherein no specific developer is elevated above another in terms of the order of respect or recognition for their work.
 
 - John Hardy
 - Ken Boak
 - Craig Jones
 - Craig Hart-RIP
-- Steve Justin - post testing
-- TEC-1 group - no idea
+- Steve Justin - post testing and coding madness
+- TEC-1 group - wake up and smell the roses!
 
-### Announcements
+# Announcements
   - https://www.facebook.com/groups/tec1z80/posts/1250512652124448/ 
   - https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/history.md
 
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/263565308_1147844542415783_7150078760328965579_n.jpg)
 
-### Videos
+# Videos
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1638969598.mp4
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1639658972.mp4
 - https://www.youtube.com/watch?v=m66y6C54Cds WARNING - 3 1/2 HR MOVIE LENGTH
 
 
 
-### My attempt to run v1.1, first go
+# My attempt to run v1.1, first go
 
 - using an EEPROM; AT28C64B.
 - compile v1.1, set flags as needed
@@ -86,11 +86,11 @@ The structuring or acknowledgment of the individuals involved in the development
 ![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/IMG_8467.jpg)
 ![]()
 
-### build v 1.1
+# Build v 1.1
 - set correct flags for the build and then compile and then burn the rom. this will combine bitbang with MINT
 - “it finally works!  
 
-### ver 2
+# Ver 2 getting respectable
 - new release, see my updated [manual](MEAT-EXTRACT.md)
 - need more ram, cannot load long programs, moving to 4k 
 - adding SPI cct .. see [tec-SCOPE ](https://github.com/SteveJustin1963/tec-SCOPE)
@@ -98,8 +98,9 @@ The structuring or acknowledgment of the individuals involved in the development
 - need a larger variable and function set, name length needs to be increased to 2 characters
 - John please fix all [bugs](https://github.com/orgMINT/MINT/issues)
 
-## ver 3 (adapted and added to JH's comments)
-- maintain the classic 1D
+# Ver 3 - You Promised to Love Me 
+- adapted from JH's comments
+- maintain the classic 1D, yes!!
 - add with modification the last two high address to get 6k more out of eeprom 
 - ![image](https://github.com/user-attachments/assets/9d753110-e74e-45b1-a050-2187cc91c0a7)
 - ![image](https://github.com/user-attachments/assets/36d45b5b-a19b-4acb-93f1-78bcea778814)
@@ -110,16 +111,17 @@ The structuring or acknowledgment of the individuals involved in the development
 - add SPI master
 - enhance /INT :F
 - enhance ASM calls and return
-- add 32-bit floating point (FP) for now
+- FP - the Big one **Will do 32-bit floating point signed number** 
 - FP always goes into a VAR, and if its put on the stack, only the pointer is stored there
+```
+The range depends on the allocation of bits for the sign, exponent, and mantissa. Following the typical IEEE 754 format:
+1 bit for the sign
+8 bits for the exponent (bias of 127)
+23 bits for the mantissa (plus an implicit leading 1 for normalized numbers)
+```
 - the stack is only for 16-bit integers and pointers, then mint doesn't need to change very much and you could have larger than 32-bit floating point numbers.
 
 
-For a **32-bit floating-point signed number**, the range depends on the allocation of bits for the sign, exponent, and mantissa. Following the typical IEEE 754 format:
-
-- **1 bit** for the sign
-- **8 bits** for the exponent (bias of 127)
-- **23 bits** for the mantissa (plus an implicit leading 1 for normalized numbers)
 
 The approximate range is:
 
