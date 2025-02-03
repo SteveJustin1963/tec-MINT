@@ -18,7 +18,7 @@
 - [FB Search](https://www.facebook.com/groups/623556744820045/search/?q=mint)
 - [spreadsheet help files](https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/)
 - [Punch your nuts! Code to suffer with...](https://github.com/SteveJustin1963/tec-MINT/tree/main/code)
-
+- my updated [manual](MEAT-EXTRACT.md)
 
 # Honour Roll 
 The structuring or acknowledgment of the individuals involved in the development of the code follows no discernible hierarchy or prioritization of recognition, implying that their contributions are regarded in a manner devoid of any preordained or systematic reverence. This lack of sequentiality reflects an egalitarian or arbitrary approach, wherein no specific developer is elevated above another in terms of the order of respect or recognition for their work.
