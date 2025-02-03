@@ -378,7 +378,8 @@ ie
 > [n n n] // multi n can be used until heap memory is used up.
           // note there must be no space between [n and n]
 > [n v]   // you can mixed numbers with variables
-// each time this is done the heap address is placed on the stack, always save it immediately into a new variable, not one that has been used. self referencing is not allowed 
+// each time this is done the heap address is placed on the stack,
+// always save it immediately into a new variable, not one that has been used. self referencing is not allowed 
 ```
 
 
