@@ -18,7 +18,7 @@
 - [FB Search](https://www.facebook.com/groups/623556744820045/search/?q=mint)
 - [spreadsheet help files](https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/)
 - [Punch your nuts! Code to suffer with...](https://github.com/SteveJustin1963/tec-MINT/tree/main/code)
-- my updated [manual](MEAT-EXTRACT.md)
+- my updated [ver 2 manual](MEAT-EXTRACT.md)
 
 # Honour Roll 
 The structuring or acknowledgment of the individuals involved in the development of the code follows no discernible hierarchy or prioritization of recognition, implying that their contributions are regarded in a manner devoid of any preordained or systematic reverence. This lack of sequentiality reflects an egalitarian or arbitrary approach, wherein no specific developer is elevated above another in terms of the order of respect or recognition for their work.
@@ -91,7 +91,7 @@ The structuring or acknowledgment of the individuals involved in the development
 - “it finally works!  
 
 # Ver 2 getting respectable
-- new release, see my updated [manual](MEAT-EXTRACT.md)
+- new release, see my updated [ver 2 manual](MEAT-EXTRACT.md)
 - need more ram, cannot load long programs, moving to 4k 
 - adding SPI cct .. see [tec-SCOPE ](https://github.com/SteveJustin1963/tec-SCOPE)
 - play with /int calls :Z function
