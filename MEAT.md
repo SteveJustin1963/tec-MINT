@@ -1018,22 +1018,659 @@ It will:
 
 After this you can use 'T' as a command which will put 123 on the stack.
 
-- `;` End definition/return
-- `(` Begin loop
-- `)` End loop
-- `/E` Else condition
-- `/F` False condition
-- `/T` True condition
-- `/U` Unlimited loop
-- `/W` While condition
-- `/G` Execute MINT code
-- `/X` Execute machine code
+#### `;` End definition/return
+Here's where end definition/return `;` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01D8   80                     DB   lsb(semi_)   ;    ;
+
+; The actual SEMI routine:
+SEMI_:       
+0480   CD AD 03               CALL   rpop        ; Restore Instruction pointer
+0483   44 4D                  LD   bc,hl        ; Move return address to bc
+0485   FD E9                  JP   (iy)         ; Next instruction
+
+; Used in definition mode to detect end:
+DEF1:        ; Store definition body
+072D   0A                     LD   a,(bc)       ; Get next character
+072E   03                     INC   bc          ; Point to next
+072F   12                     LD   (de),A       ; Store character
+0730   13                     INC   de   
+0731   FE 3B                  CP   ";"          ; Is it semicolon?
+0733   28 02                  JR   Z,def2       ; Yes, end definition
+0735   18 F6                  JR   def1         ; No, continue definition
+```
+
+`;` has two roles:
+
+1. In definitions (after `:`)
+   - Marks end of definition
+   - Ends storage of definition body
+   - Saves final heap pointer
+
+2. During execution
+   - Acts as a return
+   - Restores previous instruction pointer
+   - Returns from called word
+
+So:
+```
+: T 123 ;     ; ends definition of T
+T             ; when T runs, ; returns to caller
+```
+
+It's both the definition terminator and the return instruction.
+
+#### `(` Begin loop
+Here's where begin loop `(` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01CC   E9                     DB   lsb(lparen_)   ;   (
+
+; The actual loop start code:
+BEGIN:       
+LOOPSTART:      
+058A   ED 43 02 11            LD   (vTemp1),bc   ; save start
+058E   1E 01                  LD   e,1           ; skip to loop end, nesting = 1
+0590                LOOPSTART1:      
+0590   03                     INC   bc   
+0591   0A                     LD   a,(bc)   
+0592   CD 5B 03               CALL   nesting      ; affects zero flag
+0595   20 F9                  JR   nz,loopStart1   
+
+0597   D1                     POP   de           ; de = limit
+0598   7B                     LD   a,e           ; is it zero?
+0599   B2                     OR   d   
+059A   20 07                  JR   nz,loopStart2   
+059C   1B                     DEC   de           ; de = TRUE
+059D   ED 53 9E 13            LD   (vElse),de   
+05A1   18 1F                  JR   loopStart4   ; yes continue after skip
+
+05A3                LOOPSTART2:      
+05A3   3E 02                  LD   a,2          ; is it TRUE
+05A5   83                     ADD   a,e   
+05A6   82                     ADD   a,d   
+05A7   20 03                  JR   nz,loopStart3   
+05A9   11 01 00               LD   de,1         ; yes make it 1
+
+05AC                LOOPSTART3:      
+05AC   60 69                  LD   hl,bc   
+05AE   CD A2 03               CALL   rpush       ; rpush loop end
+05B1   0B                     DEC   bc          ; IP points to ")"
+05B2   2A 02 11               LD   hl,(vTemp1)  ; restore start
+05B5   CD A2 03               CALL   rpush      ; rpush start
+05B8   EB                     EX   de,hl       ; hl = limit
+05B9   CD A2 03               CALL   rpush      ; rpush limit
+05BC   21 FF FF               LD   hl,-1        ; hl = count = -1
+05BF   CD A2 03               CALL   rpush      ; rpush count
+```
+
+When you use `(`, it:
+1. Saves current location as loop start
+2. Finds matching `)` taking nesting into account
+3. Sets up loop control:
+   - Pushes loop end address
+   - Pushes loop start address
+   - Pushes loop limit
+   - Pushes initial counter (-1)
+
+The loop stack frame looks like:
+- counter (-1)
+- limit
+- start address
+- end address
+
+Example:
+```
+10 ( ... )    ; Loop 10 times
+```
+
+This works with the `)` command to create loops in MINT.
+
+#### `)` End loop
+Here's where end loop `)` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01CD   E0                     DB   lsb(rparen_)   ;   )
+
+; The actual loop end code:
+AGAIN:       
+LOOPEND:      
+05C4   DD 5E 02               LD   e,(ix+2)     ; de = limit
+05C7   DD 56 03               LD   d,(ix+3)     
+05CA   7B                     LD   a,e          ; a = lsb(limit)
+05CB   B2                     OR   d            ; if limit 0 exit loop
+05CC   28 2B                  JR   z,loopEnd4   
+
+05CE   13                     INC   de          ; is limit -2
+05CF   13                     INC   de   
+05D0   7B                     LD   a,e          ; a = lsb(limit)
+05D1   B2                     OR   d            ; if limit 0 exit loop
+05D2   28 09                  JR   z,loopEnd2   ; yes, loop again
+
+05D4   1B                     DEC   de   
+05D5   1B                     DEC   de   
+05D6   1B                     DEC   de   
+05D7   DD 73 02               LD   (ix+2),e     ; Store decremented limit
+05DA   DD 72 03               LD   (ix+3),d   
+
+05DD                LOOPEND2:      
+05DD   DD 5E 00               LD   e,(ix+0)     ; inc counter
+05E0   DD 56 01               LD   d,(ix+1)   
+05E3   13                     INC   de   
+05E4   DD 73 00               LD   (ix+0),e   
+05E7   DD 72 01               LD   (ix+1),d   
+
+05EA                LOOPEND3:      
+05EA   11 00 00               LD   de,FALSE     ; if clause ran then vElse = FALSE
+05ED   ED 53 9E 13            LD   (vElse),de   
+05F1   DD 4E 04               LD   c,(ix+4)     ; IP = start
+05F4   DD 46 05               LD   b,(ix+5)   
+05F7   FD E9                  JP   (iy)         ; Next instruction
+
+05F9                LOOPEND4:      
+05F9   11 08 00               LD   de,2*4       ; rpop frame
+05FC   DD 19                  ADD   ix,de   
+05FE   FD E9                  JP   (iy)         ; Next instruction
+```
+
+When `)` is executed, it:
+1. Checks loop limit:
+   - If zero: exits loop
+   - If -2: continues loop
+   - Otherwise: decrements limit
+2. Increments counter
+3. Either:
+   - Returns to loop start (IP = start)
+   - Or exits loop by removing loop frame
+
+So in a loop like:
+```
+10 ( ... )    ; Loop 10 times
+```
+The `)` will:
+1. Track iterations
+2. Jump back to code after `(` 
+3. Exit when count reaches limit
+
+The loop frame gets cleaned up when loop ends.
+
+#### `/E` Else condition
+Here's where else condition `/E` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+01F3   3B                     DB   lsb(else_)   ;E      else
+
+; The actual ELSE routine:
+ELSE_:       
+063B   2A 9E 13               LD   hl,(vElse)    ; Get else flag
+063E                ELSE1:       
+063E   E5                     PUSH   hl          ; Push flag onto stack
+063F   FD E9                  JP   (iy)          ; Next instruction
+
+; vElse is set in various places, like during loops:
+05EA                LOOPEND3:      
+05EA   11 00 00               LD   de,FALSE     ; if clause ran then vElse = FALSE
+05ED   ED 53 9E 13            LD   (vElse),de   
+```
+
+When you use `/E`, it:
+1. Gets the current else flag value from vElse
+2. Pushes that value onto stack
+
+The else flag (vElse) is used to track conditional execution:
+- Set to TRUE (-1) if a condition was false
+- Set to FALSE (0) if a condition was true
+- Used with `(...)` constructs
+
+Example usage:
+```
+condition ( do-if-true ) /E ( do-if-false )
+```
+
+If condition is:
+- True: first part runs, vElse = FALSE
+- False: second part runs, vElse = TRUE
+
+This allows for conditional execution in MINT programs.
+
+#### `/F` False condition
+Here's where false condition `/F` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+01F4   31                     DB   lsb(falsex_)   ;F      false condition
+
+; The actual FALSEX routine:
+FALSEX_:      
+0631   C3 DD 03               JP   false_      ; Jump to FALSE routine
+
+FALSE_:      
+03DD   21 00 00               LD   hl,FALSE    ; Load FALSE ($0000)
+03E0   18 03                  JR   true1       ; Jump to push result
+
+TRUE1:       
+03E5   E5                     PUSH   hl        ; Push result onto stack
+03E6   FD E9                  JP   (iy)        ; Next instruction
+```
+
+When you use `/F`, it:
+1. Loads HL with FALSE (0000)
+2. Pushes FALSE onto stack
+
+This command is used to put a false condition on the stack, which can be used for:
+- Conditional tests
+- Logical operations
+- Flow control
+
+Example usage:
+```
+/F ( code )     ; Code won't execute because condition is false
+```
+
+The command provides a way to explicitly push a FALSE value onto the stack.
+
+#### `/T` True condition
+Here's where true condition `/T` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+0202   88                     DB   lsb(truex_)   ;T      true condition
+
+; The actual TRUEX routine:
+TRUEX_:      
+0688   C3 E2 03               JP   true_      ; Jump to TRUE routine
+
+TRUE_:       
+03E2   21 FF FF               LD   hl,TRUE    ; Load TRUE ($FFFF)
+03E5   E5                     PUSH   hl       ; Push result onto stack
+03E6   FD E9                  JP   (iy)       ; Next instruction
+```
+
+When you use `/T`, it:
+1. Loads HL with TRUE ($FFFF)
+2. Pushes TRUE onto stack
+
+This command is used to put a true condition on the stack, which can be used for:
+- Conditional tests
+- Logical operations
+- Flow control
+
+Example usage:
+```
+/T ( code )     ; Code will execute because condition is true
+```
+
+The command provides a way to explicitly push a TRUE value onto the stack.
+
+#### `/U` Unlimited loop
+Here's where unlimited loop `/U` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+0203   8B                     DB   lsb(unlimit_)   ;U      unlimited loop
+
+; The actual UNLIMIT routine:
+UNLIMIT_:      
+068B   21 FE FF               LD   hl,-2        ; Load -2 (special loop value)
+068E   18 AE                  JR   else1        ; Push onto stack
+
+ELSE1:       
+063E   E5                     PUSH   hl         ; Push value
+063F   FD E9                  JP   (iy)         ; Next instruction
+```
+
+When you use `/U`, it:
+1. Loads HL with -2 (special loop value)
+2. Pushes -2 onto stack
+
+When -2 is used as a loop count:
+```assembly
+05CE   13                     INC   de          ; is limit -2
+05CF   13                     INC   de   
+05D0   7B                     LD   a,e          ; a = lsb(limit)
+05D1   B2                     OR   d            ; if limit 0 exit loop
+05D2   28 09                  JR   z,loopEnd2   ; yes, loop again
+```
+
+It creates an infinite loop that can only be broken by a `/W` while command.
+
+Example usage:
+```
+/U ( code )     ; Code will loop forever until broken by /W
+```
+
+#### `/W` While condition
+Here's where while condition `/W` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+0205   13                     DB   lsb(while_)   ;W      conditional break from loop
+
+; The actual WHILE routine:
+BREAK_:      
+WHILE_:      
+WHILE:       
+0613   E1                     POP   hl         ; Get test value
+0614   7D                     LD   a,l   
+0615   B4                     OR   h           ; Check if zero
+0616   20 09                  JR   nz,while2   ; If not zero, continue
+0618   DD 4E 06               LD   c,(ix+6)    ; IP = ) 
+061B   DD 46 07               LD   b,(ix+7)   
+061E   C3 F9 05               JP   loopEnd4    ; Break from loop
+
+WHILE2:      
+0621   FD E9                  JP   (iy)        ; Continue loop
+```
+
+When you use `/W`, it:
+1. POPs a value from stack
+2. Tests if value is zero
+3. If zero:
+   - Gets loop end address
+   - Breaks out of loop
+4. If non-zero:
+   - Continues loop
+
+Example usage:
+```
+/U ( condition /W code )  ; Loop while condition is true
+```
+
+This provides conditional loop exit:
+- Tests top of stack
+- Exits loop if zero (false)
+- Continues if non-zero (true)
+
+Often used with `/U` for while-style loops that continue until a condition becomes false.
+
+#### `/G` Execute MINT code
+Here's where execute MINT code `/G` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+01F5   53                     DB   lsb(go_)   ;G      go execute mint code
+
+; The actual GO routines:
+GO_:         
+0653   D1                     POP   de         ; Get address to execute
+
+GO1:         
+0654   7A                     LD   a,D         ; Skip if destination address is null
+0655   B3                     OR   E   
+0656   28 0E                  JR   Z,go3       ; If zero, skip execution
+
+0658   60 69                  LD   hl,bc       ; Save current instruction pointer
+065A   03                     INC   bc         ; Read next char from source
+065B   0A                     LD   a,(bc)      ; Check for semicolon
+065C   FE 3B                  CP   ";"         ; If semicolon, optimize tail call
+065E   28 03                  JR   Z,go2       ; by jumping rather than calling
+0660   CD A2 03               CALL   rpush     ; Save Instruction Pointer
+
+GO2:         
+0663   42 4B                  LD   bc,de       ; Set new instruction pointer
+0665   0B                     DEC   bc   
+
+GO3:         
+0666   FD E9                  JP   (iy)        ; Next instruction
+```
+
+When you use `/G`, it:
+1. POPs execution address from stack
+2. If address is not zero:
+   - Saves current instruction pointer
+   - Checks for tail-call optimization (;)
+   - Sets new instruction pointer to target
+3. If address is zero:
+   - Skips execution
+4. Continues execution at new location
+
+Example usage:
+```
+someaddr /G    ; Execute MINT code at someaddr
+```
+
+This command is used to:
+- Execute MINT code at a given address
+- Implement function calls
+- Support tail-call optimization (when followed by ;)
+
+  
+#### `/X` Execute machine code
+Here's where execute machine code `/X` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+0206   41                     DB   lsb(exec_)   ;X      execute machine code
+
+; The actual EXEC routines:
+EXEC_:      
+0641   CD 46 06               CALL   exec1   
+0644   FD E9                  JP   (iy)   
+
+EXEC1:       
+0646   E1                     POP   hl         ; Get code address from stack
+0647   E3                     EX   (SP),hl     ; Exchange return address with code address
+0648   E9                     JP   (hl)        ; Jump to code
+```
+
+When you use `/X`, it:
+1. POPs address from stack (where machine code is located)
+2. Exchanges return address with code address
+3. Jumps directly to the machine code
+
+Example usage:
+```
+machine_code_addr /X    ; Execute Z80 code at this address
+```
+
+This command is used to:
+- Execute raw Z80 machine code
+- Call machine language routines
+- Implement low-level operations
+
+Important notes:
+- Code being called must preserve registers properly
+- Must end with RET instruction to return to MINT
+- Is dangerous if address points to invalid code
+- Executes Z80 instructions directly
+
+This provides a way to extend MINT with native Z80 code when needed.
 
 ### 7. ARRAY OPERATIONS
-- `[` Begin array definition
-- `]` End array definition
-- `/S` Get array size
-- `/A` Allocate heap memory
+#### `[` Begin array definition
+Here's where begin array definition `[` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01E1   D4                     DB   lsb(lbrack_)   ;    [
+
+; The actual LBRACK/ARRDEF routine:
+LBRACK_:      
+ARRDEF:      
+04D4   21 00 00               LD   hl,0         ; Push 0 on return stack
+04D7   39                     ADD   hl,sp       ; Get current stack pointer
+04D8   CD A2 03               CALL   rpush      ; Save it for array building
+04DB   FD E9                  JP   (iy)         ; Next instruction
+
+; Array completion happens in ARREND when ] is encountered:
+ARREND:             ; This is the code that runs after [1 2 3]
+076E   ED 43 02 11            LD   (vTemp1),bc   ; save IP
+0772   CD AD 03               CALL   rpop   
+0775   22 04 11               LD   (vTemp2),hl   ; save old SP
+0778   54 5D                  LD   de,hl   ; de = hl = old SP
+077A   B7                     OR   a   
+077B   ED 72                  SBC   hl,sp   ; hl = array count (items on stack)
+077D   CB 3C                  SRL   h   ; num items = num bytes / 2
+077F   CB 1D                  RR   l   
+0781   44 4D                  LD   bc,hl   ; bc = count
+0783   2A 76 13               LD   hl,(vHeapPtr)   ; hl = array[-4]
+```
+
+When you use `[`, it:
+1. Gets current stack pointer
+2. Saves it on return stack
+3. Continues execution, collecting array items
+
+Then when `]` is encountered:
+1. Calculates number of items
+2. Allocates heap space
+3. Copies items from stack to heap
+4. Returns array address
+
+Example usage:
+```
+[ 1 2 3 ]    ; Creates array with 3 elements
+```
+
+Arrays are stored on the heap with:
+- Length word at start
+- Elements following
+- Elements can be bytes or words based on byte mode
+  
+#### `]` End array definition
+Here's where end array definition `]` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01E3   E3                     DB   lsb(rbrack_)   ;    ]
+
+; The actual RBRACK/ARREND routine:
+ARREND:      
+076E   ED 43 02 11            LD   (vTemp1),bc   ; save IP
+0772   CD AD 03               CALL   rpop   
+0775   22 04 11               LD   (vTemp2),hl   ; save old SP
+0778   54 5D                  LD   de,hl         ; de = hl = old SP
+077A   B7                     OR   a   
+077B   ED 72                  SBC   hl,sp        ; hl = array count (items on stack)
+077D   CB 3C                  SRL   h            ; num items = num bytes / 2
+077F   CB 1D                  RR   l   
+0781   44 4D                  LD   bc,hl         ; bc = count
+0783   2A 76 13               LD   hl,(vHeapPtr) ; hl = array[-4]
+0786   71                     LD   (hl),c        ; write num items in length word
+0787   23                     INC   hl   
+0788   70                     LD   (hl),b   
+0789   23                     INC   hl           ; hl = array[0], bc = count
+
+ARRAYEND1:      
+078C   0B                     DEC   bc           ; dec items count
+078D   1B                     DEC   de   
+078E   1B                     DEC   de   
+078F   1A                     LD   a,(de)        ; Get values from stack
+0790   77                     LD   (hl),a        ; Store in array
+0791   23                     INC   hl   
+...
+07A1   EB                     EX   de,hl         ; de = end of array
+07A2   2A 04 11               LD   hl,(vTemp2)   
+07A5   F9                     LD   sp,hl         ; SP = old SP
+07A6   2A 76 13               LD   hl,(vHeapPtr) ; de = array[-2]
+07A9   23                     INC   hl   
+07AA   23                     INC   hl   
+07AB   E5                     PUSH   hl          ; return array[0]
+07AC   ED 53 76 13            LD   (vHeapPtr),de ; move heap* to end of array
+```
+
+When `]` is executed, it:
+1. Calculates number of items collected since `[`
+2. Gets heap space for array
+3. Stores array length at start
+4. Copies items from stack to heap
+5. Updates heap pointer
+6. Pushes array start address onto stack
+
+For example:
+```
+[ 1 2 3 ]
+```
+Creates an array:
+- Length: 3
+- Contents: 1,2,3
+- Returns start address of array
+
+The array can then be accessed using the `?` operator.
+
+#### `/S` Get array size
+Here's where get array size `/S` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+0201   0B                     DB   lsb(arrSize_)   ;S      array size
+
+; The actual ARRSIZE routines:
+ARRSIZE_:      
+ARRSIZE:      
+060B   E1                     POP   hl          ; Get array address
+060C   2B                     DEC   hl          ; Point to msb size
+060D   56                     LD   d,(hl)       ; Get msb size
+060E   2B                     DEC   hl          ; Point to lsb size
+060F   5E                     LD   e,(hl)       ; Get lsb size
+0610   D5                     PUSH   de         ; Push size onto stack
+0611   FD E9                  JP   (iy)         ; Next instruction
+```
+
+When you use `/S`, it:
+1. POPs array address from stack
+2. Gets size stored before array:
+   - Points to size bytes (2 before array start)
+   - Gets 16-bit size value
+3. Pushes size onto stack
+
+Example usage:
+```
+[ 1 2 3 ] /S    ; Creates array and gets its size (pushes 3)
+```
+
+Arrays are stored with size word before data:
+```
+[Size(2 bytes)][Data...]
+      ↑          ↑
+   Size bytes  Array pointer
+```
+
+So `/S` moves back 2 bytes from array start to read the size value.
+
+#### `/A` Allocate heap memory
+Here's where allocate heap memory `/A` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+01EF   00                     DB   lsb(alloc_)   ;A      allocate some heap memory
+
+; The actual ALLOC routine:
+ALLOC_:      ; allocates raw heap memory in bytes (ignores byte mode)
+0600   D1                     POP   de          ; Get allocation size
+0601   2A 76 13               LD   hl,(vHeapPtr) ; Get current heap pointer
+0604   E5                     PUSH   hl          ; Save current pointer as return value
+0605   19                     ADD   hl,de        ; Add allocation size
+0606   22 76 13               LD   (vHeapPtr),hl ; Store new heap pointer
+0609                ANOP_:       
+0609   FD E9                  JP   (iy)          ; Next instruction
+```
+
+When you use `/A`, it:
+1. POPs number of bytes to allocate from stack
+2. Gets current heap pointer
+3. Pushes current pointer as return value (start of allocated space)
+4. Adds allocation size to pointer
+5. Updates heap pointer to new position
+
+Example usage:
+```
+100 /A    ; Allocate 100 bytes, returns start address
+```
+
+Important points:
+- Allocates raw bytes (ignores byte mode)
+- Returns start address of allocated space
+- Just moves heap pointer, doesn't initialize memory
+- No memory recovery (no free operation)
+
+This provides basic memory allocation from the heap.
+
 
 ### 8. INPUT/OUTPUT OPERATIONS
 - `.` Print decimal number
