@@ -429,15 +429,15 @@ eg
 eg
 
 ```
-> [1 2 3] p!  // save to p                                            
-> p 0?.  // let recall p and check location 0                                                                         
-1        // correct
+> [1 2 3] p!           // save to p                                            
+> p 0?.                // let recall p and check location 0                                                                         
+1                      // correct
 > p0? -222 p0?!        // lets call p0? then replace with -222 then save it again with !
 
 // lets test it
-> p 0?.        // lets check if it updated
+> p 0?.                // lets check if it updated
 -222                                                                            
->         // good its worked
+>                      // good its worked
 ```
 
 ### Array size
@@ -587,10 +587,10 @@ eg
 > : D 1(A B C) ;
 > D                  //run D and press 123
 49 50 51   
->                 //it shows ASCII for 1 2 3
+>                   //it shows ASCII for 1 2 3
 > D                 // run D and press abc
 97 98 99  
->                // it shows ASCII for abc
+>                   // it shows ASCII for abc
 ```
 
 ### Control loops and counters 
@@ -602,33 +602,33 @@ eg
 ```
 > // Define an array of 5 elements and store its address in 'a'
 > [ 0 0 0 0 0 ] a! 	// need to initialize each time 
-> 			// Loop 5 times to read input and store in the array
+> 			      // Loop 5 times to read input and store in the array
 > 5( `Enter a digit:`   // Prompt the user
 /K 48 - n!              // Read a character, convert ASCII digit to number, store in 'n'
 n a /i ?!  /N           // Store 'n' into array at index /i
 )
 >
 >
-> 			// Loop 5 times to print each element of the array
+> // Loop 5 times to print each element of the array
 5 ( `Value is:`		// Print label
 a /i ? .  /N		// Fetch array element at index /i and print it
 )
 ```
 
-
-: A [ 0 0 0 0 0 ] a! ; 
-: B 5 ( `Enter a digit: `  /K 48 - n!  n a /i ?!  /N ) ;
-: C 5 ( `Value is: ` a /i ? .  /N ) ;
+```
+:A [ 0 0 0 0 0 ] a! ; 
+:B 5 ( `Enter a digit: `  /K 48 - n!  n a /i ?!  /N ) ;
+:C 5 ( `Value is: ` a /i ? .  /N ) ;
 
 // run it
 ABC
-
+```
 
 
 ### Loops
 - Looping in MINT is of the form
 
-n(code)  // n is number of loops
+> n(code)  // n is number of loops
 
 eg
 ```
@@ -759,8 +759,7 @@ eg
 ```
 > 10 x ! 20 y !
 > x y > ( `x is greater than y` ) /E ( `y is greater than x` )
-y is greater than x
-> // result correct
+y is greater than x                         // result correct
 >
 ```
 - the variable x is assigned the value 10 and 
@@ -794,7 +793,7 @@ eg
 - The following stores a function in the variable `Z`.
 ```
 > :K `hello` 1. 2. 3. ; // important - no space between `:` and `K`
-> K	    		// called by referring to it
+> K	    		      // called by referring to it
 hello 1 2 3
 >
 ```
@@ -817,7 +816,7 @@ eg
 
 ```
 > :F $ . . ;  
-//swaps top two arguments on the stack and then prints 
+// swaps top two arguments on the stack and then prints 
 > 3 7 . . 
 7 3
 > 3 7 F  
@@ -867,11 +866,9 @@ eg
 ```
 > :@ 1+ ;   a! 
 > 3 a . /G
-bad output
+.....bad output
 //bug, dont use
 ```
-
-
 - Anonymous functions can be stored in arrays 
 - and can even be used as a kind of "switch" statement.
 
@@ -1315,9 +1312,9 @@ s 2 > (        // If list has more than 1 element
 
 ```
 > [ 0 7 9 0 0 14 0 0 10 15 0 11 0 6 ] g !  // Graph (Adjacency matrix)
-> [ 0 999 999 999 999 ] d !               // Distances (start at 0, others infinity)
-> 0 s !                                   // Start node is 0
-> g s d D                                 // Call Dijkstra's algorithm
+> [ 0 999 999 999 999 ] d !                // Distances (start at 0, others infinity)
+> 0 s !                                    // Start node is 0
+> g s d D                                  // Call Dijkstra's algorithm
 ```
 - **Graph**: `[ 0 7 9 0 0 14 0 0 10 15 0 11 0 6 ]` represents an adjacency matrix.
 - **Distances**: `[ 0 999 999 999 999 ]` represents the distances from the start node to all other nodes, 
