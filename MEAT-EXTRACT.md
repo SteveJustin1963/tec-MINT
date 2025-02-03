@@ -1,4 +1,4 @@
- 
+# The SJ Manual 
 
 ```
 "The Excessively Scribbled-Upon, Over-Explained,
@@ -7,7 +7,7 @@
                 By Stephen Justin
 ```
 
-We went up the mountain to get the [Meat](MEAT.md) that lead to the creation of this Manual
+ 
 
  
  
@@ -529,10 +529,10 @@ eg
 Then
 ```
 > \[1 2 3] /S .
-2
+3
 >
 > \[1 2 3] 1\?   .
-3
+2
 >
 ```
 
