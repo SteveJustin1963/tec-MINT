@@ -2993,15 +2993,273 @@ Example usage:
 
 Like `/r`, this is an alternate variable accessed with forward slash because it's in the ALTVARS space.
 
-////
+////   redo from here as answers are sus --------------////////////////////////////////////////////////////////////////////////////////////////////
 
-- `/v` Interrupt ID
-- `/z` Name of last defined function
-- `/b` Byte mode flag
-- `/c` Carry flag
-- `/f` Interrupt function
-- `/i` Loop variable
-- `/j` Outer loop variable
+#### `/v` Interrupt ID
+ Let me help you understand the interrupt ID handling in this Z80 assembly code.
+
+In the listing, the interrupt ID is managed through the variable `VINTID` located at memory address `0x1392`. This is part of the MINT (Minimal Interpreter) system for the Z80 microprocessor.
+
+The interrupt ID is set in the `ISR` (Interrupt Service Routine) function at address `0x008B`:
+
+```assembly
+ISR:         
+    LD h,0           ; Clear the high byte of HL
+    LD (vIntID),hl   ; Store the interrupt ID (low byte of L) in memory
+    CALL enter       ; Call the enter routine
+    .CSTR   "Z"      ; Output the character "Z"
+    RET              ; Return from the interrupt
+```
+
+Here's what's happening:
+1. `LD h,0` sets the high byte of HL to zero
+2. `LD (vIntID),hl` stores the value in the `VINTID` memory location
+3. The low byte of L contains the interrupt ID (which seems to be passed in before calling this routine)
+
+In the code, you can see interrupt IDs are set when various RST (Restart) vectors are called. For example:
+
+```assembly
+RST1:        
+    LD l,1   ; Set interrupt ID to 1
+    JP ISR   
+
+RST2:        
+    LD l,2   ; Set interrupt ID to 2
+    JP ISR   
+```
+
+Each restart vector sets a different interrupt ID (1, 2, 3, 4, 5, 6, 7, 8) before jumping to the common ISR routine.
+
+The purpose seems to be to provide a way to track and potentially handle different types of interrupts in a generic manner, with the ability to distinguish between them using the `VINTID` variable.
+
+To use the interrupt ID mechanism in this Z80 MINT system, you would typically follow these steps:
+
+1. Define an Interrupt Handler
+First, create a function that will handle specific interrupt types. For example:
+
+```assembly
+handle_interrupt:
+    ; Check the interrupt ID
+    LD A, (VINTID)   ; Load the interrupt ID
+    CP 1             ; Compare with specific interrupt type
+    JR Z, interrupt_type_1
+    CP 2             ; Check for another type
+    JR Z, interrupt_type_2
+    ; ... handle other types
+    RET
+
+interrupt_type_1:
+    ; Specific handling for interrupt type 1
+    ; For example, toggle a flag, read a sensor, etc.
+    RET
+
+interrupt_type_2:
+    ; Specific handling for interrupt type 2
+    RET
+```
+
+2. Set Up Interrupt Vectors
+The code already sets up interrupt vectors at specific memory locations (RST1, RST2, etc.). These automatically call the ISR routine with different interrupt IDs:
+
+- RST1 sets interrupt ID to 1
+- RST2 sets interrupt ID to 2
+- And so on...
+
+3. Enable Interrupts
+In the RESET routine, interrupts are enabled:
+
+```assembly
+RESET:       
+    ; ... other initialization
+    IM 1     ; Set Interrupt Mode 1
+    EI       ; Enable Interrupts
+```
+
+4. Practical Example
+Let's say you want to handle a timer interrupt (ID 1) and a serial receive interrupt (ID 2):
+
+```assembly
+RST1:   ; Timer Interrupt
+    LD l,1   ; Set interrupt ID to 1
+    JP ISR   
+
+RST2:   ; Serial Receive Interrupt
+    LD l,2   ; Set interrupt ID to 2
+    JP ISR   
+
+handle_interrupt:
+    LD A, (VINTID)
+    CP 1
+    JR Z, timer_interrupt
+    CP 2
+    JR Z, serial_interrupt
+    RET
+
+timer_interrupt:
+    ; Increment a timer variable
+    LD HL, (timer_count)
+    INC HL
+    LD (timer_count), HL
+    RET
+
+serial_interrupt:
+    ; Read a character from serial port
+    CALL RXCHAR   ; Receive character
+    LD (last_received_char), A
+    RET
+```
+
+5. In Your Main Program
+You could then check or use these interrupt-driven values:
+
+```assembly
+main_loop:
+    ; Check timer count
+    LD HL, (timer_count)
+    ; Do something based on timer
+    
+    ; Check last received character
+    LD A, (last_received_char)
+    ; Process character
+    
+    JR main_loop
+```
+
+Key Points:
+- The interrupt ID is stored in `VINTID` at memory location `0x1392`
+- Each restart vector (RST1-RST8) can trigger a different interrupt type
+- The ISR routine stores the interrupt ID
+- You can create a handler to process different interrupt types
+- The system uses Interrupt Mode 1 (IM 1)
+
+Limitations in This Implementation:
+- The current ISR just prints "Z" and returns
+- You'll need to expand the interrupt handling to do meaningful work
+- This is a minimal implementation, so you might need to add more robust interrupt management
+
+The beauty of this design is its simplicity and extensibility. You can easily add new interrupt types by adding more RST vectors and handling logic.
+
+
+
+
+
+#### `/z` Name of last defined function
+
+In the MINT system, `/z` is a system variable that represents the name (single character) of the last defined function.
+
+Key Details:
+- Memory Address: `0x139A`
+- Variable Name: `VLASTDEF`
+- Type: 2-byte memory location storing the name of the last defined function
+
+How it Works:
+1. When you define a new function using the `:` (colon) command, the system stores the function's name in `VLASTDEF`.
+
+Example in the Code:
+```assembly
+DEF:    ; Create a colon definition
+    INC BC   ; Move to next character
+    LD A,(BC)  ; Get the next character (function name)
+    CP "@"    ; Check if it's an anonymous function
+    JR NZ, def0   
+
+def0:
+    LD (vLastDef),A  ; Store the function name
+```
+
+Practical Usage:
+: B `test` ;
+```
+After these definitions, `VLASTDEF` would contain the name of the most recently defined function ('cube').
+
+Practical Example:
+```forth
+: G `Hello, World!` ;   
+
+> /z.    ; get ascii of last function letter
+71
+>
+
+```
+the is no ctrl-Z to edit last function letter
+
+
+
+The `/z` mechanism provides a quick way to review and modify the most recently defined function, supporting an interactive and iterative programming style in this minimal Forth-like language.
+
+
+#### `/b` Byte mode flag
+In the MINT system, `/b` (actually `vByteMode`) is a system variable that controls whether the interpreter is in byte mode or word mode.
+
+Location and Details:
+- Memory Address: `0x136A`
+- Variable Name: `VBYTEMODE`
+- Type: 2-byte memory location storing the byte mode flag
+
+Key Characteristics:
+- When the flag is set to `-1` (all bits set), the system operates in byte mode
+- When the flag is set to `0`, the system operates in standard 16-bit word mode
+
+How Byte Mode is Used:
+1. Declaring Byte Arrays:
+```forth
+\ [1 2 3] a!   // Declare a byte array using '\' 
+```
+
+2. Accessing Byte Arrays:
+```forth
+\[1 2 3] 1\?   // Access a specific byte in the array
+```
+
+Implementation in Code:
+```assembly
+SETBYTEMODE:      
+    LD a,$FF   ; Set byte mode flag to all bits set (-1)
+    JR assignByteMode
+
+RESETBYTEMODE:    
+    XOR a      ; Clear byte mode flag (set to 0)
+
+ASSIGNBYTEMODE:   
+    LD (vByteMode),a    ; Store the byte mode flag
+    LD (vByteMode+1),a  ; Ensure full 16-bit setting
+    JP (iy)             ; Continue execution
+```
+
+Mode Transition:
+- Entering Byte Mode: Use `\` before array declaration
+- Leaving Byte Mode: Automatically occurs when executing `]`, `?`, or `!`
+
+Example Interactions:
+```forth
+// Standard 16-bit word mode (default)
+[1 2 3] a!   // Creates a 16-bit word array
+
+// Byte mode
+\[1 2 3] a!  // Creates an 8-bit byte array
+\a 1\?       // Access second byte of the array
+```
+
+Important Nuances:
+- Byte mode affects how arrays are stored and accessed
+- Limited to 8-bit values when in byte mode
+- Automatically returns to word mode after certain operations
+
+Limitations:
+- Only 8-bit values can be stored in byte mode
+- Primarily useful for compact memory representation or working with byte-level data
+
+The `/b` byte mode flag provides flexibility in data storage and manipulation, allowing developers to switch between 16-bit and 8-bit representations as needed.\\
+
+
+
+#### `/c` Carry flag
+
+#### `/f` Interrupt function
+
+#### `/i` Loop variable
+
+#### `/j` Outer loop variable
 
 
 
