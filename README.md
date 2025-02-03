@@ -17,7 +17,7 @@
 - [monsonite site](https://github.com/monsonite/MINT)
 - [FB Search](https://www.facebook.com/groups/623556744820045/search/?q=mint)
 - [spreadsheet help files](https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/)
-- [Programs I suffer with may or may not work, punch!!](https://github.com/SteveJustin1963/tec-MINT/tree/main/code)
+- [Punch your nuts! Code to suffer with...](https://github.com/SteveJustin1963/tec-MINT/tree/main/code)
 
 
 # Honour Roll 
