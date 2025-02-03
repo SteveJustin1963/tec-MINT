@@ -2735,6 +2735,95 @@ showing the stack contents in hex.
 ### 13. SYSTEM VARIABLES
 Built-in system variables (accessed as a-z):
 
+Ah, looking at where forward slash `/` leads to in the code:
+
+```assembly
+; In the IOPCODES table:
+01D3   F2                     DB   lsb(slash_)   ;   /
+
+; The actual SLASH/ALT routine:
+SLASH_:      
+ALT_:        
+04F2   03                     INC   bc          ; Point to next character
+04F3   0A                     LD   a,(bc)       ; Get character after /
+04F4   FE 7B                  CP   "z"+1        ; Compare with 'z'+1
+04F6   30 0C                  JR   nc,alt1      ; If > 'z', not variable
+04F8   FE 61                  CP   "a"          ; Compare with 'a'
+04FA   30 0C                  JR   nc,altVar    ; If >= 'a', it's variable
+04FC   FE 5B                  CP   "Z"+1        ; Compare with 'Z'+1
+04FE   30 04                  JR   nc,alt1      ; If > 'Z', not command
+0500   FE 41                  CP   "A"          ; Compare with 'A'
+0502   30 2D                  JR   nc,altCode   ; If >= 'A', it's command
+
+ALTVAR:      
+0508   FE 69                  CP   "i"          ; Check for 'i'
+050A   2E 00                  LD   l,0   
+050C   CA 1E 05               JP   z,loopVar   
+050F   FE 6A                  CP   "j"          ; Check for 'j'
+0511   2E 08                  LD   l,8   
+0513   28 09                  JR   z,loopVar   
+0515   21 68 13               LD   hl,altVars   ; Point to alt variables
+0518   CD 30 03               CALL   lookupRef   ; Get variable address
+051B   C3 0C 04               JP   var1         ; Handle variable
+```
+
+When you use `/r`, it's actually accessing the remainder through the alternate variables space (altVars), not the normal variables space. That's why it's `/r` instead of just `r`.
+
+This also explains why other system variables like the remainder are accessed with a forward slash - they're in the alternate variables space rather than the normal variables space.
+
+Let's look at how the two variable spaces are set up in the code:
+
+```assembly
+; Normal variables (a-z):
+1300                VARS:     DS   VARS_SIZE   ; Regular variables
+
+; Alternate variables:
+1368                ALTVARS:      
+1368                          DS   2   ; a
+136A                VBYTEMODE:   DS   2   ; b
+136C                VCARRY:   DS   2   ; c carry variable
+136E                          DS   2   ; d
+1370                          DS   2   ; e
+1372                VINTFUNC:   DS   2   ; f interrupt func
+1374                          DS   2   ; g
+1376                VHEAPPTR:   DS   2   ; h heap pointer variable
+1378                          DS   2   ; i loop variable
+137A                          DS   2   ; j outer loop variable
+137C                VTIBPTR:   DS   2   ; k address of text input buffer
+...
+138A                VREMAIN:   DS   2   ; r remainder of last division
+```
+
+The code paths for accessing each:
+
+1. Regular variable (a-z):
+```assembly
+VAR_:        
+0405   0A                     LD   a,(bc)      ; Get variable name (a-z)
+0406   21 00 13               LD   hl,vars     ; Point to variables area
+0409   CD 30 03               CALL   lookupRef  ; Calculate variable address
+```
+
+2. Alternate variable (/a-/z):
+```assembly
+ALT_:        
+04F2   03                     INC   bc         ; Next char after /
+04F3   0A                     LD   a,(bc)      ; Get variable name
+...
+ALTVAR:      
+0515   21 68 13               LD   hl,altVars  ; Point to alt variables
+0518   CD 30 03               CALL   lookupRef  ; Get variable address
+051B   C3 0C 04               JP   var1        ; Handle variable
+```
+
+So:
+- Normal variables (like `r`) access VARS space
+- Alt variables (like `/r`) access ALTVARS space
+- Both use similar lookup but different base addresses
+- System variables like remainder are in ALTVARS space
+
+That's why remainder must be accessed as `/r` - it's in the alternate variables area.
+
 #### `/h` Heap pointer variable
 Looking at the code again, you are correct in questioning `/h` - there is no `/h` command in the MINT implementation.
 
@@ -2750,8 +2839,9 @@ Let's look at the variable 'h':
 
 So to use the heap pointer:
 ```
-h      ; Get heap pointer value
-h !    ; Store to heap pointer
+/h      ; Get heap pointer value
+/h !    ; Store to heap pointer, you can do this but you should not as its internaly managed
+/h .    ; display it
 ```
 
 There is no special `/h` command. I apologize for any confusion in my earlier responses. The 'h' variable is used internally by the system to track heap allocation, but it's accessed just like any other MINT variable.
@@ -2833,9 +2923,8 @@ The TIB and its pointer (k) are used internally by MINT to handle text input.
 
 #### `/r` Remainder of last division
 
-////
-
-Looking at the code, `r` is actually a variable, not a `/r` command. Here's how it's defined and used:
+Looking at the code, `r` is actually a variable, and /r is a special viable that stores the remainder 
+and is not a `/r` command. Here's how it's defined and used:
 
 ```assembly
 ; In the variables section:
@@ -2851,20 +2940,61 @@ DIV:
 ```
 
 There is no `/r` command. Instead:
-1. 'r' is a variable that contains remainder after division
+1. '/r' is a variable that contains remainder after division
 2. It's automatically set after division operations
 3. You access it like any variable
 
 Example usage:
 ```
 5 2 /    ; Divide 5 by 2, quotient (2) goes on stack
-r        ; Get remainder (1) from variable r
+/r       ; Get remainder (1) from variable r
+/r.      ; display it
+1
+
 ```
 
-The 'r' variable is updated after any division operation to hold the remainder.
+The '/r' variable is updated after any division operation to hold the remainder.
 
 
-- `/s` Address of start of stack
+#### `/s` Address of start of stack
+Here's where `/s` (address of start of stack) is implemented in the code:
+
+```assembly
+; In the variables section (alt vars):
+138C                VSTKSTART:   DS   2   ; s address of start of stack
+
+; Initialized in INIT:
+02DE                INIT:        
+...
+02F3   21 00 11               LD   hl,dStack   ; Load stack start address
+02F6   22 8C 13               LD   (vStkStart),hl   ; Set 's' variable
+
+; The dStack is defined at:
+1100                DSTACK:      ; Start of data stack
+```
+
+When you use `/s`, it:
+1. Accesses VSTKSTART variable through alt variable access
+2. Returns the start address of the data stack ($1100)
+
+This is used in some MINT macros, like print stack:
+```assembly
+PRINTSTACK_:      
+; `=> `/s2- /D1-(",$22",2-)'/N/P;"   
+;      ^-- Gets stack start address
+```
+
+`/s` is useful when you need to know where the stack starts in memory, especially for stack manipulation operations.
+
+Example usage:
+```
+/s    ; Pushes stack start address ($1100)
+```
+
+Like `/r`, this is an alternate variable accessed with forward slash because it's in the ALTVARS space.
+
+////
+
 - `/v` Interrupt ID
 - `/z` Name of last defined function
 - `/b` Byte mode flag
