@@ -112,7 +112,7 @@
 ```
 
 
-after running it i got ... it didnt work btut we are on the right rack
+after running it i got ... it didnt work but we are on the right rack
 
 ```
 > R                                                                             
@@ -130,9 +130,7 @@ Array:
 
 # 3.2.2025
 
-nest step. untested
-
-maybe whats wrong and how to correct it:
+next step. untested 
 
 ### Issues Identified:
 1. **Swapping Elements (`:W`)**:
