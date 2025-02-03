@@ -1985,19 +1985,292 @@ This command prints the standard MINT prompt, which is:
 It's the same prompt you see when MINT starts up or after commands complete.
 
 #### `/I` Input from port
+Here's where input from port `/I` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+01F7   70                     DB   lsb(inPort_)   ;I      input from port
+
+; The actual INPORT routine:
+INPORT_:      
+0670   E1                     POP   hl         ; Get port number
+0671   79                     LD   a,C         ; Save C
+0672   4D                     LD   C,L         ; Port number in C
+0673   ED 68                  IN   L,(C)       ; Read from port
+0675   26 00                  LD   H,0         ; Clear high byte
+0677   4F                     LD   C,A         ; Restore C
+0678   18 C4                  JR   else1       ; Push result onto stack
+```
+
+When you use `/I`, it:
+1. POPs port number from stack
+2. Saves C register
+3. Puts port number in C
+4. INputs from port into L
+5. Clears high byte (H=0)
+6. Restores C register
+7. Pushes result onto stack
+
+Example usage:
+```
+portnum /I    ; Read from port, push value onto stack
+```
+
+This command is used to read values from I/O ports on the Z80. Each port can be addressed with an 8-bit number (0-255).
+
+
 #### `/O` Output to port
+Here's where output to port `/O` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+01FD   7F                     DB   lsb(outPort_)   ;O      output to port
+
+; The actual OUTPORT routine:
+OUTPORT_:      
+067F   E1                     POP   hl         ; Get port value
+0680   59                     LD   E,C         ; Save C
+0681   4D                     LD   C,L         ; Port number in C
+0682   E1                     POP   hl         ; Get value to output
+0683   ED 69                  OUT   (C),L      ; Output to port
+0685   4B                     LD   C,E         ; Restore C
+0686   FD E9                  JP   (iy)        ; Next instruction
+```
+
+When you use `/O`, it:
+1. POPs port number from stack
+2. Saves C register
+3. Puts port number in C
+4. POPs value to output from stack
+5. OUTputs value to port
+6. Restores C register
+
+Example usage:
+```
+value portnum /O    ; Output value to specified port
+```
+
+This command is used to write values to I/O ports on the Z80. Each port can be addressed with an 8-bit number (0-255).
+
+
 #### `/D` Print stack depth
+Here's where print stack depth `/D` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+01F2   23                     DB   lsb(depth_)   ;D      depth of stack
+
+; The actual DEPTH routines:
+DEPTH_:      
+DEPTH:       
+0623   21 00 00               LD   hl,0         ; Clear HL
+0626   39                     ADD   hl,SP        ; Get current stack pointer
+0627   EB                     EX   de,hl        ; Save in DE
+0628   21 00 11               LD   hl,DSTACK    ; Get stack start address
+062B   B7                     OR   A            ; Clear carry
+062C   ED 52                  SBC   hl,de       ; Calculate items on stack
+062E   C3 8C 04               JP   shr1         ; Divide by 2 (2 bytes per item)
+```
+
+When you use `/D`, it:
+1. Gets current stack pointer
+2. Gets stack start address (DSTACK)
+3. Subtracts to get number of bytes used
+4. Divides by 2 (since each stack item is 2 bytes)
+5. Pushes result onto stack
+
+Example usage:
+```
+/D .     ; Print current stack depth
+```
+
+The command tells you how many items are currently on the stack by:
+- Calculating bytes between stack start and current position
+- Dividing by 2 (each item uses 2 bytes)
+- Result is number of items on stack
+
 
 ### 9. FUNCTION CALLS
-- `A-Z` Call defined functions (26 possible functions)
-- `/Z` Edit line definition
+#### `A-Z` Call defined functions (26 possible functions)
+Here's where calling defined functions (A-Z) is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01DE   9A                     DB   (26 | $80)   ; call a command a, B ....Z
+01DF   56                     DB   lsb(call_)   
+
+; The actual CALL routine:
+CALL_:       
+0456   0A                     LD   a,(bc)       ; Get function name (A-Z)
+0457   CD 29 03               CALL   lookupRef0  ; Find function address
+045A   5E                     LD   E,(hl)       ; Get low byte of address
+045B   23                     INC   hl   
+045C   56                     LD   D,(hl)       ; Get high byte of address
+045D   C3 54 06               JP   go1          ; Execute the function
+
+; Function addresses stored in DEFS:
+1334                DEFS:     DS   VARS_SIZE    ; 26*2 bytes for A-Z
+```
+
+When you use an uppercase letter (A-Z), it:
+1. Gets letter as function name
+2. Looks up function in DEFS table
+3. Gets stored function address
+4. Jumps to execute that function
+
+Example usage:
+```
+: T 123 ;    ; Define function T
+T           ; Call function T (puts 123 on stack)
+```
+
+There's space for 26 functions (A to Z). Each one stores a pointer to its MINT code in the DEFS table. When you use a letter, it looks up and executes that code.
+
+This provides the ability to define and call named functions in MINT.
+
+**extra question**
+
+To modify MINT to accept two-letter function names, we'd need to change several parts of the code:
+
+1. The DEFS table would need to be expanded:
+```assembly
+; Currently:
+1334    DEFS:     DS   VARS_SIZE    ; 26*2 bytes for A-Z
+
+; Would need:
+1334    DEFS:     DS   26*26*2      ; 1352 bytes for AA-ZZ
+```
+
+2. Modify the CALL_ routine:
+```assembly
+CALL_:       
+0456   0A                     LD   a,(bc)       ; Get first letter
+0457   03                     INC   bc          ; Point to second letter
+0458   47                     LD   b,a          ; Save first letter
+0459   0A                     LD   a,(bc)       ; Get second letter
+; Would need new code to:
+; - Convert AA-ZZ to 0-675 index (26*26 combinations)
+; - Use that to look up function address
+```
+
+3. Modify definition code:
+```assembly
+DEF0:        
+071F   32 9A 13               LD   (vLastDef),a   ; Currently stores one letter
+; Would need to store both letters
+```
+
+The main challenges would be:
+1. Code to convert two letters to a unique index
+2. Larger memory requirement for function table
+3. Changes to all code that handles function names
+
+It's doable but would require careful modifications to maintain compatibility with existing MINT code.
+
+ 
+
+
+
+
+#### `/Z` Edit line definition
+
+Here's where edit line `/Z` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+0208   49                     DB   lsb(editDef_)   ;Z      edit line
+
+; The actual EDITDEF routines:
+EDITDEF_:      
+0649   CD 99 06               CALL   editDef    ; Edit the definition
+064C   FD E9                  JP   (iy)         ; Next instruction
+
+EDITDEF:       ; lookup up def based on number
+0699   E1                     POP   hl         ; pop ret address
+069A   E3                     EX   (SP),hl     ; swap with TOS
+069B   7D                     LD   a,L         ; Get definition number
+069C   08                     EX   AF,AF'      ; Save it
+069D   7D                     LD   a,l         
+069E   CD 29 03               CALL   lookupRef0 ; Find definition
+06A1   5E                     LD   E,(hl)      ; Get address low byte
+06A2   23                     INC   hl   
+06A3   56                     LD   D,(hl)      ; Get address high byte
+06A4   7A                     LD   a,D   
+06A5   B3                     OR   E           ; Check if definition exists
+06A6   21 00 08               LD   hl,TIB      ; Point to text buffer
+06A9   28 14                  JR   Z,editDef3  ; If no definition, done
+
+06AB   3E 3A                  LD   a,":"       ; Start with colon
+06AD   CD B8 03               CALL   writeChar  ; Write to buffer
+06B0   08                     EX   AF,AF'      ; Get definition name back
+06B1   CD B8 03               CALL   writeChar  ; Write name to buffer
+06B4   18 01                  JR   editDef2    ; Copy definition
+
+06B6                EDITDEF1:      
+06B6   13                     INC   de         ; Next character
+
+06B7                EDITDEF2:      
+06B7   1A                     LD   a,(de)      ; Get character from definition
+06B8   CD B8 03               CALL   writeChar  ; Write to buffer
+06BB   FE 3B                  CP   ";"         ; Until semicolon
+06BD   20 F7                  JR   NZ,editDef1   
+
+06BF                EDITDEF3:      
+06BF   11 00 08               LD   de,TIB      ; Calculate 
+06C2   B7                     OR   A           ; number of
+06C3   ED 52                  SBC   hl,de      ; characters written
+06C5   22 7C 13               LD   (vTIBPtr),hl ; Save count
+06C8   C9                     RET      
+```
+
+When you use `/Z`, it:
+1. Gets definition letter
+2. Looks up definition in DEFS
+3. If found:
+   - Writes ':' to text buffer
+   - Writes definition letter
+   - Copies definition code until ';'
+4. Updates text buffer pointer
+5. Ready for editing
+
+Example usage:
+```
+: T 123 ;    ; Define T
+/Z T         ; Edit definition of T
+```
+
+This command allows you to pull a function definition back into the text buffer for editing.
+
+/////
+
 
 ### 10. NUMBER INPUT
 - `0-9` Decimal number input
 - `#` Begin hexadecimal number input
 
 ### 11. NO OPERATION COMMANDS
-- `@` No operation
+#### `@` No operation
+Here's where no operation `@` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01DD   01                     DB   lsb(at_)   ;    @
+
+; The actual AT routine:
+AT_:         
+UNDERSCORE_:      
+0401   FD E9                  JP   (iy)        ; Just skip to next instruction
+```
+
+When you use `@`, it:
+1. Simply jumps to next instruction (does nothing)
+
+In MINT, `@` and `_` (underscore) both do exactly the same thing - they are no-operation commands that just continue to the next instruction without doing anything.
+
+The code combines the AT (@) and UNDERSCORE (_) routines since they both do the same thing: nothing.
+
+
+
 - `_` No operation
 - `/B` No operation
 - `/H` No operation
