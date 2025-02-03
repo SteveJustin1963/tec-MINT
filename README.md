@@ -1,9 +1,13 @@
 # Punch yourself in the nuts with MINT coding !
 
-![image](https://github.com/user-attachments/assets/2dedb642-9c9e-4c19-9cf5-f6345052792c)
+
 ![image](https://github.com/user-attachments/assets/76699c73-d350-4f52-a544-398e5a6214a2)
 ![image](https://github.com/user-attachments/assets/e15ac155-4a9c-48a9-a4c3-31413bce2aa3)
 
+
+
+
+![image](https://github.com/user-attachments/assets/2dedb642-9c9e-4c19-9cf5-f6345052792c)
 
 - A small and fast forth like system for the TEC-1 and SCC, and others
 - 400,000 commands /sec (4Mhz clock)
