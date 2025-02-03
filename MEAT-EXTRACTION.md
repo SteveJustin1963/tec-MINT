@@ -1,5 +1,161 @@
 # Code Extraction 
 
+# Register usage
+
+role of each Z80 register in the context of the Mint (Forth-like) language implementation:
+
+AF (Accumulator and Flags):
+- A is used for arithmetic, logic, and I/O operations related to Mint primitives.
+- Flags in F are set based on results of Mint operations and used for conditional branching.
+
+BC:
+- BC holds the Interpretive Pointer (IP), which points to the next Mint word to interpret in the Text Input Buffer (TIB).
+- B and C are sometimes used separately for loop counters and I/O port numbers in Mint primitives.
+
+DE:
+- Used to hold 16-bit values like addresses, often a destination address for memory operations in Mint primitives.
+- E is used to track the nesting depth of Mint loops and conditional structures.
+
+HL:
+- The most frequently used register pair, used as a pointer to memory for Mint operations.
+- Holds addresses of Mint variables, arrays, strings on the heap and stack.
+- Used as the main register for 16-bit arithmetic in Mint primitives.
+- L is used as an index into jump tables for Mint primitive dispatch.
+
+SP (Stack Pointer):
+- Manages the Mint data and return stacks, holding the address of the top of the stack.
+- Manipulated with Mint primitives like DUP, DROP, >R, R> which translate to PUSH/POP, CALL/RET instructions.
+
+IX (Index Register):
+- Used as a pointer to the Mint return stack for easy access to return addresses and loop parameters.
+
+IY (Index Register):
+- Dedicated to holding the address of the NEXT routine, which is the heart of the Mint interpreter loop, allowing for faster jumps to this key routine.
+
+The usage of registers is optimized for Mint's stack-based, interpretive model:
+
+- BC always holds the interpretive pointer
+- DE holds key Mint values and the nesting level 
+- HL is the primary register for memory access and arithmetic
+- SP manages Mint's two stacks
+- IX points to the return stack for easy manipulation
+- IY holds NEXT for fast interpreter dispatch
+
+This register allocation allows for efficient implementation of the Mint virtual machine on the Z80 CPU. The registers are used in a coordinated way to interpret Mint code and manage Mint's key data structures like the stacks.
+
+#### examples
+These examples demonstrate how the Z80 registers are used in a coordinated fashion to efficiently implement the Mint Forth virtual machine, with each register having a specific role in the interpreter's operation. Here are code examples for each register's usage in the Mint implementation:
+
+AF (Accumulator and Flags):
+```
+NESTING: 
+  CP   "`"     ; Compare character to "`"
+  JR   NZ,nesting1
+  LD   a,$80   
+  XOR  e       ; Toggle bit 7 of nesting level
+  LD   e,a
+  RET
+```
+Here, A is used to compare a character and manipulate the nesting level in E.
+
+BC (Interpretive Pointer):
+```
+INTERPRET2:
+  LD   E,0     ; Initialize nesting to 0
+  PUSH bc      ; Save IP on stack
+  LD   hl,TIB  ; HL = start of TIB
+  JR   interpret4
+  
+NEXT:  
+  INC  bc      ; Increment IP to next Mint word
+  LD   a,(bc)  ; Fetch next character
+  OR   a       ; Check if it's NUL (end of buffer)
+  JR   z,exit
+  ...
+```
+BC is used as the IP throughout the interpreter, incremented to fetch the next Mint word.
+
+DE:
+```
+ARRDEF:
+  LD   hl,0
+  ADD  hl,sp   ; HL = current stack pointer
+  CALL rpush   ; Save on return stack
+  JP   (iy)    ; Continue interpreting
+```
+Here, DE is implicitly used to save the stack pointer on the return stack, as PUSH and RET use DE.
+
+HL:
+```
+VAR1:  
+  LD   (vPointer),hl  ; Save address of variable
+  LD   d,0
+  LD   e,(hl)         ; Fetch value into DE
+  LD   a,(vByteMode)  
+  INC  a              ; Check for byte mode
+  JR   z,var2
+  INC  hl
+  LD   d,(hl)         ; Fetch high byte if word mode
+```
+HL extensively used for memory access, here to fetch a Mint variable's value.
+
+SP (Stack Pointer):
+```
+DEPTH:
+  LD   hl,0
+  ADD  hl,SP   ; HL = current stack depth  
+  EX   de,hl
+  LD   hl,DSTACK
+  OR   A       ; Clear carry
+  SBC  hl,de   ; HL = depth in bytes
+  JP   shr1    ; Shift right to get depth in cells
+```
+SP is used here to calculate the current stack depth.
+
+IX (Return Stack Pointer):
+```
+LOOPSTART:
+  LD   (vTemp1),bc  ; Save loop start
+  LD   e,1          ; Nesting level = 1
+LOOPSTART1:  
+  INC  bc
+  LD   a,(bc)
+  CALL nesting        
+  JR   nz,loopStart1 ; Find end of loop 
+  POP  de            ; DE = loop limit
+  ...  
+  PUSH hl            ; Save loop params on return stack
+  PUSH bc
+  LD   hl,-1         ; Push initial index
+  CALL rpush
+```
+IX is implicitly used here to save loop control parameters on the return stack via RPUSH.
+
+IY (NEXT Pointer):
+```
+NEXT:  
+  INC  bc    ; Increment IP
+  LD   a,(bc)
+  OR   a     
+  JR   z,exit
+  ...
+exit:
+  INC  bc
+  LD   de,bc ; Save IP
+  CALL rpop  ; Restore previous IP
+  EX   de,hl ; HL = IP
+  JP   (hl)  ; Jump to next Mint word
+
+ENDLOOP:
+  ...        ; Loop housekeeping
+  JP   (iy)  ; Jump to NEXT to continue interpreting
+```
+IY always holds the address of NEXT, allowing for quick jumps back to the interpreter.
+
+
+
+
+
  
 ### 1. ARITHMETIC OPERATIONS
 #### `+` Add top two stack values
