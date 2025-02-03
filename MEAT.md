@@ -1673,16 +1673,320 @@ This provides basic memory allocation from the heap.
 
 
 ### 8. INPUT/OUTPUT OPERATIONS
-- `.` Print decimal number
-- `,` Print hexadecimal number
-- ``` ` ``` String delimiter/print
-- `/C` Print character
-- `/K` Read character from input
-- `/N` Print newline
-- `/P` Print MINT prompt
-- `/I` Input from port
-- `/O` Output to port
-- `/D` Print stack depth
+#### `.` Print decimal number
+Here's where print decimal number `.` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01D2   60                     DB   lsb(dot_)   ;   .
+
+; The actual DOT routine:
+DOT_:        
+0460   E1                     POP   hl         ; Get number to print
+0461   CD C9 06               CALL   printDec   ; Print in decimal
+0464                DOT2:        
+0464   3E 20                  LD   a," "       ; Print space after
+0466   CD 85 00               CALL   putChar   
+0469   FD E9                  JP   (iy)   
+
+; The decimal printing routine:
+PRINTDEC:      
+06C9   CB 7C                  BIT   7,h           ; Check if negative
+06CB   28 0B                  JR   z,printDec2    ; If positive skip
+06CD   3E 2D                  LD   a,"-"          ; Print minus
+06CF   CD 85 00               CALL   putchar   
+06D2   AF                     XOR   a             ; Make number
+06D3   95                     SUB   l             ; positive by
+06D4   6F                     LD   l,a            ; negating it
+06D5   9F                     SBC   a,a   
+06D6   94                     SUB   h   
+06D7   67                     LD   h,a   
+
+PRINTDEC2:      
+06D8   C5                     PUSH   bc   
+06D9   0E 00                  LD   c,0           ; Leading zeros flag = false
+06DB   11 F0 D8               LD   de,-10000     ; Print 10000s
+06DE   CD FA 06               CALL   printDec4   
+06E1   11 18 FC               LD   de,-1000      ; Print 1000s
+06E4   CD FA 06               CALL   printDec4   
+06E7   11 9C FF               LD   de,-100       ; Print 100s
+06EA   CD FA 06               CALL   printDec4   
+06ED   1E F6                  LD   e,-10         ; Print 10s
+06EF   CD FA 06               CALL   printDec4   
+06F2   0C                     INC   c            ; Flag = true for at least digit
+06F3   1E FF                  LD   e,-1          ; Print 1s
+06F5   CD FA 06               CALL   printDec4   
+```
+
+When you use `.`, it:
+1. POPs number from stack
+2. If negative:
+   - Prints minus sign
+   - Converts to positive
+3. Prints each digit:
+   - 10000s place
+   - 1000s place
+   - 100s place
+   - 10s place
+   - 1s place
+4. Prints space after number
+
+Example usage:
+```
+123 .     ; Prints "123 "
+-456 .    ; Prints "-456 "
+```
+
+The routine handles both positive and negative numbers and suppresses leading zeros.
+
+#### `,` Print hexadecimal number
+Here's where print hexadecimal number `,` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01D0   6B                     DB   lsb(comma_)   ;   ,
+
+; The actual COMMA routine:
+COMMA_:      ; print hexadecimal
+046B   E1                     POP   hl         ; Get number to print
+046C   CD 3C 03               CALL   printhex  ; Print in hex
+046F   18 F3                  JR   dot2        ; Print space after
+
+; The hex printing routines:
+PRINTHEX:      
+033C   C5                     PUSH   bc        ; preserve the IP
+033D   7C                     LD   a,H         ; Print high byte
+033E   CD 47 03               CALL   printhex2   
+0341   7D                     LD   a,L         ; Print low byte
+0342   CD 47 03               CALL   printhex2   
+0345   C1                     POP   bc   
+0346   C9                     RET      
+
+PRINTHEX2:      
+0347   4F                     LD   C,A         ; Save byte
+0348   1F                     RRA              ; Get high nibble
+0349   1F                     RRA      
+034A   1F                     RRA      
+034B   1F                     RRA      
+034C   CD 50 03               CALL   printhex3   ; Print high nibble
+034F   79                     LD   a,C         ; Get original byte
+0350                PRINTHEX3:      
+0350   E6 0F                  AND   0x0F       ; Mask to nibble
+0352   C6 90                  ADD   a,0x90     ; Convert to ASCII
+0354   27                     DAA              ; Decimal adjust
+0355   CE 40                  ADC   a,0x40   
+0357   27                     DAA      
+0358   C3 85 00               JP   putchar     ; Print character
+```
+
+When you use `,`, it:
+1. POPs number from stack
+2. Prints high byte in hex
+   - High nibble
+   - Low nibble
+3. Prints low byte in hex
+   - High nibble
+   - Low nibble
+4. Prints space after number
+
+Example usage:
+```
+$FF ,      ; Prints "FF "
+$1234 ,    ; Prints "1234 "
+```
+
+The routine:
+- Prints all numbers in 4-digit hex format
+- Uses leading zeros for hex display
+- Always follows with a space
+- Uses uppercase hex digits (0-9, A-F)
+  
+#### ``` ` ``` String delimiter/print
+Here's where string delimiter/print ``` ` ``` (grave) is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01E6   C5                     DB   lsb(grave_)   ;    `   ; for printing `hello`
+
+; The actual GRAVE/STR routine:
+GRAVE_:      
+STR:         
+04C5   03                     INC   bc         ; Move past first `
+04C6                STR1:        
+04C6   0A                     LD   a,(bc)      ; Get character
+04C7   03                     INC   bc         ; Point to next
+04C8   FE 60                  CP   "`"         ; Is it ending `?
+04CA   28 05                  JR   Z,str2      ; Yes, done
+04CC   CD 85 00               CALL   putchar   ; No, print it
+04CF   18 F5                  JR   str1        ; Get next char
+
+STR1:        
+04D1   0B                     DEC   bc         ; Back up one
+04D2   FD E9                  JP   (IY)        ; Return
+```
+
+When you use ``` ` ```, it:
+1. Starts string mode
+2. For each character until next ``` ` ```:
+   - Gets character
+   - If it's ``` ` ```, ends string
+   - Otherwise prints character
+3. Continues until ending ``` ` ```
+
+Example usage:
+```
+`Hello World`    ; Prints: Hello World
+```
+
+The grave accent (backtick) acts as a string delimiter, printing everything between pairs of backticks literally.
+
+This provides a way to print text strings in MINT.
+
+#### `/C` Print character
+Here's where print character `/C` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+01F1   34                     DB   lsb(printChar_)   ;C      print a char
+
+; The actual PRINTCHAR routine:
+PRINTCHAR_:      
+0634   E1                     POP   hl         ; Get character to print
+0635   7D                     LD   a,L         ; Move to A register
+0636   CD 85 00               CALL   putchar   ; Print it
+0639   FD E9                  JP   (iy)        ; Next instruction
+```
+
+When you use `/C`, it:
+1. POPs a value from stack
+2. Takes low byte as ASCII character
+3. Prints that character using putchar
+
+Example usage:
+```
+65 /C     ; Prints "A" (ASCII 65)
+33 /C     ; Prints "!" (ASCII 33)
+```
+
+The command prints a single ASCII character based on the numeric value on top of the stack.
+
+All output goes through putchar which handles actual character output to the display/terminal.
+
+#### `/K` Read character from input
+Here's where read character from input `/K` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+01F9   68                     DB   lsb(key_)   ;K      read a char from input
+
+; The actual KEY routine:
+KEY_:        
+0668   CD 81 00               CALL   getchar   ; Get a character
+066B   26 00                  LD   H,0         ; Clear high byte
+066D   6F                     LD   L,A         ; Put char in low byte
+066E   18 CE                  JR   else1       ; Push onto stack
+
+; The getchar routine it uses:
+GETCHAR:      
+0081   2A 18 11               LD   HL,(GETCVEC)  ; Get input vector
+0084   E9                     JP   (hl)          ; Jump to input routine
+```
+
+When you use `/K`, it:
+1. Calls getchar to get input character
+2. Clears high byte (H=0)
+3. Puts character in low byte (L=char)
+4. Pushes result onto stack
+
+Example usage:
+```
+/K      ; Waits for keypress, pushes ASCII value onto stack
+```
+
+The command:
+- Waits for input
+- Returns ASCII value
+- Returns single character
+- Normally used in input loops
+
+Used for getting keyboard/serial input in MINT programs.
+
+#### `/N` Print newline
+Here's where print newline `/N` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+01FC   7A                     DB   lsb(newln_)   ;N      prints a newline to output
+
+; The actual NEWLN routine:
+NEWLN_:      
+067A   CD 8B 03               CALL   crlf      ; Print CRLF
+067D   FD E9                  JP   (iy)        ; Next instruction
+
+; The CRLF routine it uses:
+CRLF:        
+038B   CD 92 03               CALL   printStr   
+038E   0D 0A 00               .CSTR   "\r\n"   ; Carriage return + Line feed
+0391   C9                     RET      
+```
+
+When you use `/N`, it:
+1. Calls CRLF routine
+2. Which prints:
+   - Carriage Return (0D)
+   - Line Feed (0A)
+
+Example usage:
+```
+`Hello` /N    ; Prints "Hello" followed by newline
+```
+
+The command provides a way to start a new line in output. It uses both CR and LF for compatibility across systems.
+
+#### `/P` Print MINT prompt
+Here's where print MINT prompt `/P` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+01FE   4E                     DB   lsb(prompt_)   ;P      print MINT prompt
+
+; The actual PROMPT routine:
+PROMPT_:      
+064E   CD 82 03               CALL   prompt    ; Print prompt
+0651   FD E9                  JP   (iy)        ; Next instruction
+
+; The prompt routine it uses:
+PROMPT:      
+0382   CD 92 03               CALL   printStr   
+0385   0D 0A 3E 20 00         .CSTR   "\r\n> "  ; CR, LF, > and space
+038A   C9                     RET      
+```
+
+When you use `/P`, it:
+1. Calls prompt routine
+2. Which prints:
+   - Carriage Return (0D)
+   - Line Feed (0A)
+   - Greater than sign (>)
+   - Space (20)
+
+Example usage:
+```
+/P      ; Prints:
+>       ; The MINT prompt on new line
+```
+
+This command prints the standard MINT prompt, which is:
+- A newline
+- The > character
+- A space
+- Ready for input
+
+It's the same prompt you see when MINT starts up or after commands complete.
+
+#### `/I` Input from port
+#### `/O` Output to port
+#### `/D` Print stack depth
 
 ### 9. FUNCTION CALLS
 - `A-Z` Call defined functions (26 possible functions)
