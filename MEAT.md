@@ -845,12 +845,179 @@ Each variable (a-z) has a 2-byte slot available for storage, and the byte/word m
 
 #### `\` Set byte mode
 
+Here's where set byte mode `\` (backslash) is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01E2   03                     DB   lsb(bslash_)   ;    \
+
+; The actual BSLASH routine:
+BSLASH_:      
+0403   18 CB                  JR   setByteMode   ; Jump to set byte mode
+
+SETBYTEMODE:      
+03D0   3E FF                  LD   a,$FF       ; Load $FF for true
+03D2   18 01                  JR   assignByteMode  
+
+ASSIGNBYTEMODE:      
+03D5   32 6A 13               LD   (vByteMode),a   ; Store byte mode flag
+03D8   32 6B 13               LD   (vByteMode+1),a   
+03DB   FD E9                  JP   (iy)        ; Next instruction
+```
+
+When you use `\`, it:
+1. Sets vByteMode flag to $FF (TRUE)
+2. This affects subsequent variable operations:
+   - Variable access will only read/write single bytes
+   - Stays in effect until reset
+
+vByteMode is reset by many operations including:
+```assembly
+RESETBYTEMODE:      
+03D4   AF                     XOR   a          ; Clear A to 0
+03D5   32 6A 13               LD   (vByteMode),a   ; Reset byte mode flag
+```
+
+So if you do:
+```
+\ 42 a !   ( Store byte 42 in a )
+```
+Only one byte will be stored instead of two.
+
+This allows you to switch between byte and word operations for variable access.
+
 #### `?` Array access
+Here's where array access `?` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01DC   EC                     DB   lsb(question_)   ;    ?
+
+; The actual ARRACCESS routine:
+ARRACCESS:      
+053E   E1                     POP   hl         ; hl = index
+053F   D1                     POP   de         ; de = array address
+0540   3A 6A 13               LD   a,(vByteMode)  ; Check byte/word mode
+0543   3C                     INC   a   
+0544   28 01                  JR   z,arrAccess1   ; If byte mode, skip index doubling
+0546   29                     ADD   hl,hl      ; If word mode, double index (2 bytes per element)
+
+ARRACCESS1:      
+0547   19                     ADD   hl,de      ; hl = addr + index
+0548   C3 0C 04               JP   var1        ; Get value at calculated address
+```
+
+When you use `?`, it:
+1. POPs index value
+2. POPs array base address
+3. Checks byte/word mode:
+   - In word mode: doubles index (2 bytes per element)
+   - In byte mode: uses index as-is
+4. Adds index to base address
+5. Gets value at calculated address
+
+So if you do:
+```
+arr 5 ?    ( Get 5th element from array 'arr' )
+```
+It will:
+1. Calculate address = array_base + (index * element_size)
+2. Push value at that address
+
+The byte/word mode affects whether it treats array elements as 1 or 2 bytes.
 
 #### `/V` Get last variable access address
+Here's where get last variable access `/V` is implemented in the code:
+
+```assembly
+; In the IALTCODES table:
+0204   90     DB   lsb(varAccess_)   ;V      address of last access
+
+; The actual VARACCESS routine:
+VARACCESS_:      
+0690   21 9C 13               LD   hl,vPointer  ; Point to last accessed variable address
+0693   5E                     LD   e,(hl)       ; Get low byte
+0694   23                     INC   hl   
+0695   56                     LD   d,(hl)       ; Get high byte
+0696   D5                     PUSH   de         ; Push address onto stack
+0697   FD E9                  JP   (iy)         ; Next instruction
+```
+
+When you use `/V`, it:
+1. Gets address stored in vPointer (set by last variable access)
+2. Pushes that address onto stack
+
+vPointer is updated whenever you access a variable:
+```assembly
+VAR1:        
+040C   22 9C 13               LD   (vPointer),hl   ; Save var address when accessing variable
+```
+
+So if you do:
+```
+a           ( Access variable 'a' )
+/V          ( Get address where 'a' is stored )
+```
+
+This is useful when you need to know where a variable is stored in memory. The returned address can be used with `!` to store values directly to that location.
+
 
 ### 6. PROGRAM FLOW
-- `:` Begin definition
+#### `:` Begin definition
+Here's where begin definition `:` is implemented in the code:
+
+```assembly
+; In the IOPCODES table:
+01D7   E6                     DB   lsb(colon_)   ;    :
+
+; The actual DEF (definition) routine:
+DEF:         ; Create a colon definition
+0711   03                     INC   bc          ; Next character
+0712   0A                     LD   a,(bc)       ; Get the next character
+0713   FE 40                  CP   "@"          ; Is it anonymous (@)?
+0715   20 08                  JR   nz,def0      ; No, normal named definition
+0717   03                     INC   bc   
+0718   ED 5B 76 13            LD   de,(vHeapPtr)  ; Return start of definition
+071C   D5                     PUSH   de   
+071D   18 0E                  JR   def1   
+
+DEF0:        ; Named definition
+071F   32 9A 13               LD   (vLastDef),a   ; Save name of definition
+0722   CD 29 03               CALL   lookupRef0   ; Get definition address
+0725   ED 5B 76 13            LD   de,(vHeapPtr)  ; Start of definition
+0729   73                     LD   (hl),E         ; Save low byte of address
+072A   23                     INC   hl   
+072B   72                     LD   (hl),D         ; Save high byte of address
+072C   03                     INC   bc   
+
+DEF1:        ; Store definition body
+072D   0A                     LD   a,(bc)         ; Get the next character
+072E   03                     INC   bc            ; Point to next character
+072F   12                     LD   (de),A         ; Store character
+0730   13                     INC   de   
+0731   FE 3B                  CP   ";"            ; Is it a semicolon?
+0733   28 02                  JR   Z,def2         ; End the definition
+0735   18 F6                  JR   def1           ; Get the next element
+```
+
+When you use `:`, it:
+1. Checks next character:
+   - If '@': makes anonymous definition
+   - Otherwise: uses character as definition name
+2. Stores definition start address
+3. Copies definition body into heap until ';' is found
+
+So if you do:
+```
+: T 123 ;     ( Define T to put 123 on stack )
+```
+It will:
+1. Store 'T' as name
+2. Store code "123" in heap
+3. End definition at ';'
+
+After this you can use 'T' as a command which will put 123 on the stack.
+
 - `;` End definition/return
 - `(` Begin loop
 - `)` End loop
