@@ -7,7 +7,7 @@
                 By Stephen Justin
 ```
 
-We went up the mountain and got the 74 extractions from the meat, ie 10 Commandments
+We went up the mountain and got the 74 extractions from the meat 
 
 https://github.com/SteveJustin1963/tec-MINT/blob/main/Meat%20extraction.md
  
