@@ -429,8 +429,8 @@ The sequence:
 
 It's a simple way to drop/discard the top value from the stack.
 
-#### `??????` Rotate (a b c -- b c a)
-use other commands to construct
+####  Rotate (a b c -- b c a)
+not implemented, use other commands to construct
 
 
 ### 3. BITWISE OPERATIONS
