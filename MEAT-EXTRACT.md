@@ -9,7 +9,7 @@
 
 We went up the mountain to get the [Meat](MEAT.md)
 
-https://github.com/SteveJustin1963/tec-MINT/blob/main/Meat%20extraction.md
+ 
  
 
 
