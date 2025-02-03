@@ -7,7 +7,7 @@
                 By Stephen Justin
 ```
 
-We went up the mountain to get the [Meat](MEAT.md) that lead to the cration of this manual
+We went up the mountain to get the [Meat](MEAT.md) that lead to the creation of this Manual
 
  
  
