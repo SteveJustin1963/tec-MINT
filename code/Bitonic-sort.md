@@ -112,3 +112,20 @@
 ```
 
 
+after running it i got ... it didnt work btut we are on the right rack
+
+```
+> R                                                                             
+Performance Test                                                                
+Before:                                                                         
+Array:                                                                          
+8  6  7  5  3  0  9  1                                                          
+Sorting...                                                                      
+After:                                                                          
+Array:                                                                          
+8  6  7  5  3  0  9  1                                                          
+                                                                                
+> 
+```
+
+
