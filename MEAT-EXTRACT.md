@@ -7,7 +7,7 @@
                 By Stephen Justin
 ```
 
-We went up the mountain and got the 74 extractions from the meat 
+We went up the mountain to get the [Meat](MEAT.md)
 
 https://github.com/SteveJustin1963/tec-MINT/blob/main/Meat%20extraction.md
  
