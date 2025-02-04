@@ -1,3 +1,42 @@
+Let me explain how to run this entropy calculation program in MINT.
+
+According to the manual, we need to:
+1. Enter each function as one whole line with no comments
+2. Each function should be followed by a MINT prompt `>`
+3. After entering the functions, we can call them
+
+So here's how to enter and run it:
+
+First, enter the natural log function L (all in one line):
+```
+:L x! 1000 x * f! 0 r! f 1 - n! n 1000 * t! 1 s! 5( t s / a! s 1 + s! s 2 % 0 = (a -1 * a!) a r + r! ) r 1000 / . ;
+>
+```
+
+Then enter the randomness check function R (all in one line):
+```
+:R [a b c d e f g h i j k l m n o p q r s t u v w x y z a b] d! 27( `Enter digit (0-9):` /K 48 - n! n d /i ?! /N ) 0 e! 27( d /i ? f! 0 s! 27( d /j ? f = (s 1 + s!) ) s 27 * 1000 / l! l 0 > ( l L p! l p * 1000 / e + e! ) ) e -1 * 1000 / . ;
+>
+```
+
+To run it:
+1. Type `R` at the MINT prompt:
+```
+> R
+```
+
+2. It will prompt you to enter 27 digits (0-9). Enter each digit when prompted and press Enter:
+```
+Enter digit (0-9):5
+Enter digit (0-9):2
+...
+```
+
+3. After entering all 27 digits, it will calculate and display the entropy value. A value closer to 0 indicates more randomness, while more negative values indicate less randomness.
+
+Would you like me to help you test it with some example numbers?
+
+
 ```
 // Function L: Natural logarithm approximation using Taylor series
 :L x!                     
