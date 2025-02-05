@@ -3,7 +3,7 @@
 
 **To write good code, learn from these pictures. You need to smoke to make them huge then drag code around till you get good then finaly drop heavy code on them!**
 
-**You also need to max out ur ram, and change in file `ram.ram` change this to TIBSIZE     EQU $800 ` as you will no doubt enter huge chunks of code.**
+**You also need to max out ur ram physically or in asm.80 emulation and change in the file `ram.ram` to TIBSIZE EQU $800 ` as you will no doubt enter huge chunks of code. In terminal you can upload code or in asm.80 use the autotyper.py tool.**
 
 
 ![image](https://github.com/user-attachments/assets/76699c73-d350-4f52-a544-398e5a6214a2)
