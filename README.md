@@ -3,7 +3,7 @@
 
  
 
-**To write good code, learn from these pictures. First use small nut fragments, punch testing till robust, then place nuts in functions and drag around till they work, finally place all your nuts in a pile and drop test!**
+**To write good code, learn from these pictures. First use small nut fragments, punch testing till robust, then place nuts in functions and drag them around till they work, finally place all your nuts in a pile and drop test!**
 
 **You also need to max out ur ram physically or in asm.80 emulation and change in the file `ram.ram` to TIBSIZE EQU $800 ` as you will no doubt enter huge chunks of code. In terminal you can upload code or in asm.80 use the autotyper.py tool.**
 
