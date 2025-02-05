@@ -12,8 +12,22 @@
 ![image](https://github.com/user-attachments/assets/e15ac155-4a9c-48a9-a4c3-31413bce2aa3)
 
 
-**You also need to max out ur ram physically or in asm.80 emulation and change in the file `ram.ram` to TIBSIZE EQU $800 ` as you will no doubt enter huge chunks of code. In terminal you can upload code or in asm.80 use the autotyper.py tool.**
+You also need to max out ur ram physically, the tec-1d can take 2k x 7 chips (14k) 
 
+if using asm80 emulation change the file constants.asm to show
+```
+; Configuration for TEC-1
+LOADER EQU 0
+BITBANG EQU 0
+        
+ROMSTART    EQU $0000
+RAMSTART    EQU $0800
+ROMSIZE     EQU $0800
+RAMSIZE     EQU $4000   ; this is 14k ram, but u can make bigger as not a real tec-1
+```
+also change `ram.ram` to TIBSIZE EQU $800 ` on both tec-1 or asm80 so u can enter huge chunks of code. the text input buffer is where the code lives and is also used again to display code with ctrl-L.
+
+for asm80 use upload code tool with `autotyper.py tool`.
 
 
 - A small and fast [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) like system for the TEC-1 and SCC, and more 
