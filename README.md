@@ -40,7 +40,7 @@ Also change `ram.ram` to `TIBSIZE EQU $800 ` on both tec-1 or asm80 so u can ent
 - [spreadsheet help files](https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/)
 - [Code to keep punching...](https://github.com/SteveJustin1963/tec-MINT/tree/main/code)
 - my ongoing updated [SJ Manual Mint V2.md](https://github.com/SteveJustin1963/tec-MINT/blob/main/SJ%20Manual%20Mint%20V2.md)
-- my ongoing analysis [meat extraction](https://github.com/SteveJustin1963/tec-MINT/wiki) 
+- my ongoing autopsy analysis [and extraction](https://github.com/SteveJustin1963/tec-MINT/wiki) 
 
 # Honour Roll 
 The structuring or acknowledgment of the individuals involved in the development of the code follows no discernible hierarchy or prioritization of recognition, implying that their contributions are regarded in a manner devoid of any preordained or systematic reverence. This lack of sequentiality reflects an egalitarian or arbitrary approach, wherein no specific developer is elevated above another in terms of the order of respect or recognition for their work.
