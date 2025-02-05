@@ -1,10 +1,7 @@
 # Punch yourself in the nuts with MINT !
 ![image](https://github.com/user-attachments/assets/2dedb642-9c9e-4c19-9cf5-f6345052792c)
 
-```
-
-
-```
+ 
 
 **To write good code, learn from these pictures. First use small nut fragments, punch testing till robust, then place nuts in functions and drag around till they work, finally place all your nuts in a pile and drop test!**
 
