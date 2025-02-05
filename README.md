@@ -29,7 +29,7 @@ RAMSIZE     EQU $4000   ; this is 14k ram, but u can make bigger as not a real t
 
 Also change `ram.ram` to `TIBSIZE EQU $800 ` on both tec-1 or asm80 so u can enter huge chunks of code.  The text input buffer is where the code lives and is also used again to display code with ctrl-L. For asm80 use upload code tool with `autotyper.py` tool. Adjust delay in py file to account for the responsiveness of your pc running asm80.
 
-
+# Down to business...
 - A small and fast [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) like system for the TEC-1 and SCC, and more 
 - Incredible 400,000 commands /sec (4Mhz clock) or one order of power slower than your clock speed
 - Allows rapid prototyping of code, easy concatenation, no compiling, runs instantly, test as you build
