@@ -3,7 +3,7 @@
 
  
 
-**To write good code, learn from these pictures. First use small nut fragments, punch testing each one till tender and robust, then place nuts in functions and drag them around till they work, finally place all your nuts in a pile and drop test!**
+**To write good code, learn from these pictures. First use small nut fragments, punch testing each one till tender and robust, then place nuts in functions and drag them around till they work, finally place all your nuts in a pile and drop test the whole program!**
 
 
 
