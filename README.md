@@ -14,7 +14,8 @@
 
 You also need to max out ur ram physically, the tec-1d can take 2k x 7 chips (14k) 
 
-if using asm80 emulation change the file constants.asm to show
+If using asm80 emulation change the file constants.asm to show
+
 ```
 ; Configuration for TEC-1
 LOADER EQU 0
@@ -25,6 +26,7 @@ RAMSTART    EQU $0800
 ROMSIZE     EQU $0800
 RAMSIZE     EQU $4000   ; this is 14k ram, but u can make bigger as not a real tec-1
 ```
+
 Also change `ram.ram` to TIBSIZE EQU $800 ` on both tec-1 or asm80 so u can enter huge chunks of code.  The text input buffer is where the code lives and is also used again to display code with ctrl-L. For asm80 use upload code tool with `autotyper.py tool`.
 
 
