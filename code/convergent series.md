@@ -1,6 +1,4 @@
-This is Figure 6-1 from the document titled:
-
-"Computing 2 the hard way"
+ 
 
 The code is calculating the value 2 using an infinite series of negative powers of 2, specifically by computing and summing:
 
@@ -58,7 +56,7 @@ n = 40 sum = 1.999999999999909
 ```
 
 
-Looking at the flow chart in Figure 6-1 "Computing 2 the hard way", you're right. Let me analyze and break it down into proper MINT functions:
+  analyze and break it down into proper MINT functions:
 
 ```
 // First function calculates 2^(-n-1)
@@ -89,14 +87,4 @@ m(              // loop m times
 )
 ;
 ```
-
-This better reflects the flow diagram by:
-1. Factoring out the exponent calculation into separate function E
-2. Following the exact flow of the diagram with:
-   - Setup
-   - Continue check
-   - 10-term loop
-   - Sum update
-   - Counter increment
-
-Is this closer to what you were looking for in terms of function factoring?
+ 
