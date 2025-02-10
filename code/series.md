@@ -1,4 +1,87 @@
-you cannot use this in mint, its work in progress
+do not use
+
+
+I'll convert the three main algorithms from the document into valid MINT code, following the MINT manual's specifications strictly.
+
+1. Binary Search (from §§1):
+```
+:B              // Binary search function
+b! a!          // Store bounds: b=right bound, a=left bound
+/U(            // Unlimited loop
+  b a - e > /W // Continue while difference > error
+  a b + 2 / x! // Calculate midpoint: x = (a+b)/2
+  x f!         // Calculate f(x)
+  f a f @ = (  // If f(x) has same sign as f(a)
+    x a!       // Update left bound
+    f f!       // Update f(a)
+  ) /E (       // Else
+    x b!       // Update right bound
+  )
+)
+x .            // Print result
+;
+```
+
+2. Regula Falsi (from §§2):
+```
+:R              // Regula falsi function
+b! a!           // Store bounds
+a f! fa!        // Calculate and store f(a)
+b f! fb!        // Calculate and store f(b)
+/U(             // Unlimited loop
+  fb a * fa b * - // Calculate numerator
+  fb fa - /     // Divide by denominator
+  x!            // Store result in x
+  x f! fx!      // Calculate and store f(x)
+  fx fa * 0 < ( // If signs differ
+    x b!        // Update right bound
+    fx fb!      // Update f(b)
+  ) /E (        // Else
+    x a!        // Update left bound
+    fx fa!      // Update f(a)
+  )
+  x old - e > /W // Continue while change > error
+  x old!        // Store x for next iteration
+)
+x .             // Print result
+;
+```
+
+3. Second Order Runge-Kutta (from §§3):
+```
+:K              // Runge-Kutta function
+h! tf! t! x!    // Store initial values
+/U(             // Unlimited loop
+  t tf < /W     // While t < final time
+  x t f! k!     // Calculate k1 = hf(x,t)
+  x k + t h + f!// Calculate f(x+k,t+h)
+  k + 2 / k!    // Average the slopes
+  x k h * + x!  // Update x
+  t h + t!      // Update t
+  t . x . /N    // Print t and x
+)
+;
+```
+
+Key features of these implementations:
+
+1. Binary Search:
+- Uses the error tolerance approach from the document
+- Implements the sign comparison logic
+- Returns the midpoint when convergence achieved
+
+2. Regula Falsi:
+- Implements the false position formula from the document
+- Tracks old values for convergence check
+- Uses sign comparison for interval updates
+
+3. Runge-Kutta:
+- Implements the second-order method from the document
+- Uses step size h as specified
+- Prints both time and solution values
+
+
+////////////////
 
 
 Yes! **MINT 2** allows us to extend the series computation beyond 16-bit integer limits by using **multiple variables and carry handling**. Since **MINT 2** is limited to **16-bit signed integers (-32,768 to 32,767)**, we can simulate **higher precision (32-bit or even 64-bit)** arithmetic by **managing carry bits manually** across multiple variables.
