@@ -1,5 +1,6 @@
 # The SJ Manual 
 
+# Humour
 ```
 "The Excessively Scribbled-Upon, Over-Explained,
       and Possibly Bewildering Edition of the MINT Programming Language Manual,
@@ -366,13 +367,13 @@ ie
 
 ### Basic arrays
 - arrays are a type of data structure that can be used to store a collection of elements.
-- they are stored in the heap area of MINT until rebooted, once defined, their size cannot be changed
-- once an array is created and stored in a variable, it remains static and does not need to be initialized with numbers. Instead, we can insert variables directly into it.
+- they are stored in the heap area of MINT until rebooted, 
+- very important - once defined, their size and contents cannot be changed
 - Arrays are indexed, which means that each element in the array has a unique number associated with it. 
 - This number is called the index of the element.
 - the array indexes start at 0
 - To create an array, use the following syntax:  
-- v = variable i.e. single lowercase single letter
+- v = variable i.e. single lowercase single letter , use this if u want to change the array contents
 - n= number 
 
 ```
@@ -757,6 +758,8 @@ eg
 // boolean (code-block-then) /E (code-block-else)
 - If the condition is true, then `code-block-then` is executed. 
 - Otherwise, `code-block-else` is executed.
+- if you need for if... else then you can nest it, you cannot use /E twice or more in one line
+
 
 eg
 ```
