@@ -577,10 +577,10 @@ To set a value, e.g set item 1 to 10, is the same for both use
 
 
 ### Variables in Arrays
-- you can put a variable in an array but it will only store the ASCII number of that you are inputting
-- this means when you call an array value, and want to use it 
-you have to convert the ASCII back to its alpha or numeric character 
-- after calling the value form the array you can print the ASCII symbol with /K.
+- you can put a variable in an array
+- if you choose to use terminal input then it will only store the ASCII of that input 
+- this means when you call an array value, and want to use it  you have to convert the ASCII back to its alpha or numeric character 
+- after calling the value from the array you can print the ASCII symbol with /K.
 
 eg
 ```
@@ -596,6 +596,26 @@ eg
 97 98 99  
 >                   // it shows ASCII for abc
 ```
+
+- if you dont want to use keyboard input then the program can store numbers into the array
+```
+> // setup functions
+
+> : B [a b c] d! ;   // when use save to d this variable cannot be inside the array
+> : C d0?. d1?. d2?. ;
+> 1a! 2b! 3c!
+> D                  //run D 
+1 2 3   
+> 12a! 56b! 39c!
+>D
+12 56 39
+>
+- also the program can change these values
+- if you overwrite d you will loose the address to the array so protect it by not using it
+
+
+
+
 
 ### Control loops and counters 
 - with /i and /j to control array size and access
