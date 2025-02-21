@@ -54,6 +54,8 @@ language.
 - @ has no use in code, ignore its use for now
 - delays are made with (), for example 100() means do nothing 100 times, this can be nested for longer loops 100(100())
 -
+- all commands that start with / for example /U or /E must have a space before it, eg 12!/E is wrong shud be 12! /E
+- 
 
 ### Reverse Polish Notation (RPN)
 - RPN is a way of writing expressions in which the operators come after their operands. 
