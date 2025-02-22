@@ -377,6 +377,9 @@ ie
 - To create an array, use the following syntax:  
 - v = variable i.e. single lowercase single letter , use this if u want to change the array contents
 - n= number 
+- MINT has no stack or heap overflow protection, so large arrays or deep recursion can corrupt memory.
+- arrays must fit within memory, and large [...] declarations might fail if they exceed the heap.
+
 
 ```
 > [n n n] // multi n can be used until heap memory is used up.
