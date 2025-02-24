@@ -136,28 +136,28 @@ This also may help if your nuts are too big, by changing `ram.ram` to show `TIBS
 - “it finally works!  
 
 # Ver 2 getting respectable
-- new release, see my updated [ver 2 manual](SJ Manual Mint V2.md)
-- need more ram, cannot load long programs, moving to 4k 
-- adding SPI cct .. see [tec-SCOPE ](https://github.com/SteveJustin1963/tec-SCOPE)
-- play with /int calls :Z function
-- need a larger variable and function set, name length needs to be increased to 2 characters
-- John please fix all [bugs](https://github.com/orgMINT/MINT/issues)
+- new release, see my updated ver 2 manual 
+- John really really promised to fix bugs that same night [bugs](https://github.com/orgMINT/MINT/issues)
+- my 2k cannot handle big halibut, i should move to 4k or more, or the mighty G 
+- I wish to add SPI cct .. see [tec-SCOPE ](https://github.com/SteveJustin1963/tec-SCOPE)
+- edge play time with /int calls :Z function
+- need a larger variable and function set, iincreased tto 2 ccharacters wwould bbe aa ggood sstart
 
-# Ver 3 - Future...2025 maybe 
+# Ver 3 2025 maybe 
 - adapted from JH's comments
-- maintain the classic 1D, yes!!
-- add with modification the last two high address to get 6k more out of eeprom 
+- maintain the classic 1D, hell yes!
+- add with modification the last two high address to get 6k more out of eeprom
 - ![image](https://github.com/user-attachments/assets/9d753110-e74e-45b1-a050-2187cc91c0a7)
 - ![image](https://github.com/user-attachments/assets/36d45b5b-a19b-4acb-93f1-78bcea778814)
-
 - arrays and strings are handled the same way, never directly stored on the stack, uses heap space (grows with ram)
 - need examples of calculations when doing floating point and/or matrices...even the most basic floating point number could be considered an array with one element in it.
 - consider ideas from APL style languages, next MINT will be https://github.com/SteveJustin1963/Tec-TACIT
 - add SPI master
 - enhance /INT :F
 - enhance ASM calls and return
-- FP - the Big one **Will do 32-bit floating point signed number** 
-- FP always goes into a VAR, and if its put on the stack, only the pointer is stored there
+- the Big halibut **Will do 32-bit floating point signed number!** 
+- btw, FP always goes into a VAR, and if its put on the stack, only the pointer is stored there
+
 ```
 The range depends on the allocation of bits for the sign, exponent, and mantissa. Following the typical IEEE 754 format:
 1 bit for the sign
@@ -166,25 +166,10 @@ The range depends on the allocation of bits for the sign, exponent, and mantissa
 ```
 - the stack is only for 16-bit integers and pointers, then mint doesn't need to change very much and you could have larger than 32-bit floating point numbers.
 
-
-
-The approximate range is:
+FP range is:
 
 ![image](https://github.com/user-attachments/assets/4f85de62-eb23-4f8c-94b9-0629619b52d6)
 
 https://en.wikipedia.org/wiki/IEEE_754
 
-
-
- 
-
-
- 
- 
-
 ![image](https://github.com/user-attachments/assets/c28e7498-5bc2-4928-b141-aae132415934)
-
-
-
-
-
