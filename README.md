@@ -1,7 +1,7 @@
 ```
          ________________________
         |  ____________________  |
-        | |   MINT CODE, OI!   | |   <-- Ye Olde Computer (complete with lever & gears)
+        | |   MINT CODE, OI!   | |   <-- Ye Olde Computer (complete with levers & gears)
         | |____________________| |
         |________________________|
                 ||      ||
