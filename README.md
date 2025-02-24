@@ -70,7 +70,7 @@ ROMSIZE     EQU $0800
 RAMSIZE     EQU $4000   ; this is 14k ram (like a real tec1-D), but you can make it bigger here as its not a real tec-1
 ```
 
-This also may help if your nuts are too big, by changing `ram.ram` to show `TIBSIZE EQU $800 ` on both tec-1 or asm80 so you can enter huge nuts of code per line.  The text input buffer is where the code lives and is also used again to display code with ctrl-L. For asm80 use my nifty upload code tool called `autotyper.py` tool, btw it also strips out comments it does not like. Adjust 3 delays in the `.py` file to account for ye slow and old computers. Oh and also fix the yoda path to your source code. 
+This also may help if your nuts are too big, by changing `ram.ram` to show `TIBSIZE EQU $800 ` on both tec-1 or asm80 so you can enter huge nuts of code per line.  The text input buffer is where the code lives and is also used again to display code with ctrl-L. For asm80 use my nifty upload code tool called `autotyper.py` tool, btw it also strips out comments it does not like. Adjust 3 delays in the `.py` file to account for ye slow and old computers. Oh and also fix the yoda path to the source so it may be with you. 
 
 # Down to business...
 - A small and fast [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) like system for the TEC-1 and SCC, and more 
