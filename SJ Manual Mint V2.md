@@ -603,6 +603,7 @@ eg
 ```
 
 - if you dont want to use keyboard input then the program can store numbers into the array
+  
 ```
 > // setup functions
 
@@ -615,6 +616,8 @@ eg
 >D
 12 56 39
 >
+```
+
 - also the program can change these values
 - if you overwrite d you will loose the address to the array so protect it by not using it
 
@@ -628,6 +631,7 @@ eg
  
 
 eg
+
 ```
 > // Define an array of 5 elements and store its address in 'a'
 > [ 0 0 0 0 0 ] a! 	// need to initialize each time 
@@ -642,9 +646,9 @@ n a /i ?!  /N           // Store 'n' into array at index /i
 5 ( `Value is:`		// Print label
 a /i ? .  /N		// Fetch array element at index /i and print it
 )
-```
 
-```
+
+
 :A [ 0 0 0 0 0 ] a! ; 
 :B 5 ( `Enter a digit: `  /K 48 - n!  n a /i ?!  /N ) ;
 :C 5 ( `Value is: ` a /i ? .  /N ) ;
@@ -665,6 +669,7 @@ eg
 xxxxx
 >
 ```
+
 - The number represents the number of times the code between parentheses will be repeated. 
 - If the number is zero then the code will be skipped. 
 - If the number is ten, it will be repeated ten times. 
