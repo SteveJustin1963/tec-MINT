@@ -133,7 +133,7 @@ This also may help if your nuts are too big, by changing `ram.ram` to show `TIBS
 
 # Build v 1.1
 - set correct flags for the build and then compile and then burn the rom. this will combine bitbang with MINT
-- “it finally works!  
+- “it finally works"!  
 
 # Ver 2 getting respectable
 - new release, see my updated ver 2 manual 
