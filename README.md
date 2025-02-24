@@ -10,8 +10,8 @@
                 ||      ||
                 ||      ||
      [O]      __||______||__
-     /|\     /             \
-     / \    |               |
+     /|\     /              \
+     / \    |                |
 
    (I the MINT-esque knight
    in a ridiculous helmet,
