@@ -13,7 +13,7 @@
      /|\     /             \
      / \    |               |
 
-(I the MINT-esque knight
+   (I the MINT-esque knight
    in a ridiculous helmet,
    quill in hand, proudly declaring:)
    
