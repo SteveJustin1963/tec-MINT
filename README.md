@@ -1,3 +1,24 @@
+```
+         ________________________
+        |  ____________________  |
+        | |   MINT CODE, OI!   | |   <-- Ye Olde Computer (complete with lever & gears)
+        | |____________________| |
+        |________________________|
+                ||      ||
+                ||      ||
+      O       __||______||__
+     /|\     /             \
+     / \    |               |
+
+(I the MINT-esque knight
+   in a ridiculous helmet,
+   quill in hand, proudly declaring:)
+   
+   " 'Tis but a halibut code will be good enough for Jehovah!"
+
+```
+
+
 **The structuring or acknowledgment of the individuals involved in the development of the MINT interpreter follows no discernible hierarchy or prioritization of recognition, implying that their contributions are regarded in a manner devoid of any preordained or systematic reverence. This lack of sequentiality reflects an egalitarian or arbitrary approach, wherein no specific developer is elevated above another in terms of the order of respect or recognition for their work.**
 
 - John Hardy
