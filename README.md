@@ -1,3 +1,6 @@
+![image](https://github.com/user-attachments/assets/2dedb642-9c9e-4c19-9cf5-f6345052792c)
+
+
 ```
          __________________________
         |  ______________________  |
@@ -178,13 +181,6 @@ https://en.wikipedia.org/wiki/IEEE_754
  
 
 ![image](https://github.com/user-attachments/assets/c28e7498-5bc2-4928-b141-aae132415934)
-
-
-
-![image](https://github.com/user-attachments/assets/2dedb642-9c9e-4c19-9cf5-f6345052792c)
-
-
-
 
 
 
