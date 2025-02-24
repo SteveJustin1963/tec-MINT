@@ -70,7 +70,7 @@ ROMSIZE     EQU $0800
 RAMSIZE     EQU $4000   ;this is 14k of ram (like a real tec1-D maxed out), asm80 can take it bigger
 ```
 
-This also may help if your nuts are too big, by changing `ram.ram` to show `TIBSIZE EQU $800 ` on both tec-1 or asm80 so you can enter huge nuts of code per line.  The text input buffer is where the code lives and is also used again to display code with ctrl-L. For asm80 use my nifty upload code tool called `autotyper.py` tool, btw it also strips out comments it does not like. Last, if your old Millennium Falcon computer makes the Kessel Run in far more than 12 parsecs then adjust the 3 delays in the `.py` code, make them longer eg 0.2 or more, it may bore you to tears if to large. Oh and also fix the path to Yoda so the source may be with you :-) 
+This also may help if your nuts are too big, by changing `ram.ram` to show `TIBSIZE EQU $800 ` on both tec-1 or asm80 so you can enter huge nuts of code per line.  The text input buffer is where the code lives and is also used again to display code with ctrl-L. For asm80 use my nifty upload code tool called `autotyper.py` tool, btw it also strips out comments it does not like. Last, if your old Millennium Falcon computer makes the Kessel Run in far more than 12 parsecs then adjust the 3 delays in the `.py` code, make them longer eg 0.2 or more, but it may bore you to tears if to large. Oh and also fix the path to Yoda so the source may be with you :-) 
 
 # Down to business...
 - A small and fast [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) like system for the TEC-1 and SCC, and more 
