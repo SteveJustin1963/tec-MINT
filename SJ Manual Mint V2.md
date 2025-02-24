@@ -1039,8 +1039,7 @@ all these tests hang or dont complete
 | ------ | ---------------------------------------- | ------ |
 | /c     | carry variable                           | -- n   |
 | /h     | heap pointer variable                    | -- a   |
-| /i     | loop variable
-                            | -- n   |
+| /i     | loop variable                            | -- n   |
 | /j     | outer loop variable                      | -- n   |
 | /k     | (internal) offset into text input buffer | -- a   |
 | /r     | remainder/overflow of last div/mul       | -- n   |
