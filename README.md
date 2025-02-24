@@ -24,13 +24,14 @@
 
 **The structuring or acknowledgment of the individuals involved in the development of the MINT interpreter follows no discernible hierarchy or prioritization of recognition, implying that their contributions are regarded in a manner devoid of any preordained or systematic reverence. This lack of sequentiality reflects an egalitarian or arbitrary approach, wherein no specific developer is elevated above another in terms of the order of respect or recognition for their work.**
 
-- Chuck, the Charles Havice Moore the II
-- John Hardy
-- Ken Boak
-- Craig Jones
-- Craig Hart-RIP
-- Steve Justin - post testing and coding madness
-- TEC-1 group - wake up and smell the roses!
+- Chucky the Charles Havice Moore the II we all know and love
+- John Hardy - genius
+- Ken Boak - genius
+- Ken Stone - genius
+- Craig Jones - genius
+- Craig Hart-RIP genius
+- Steve Justin - OI!
+- TEC-1 group - wake up and smell the halibut
 
 # Announcements
   - https://www.facebook.com/groups/tec1z80/posts/1250512652124448/ 
@@ -44,7 +45,7 @@
 - https://www.youtube.com/watch?v=m66y6C54Cds WARNING - 3 1/2 HR MOVIE LENGTH
 
 
-# NOW --- Punch yourself in the n@@ts with MINT!
+# Punch yourself in the n@@ts with MINT!
  
 
 **Ah, right then, gather 'round, ye code-crunching wizards! You must read my excessively scribbled-upon, over-explained, and possibly bewildering edition of the "[MINT Programming Language Manual](https://github.com/SteveJustin1963/tec-MINT/blob/main/SJ%20Manual%20Mint%20V2.md)", now with 67% more footnotes and unnecessary asides. Next, code some wild and mysterious code fragments and give them a good ol' "smoke test"—which, in this case, may or may not involve a few questionable items of dubious legality. As the test progresses, you’ll inevitably amass a sizeable collection of nuts—be sure they’re good and crispy! Next, tie up those nuts (but not too tightly) into neat little functions—call them :A, :B, and so on, until your nuts are so firmly in place not one of them dares to escape. And now, the pièce de résistance: take a deep breath, fling your functions about like a madman at a fish market, and upon their glorious unification, shout with the most confident air, “That piece of halibut was good enough for Jehovah!” Voilà! You've written MINT code, sort of.**
