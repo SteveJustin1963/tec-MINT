@@ -81,7 +81,7 @@ This also may help if your nuts are too big, by changing `ram.ram` to show `TIBS
 - [monsonite site](https://github.com/monsonite/MINT)
 - [FB Search](https://www.facebook.com/groups/623556744820045/search/?q=mint)
 - [spreadsheet help files](https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/)
-- [Code to keep punching...](https://github.com/SteveJustin1963/tec-MINT/tree/main/code)
+- [Code to keep punching...](https://github.com/SteveJustin1963/tec-MINT/tree/main/code) and all over my github
 - my ongoing updated [SJ Manual Mint V2.md](https://github.com/SteveJustin1963/tec-MINT/blob/main/SJ%20Manual%20Mint%20V2.md)
 - my ongoing autopsy analysis [and extraction](https://github.com/SteveJustin1963/tec-MINT/wiki) 
 
