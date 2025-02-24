@@ -3,7 +3,7 @@
 
  
 
-**To write good code, learn from these pictures. First write small code (nut) fragments, punch test each one till tender, robust error free, then place your nuts in a functions and test drag them around till again robust error free, then finally place all your fucntion of nuts in a big pile and drop test the whole lot, just dont say "That piece of halibut was good enough for Jehovah!"**
+**To write good code, learn from these pictures. First smoke test each code fragments until you have a big pile of nuts. Next rope your nuts into functions (:A :B ...etc) and drag them around till none fall off. Finally enjoy all your funtions in one go and say "That piece of halibut was good enough for Jehovah!"**
 
 
 
