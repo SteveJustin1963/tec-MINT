@@ -172,15 +172,7 @@ FP range is:
 
 https://en.wikipedia.org/wiki/IEEE_754
 
-# Triv 
+#### 25.2.2025
 
-![image](https://github.com/user-attachments/assets/c28e7498-5bc2-4928-b141-aae132415934)
-
-![image](https://github.com/user-attachments/assets/d3616bb3-1313-4780-9f4f-4fff65f8c1b1)
-
-![image](https://github.com/user-attachments/assets/bf519200-5841-4d49-a925-1a19e7dc5dda)
-
-https://www.msc.org/what-you-can-do/eat-sustainable-seafood/fish-to-eat/halibut
-
-https://en.wikipedia.org/wiki/Halibut
+playing with the 7 seg display  https://github.com/SteveJustin1963/tec-MINT/blob/main/code/8-LED-light-chaser.md
 
