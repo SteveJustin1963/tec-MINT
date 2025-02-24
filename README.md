@@ -1,47 +1,3 @@
-# Punch yourself in the nuts with MINT !
-
-
- 
-
-**Ah, right then, gather 'round, ye code-crunching wizards! First, you must take these wild and mysterious code fragments and give them a good ol' "smoke test"—which, in this case, may or may not involve a few questionable items of dubious legality. As the test progresses, you’ll inevitably amass a sizeable collection of nuts—be sure they’re good and crispy! Next, tie up those nuts (but not too tightly) into neat little functions—call them :A, :B, and so on, until your nuts are so firmly in place not one of them dares to escape. And now, the pièce de résistance: take a deep breath, fling your functions about like a madman at a fish market, and upon their glorious unification, shout with the most confident air, “That piece of halibut was good enough for Jehovah!” Voilà! You've written MINT code, sort of.**
-
-
-
-
-![image](https://github.com/user-attachments/assets/76699c73-d350-4f52-a544-398e5a6214a2)
-![image](https://github.com/user-attachments/assets/e15ac155-4a9c-48a9-a4c3-31413bce2aa3)
-
-
-You also need to max out ur ram physically, the tec-1d can take 2k x 7 chips (14k) 
-
-If using asm80 emulation change the file constants.asm to show
-
-```
-; Configuration for TEC-1
-LOADER EQU 0
-BITBANG EQU 0
-        
-ROMSTART    EQU $0000
-RAMSTART    EQU $0800
-ROMSIZE     EQU $0800
-RAMSIZE     EQU $4000   ; this is 14k ram, but u can make bigger as not a real tec-1
-```
-
-Also change `ram.ram` to `TIBSIZE EQU $800 ` on both tec-1 or asm80 so u can enter huge chunks of code.  The text input buffer is where the code lives and is also used again to display code with ctrl-L. For asm80 use upload code tool with `autotyper.py` tool. Adjust delay in py file to account for the responsiveness of your pc running asm80.
-
-# Down to business...
-- A small and fast [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) like system for the TEC-1 and SCC, and more 
-- Incredible 400,000 commands /sec (4Mhz clock) or one order of power slower than your clock speed
-- Allows rapid prototyping of code, easy concatenation, no compiling, runs instantly, test as you build
-- We never get an undetected error because it never works as expected until it does, punch! 
-- [THE SOURCE CODE](https://github.com/orgMINT/MINT)
-- [monsonite site](https://github.com/monsonite/MINT)
-- [FB Search](https://www.facebook.com/groups/623556744820045/search/?q=mint)
-- [spreadsheet help files](https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/)
-- [Code to keep punching...](https://github.com/SteveJustin1963/tec-MINT/tree/main/code)
-- my ongoing updated [SJ Manual Mint V2.md](https://github.com/SteveJustin1963/tec-MINT/blob/main/SJ%20Manual%20Mint%20V2.md)
-- my ongoing autopsy analysis [and extraction](https://github.com/SteveJustin1963/tec-MINT/wiki) 
-
 # Honour Roll 
 The structuring or acknowledgment of the individuals involved in the development of the code follows no discernible hierarchy or prioritization of recognition, implying that their contributions are regarded in a manner devoid of any preordained or systematic reverence. This lack of sequentiality reflects an egalitarian or arbitrary approach, wherein no specific developer is elevated above another in terms of the order of respect or recognition for their work.
 
@@ -62,6 +18,49 @@ The structuring or acknowledgment of the individuals involved in the development
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1638969598.mp4
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1639658972.mp4
 - https://www.youtube.com/watch?v=m66y6C54Cds WARNING - 3 1/2 HR MOVIE LENGTH
+
+OK
+
+# Punch yourself in the nuts with MINT!
+ 
+
+**Ah, right then, gather 'round, ye code-crunching wizards! First, you must take these wild and mysterious code fragments and give them a good ol' "smoke test"—which, in this case, may or may not involve a few questionable items of dubious legality. As the test progresses, you’ll inevitably amass a sizeable collection of nuts—be sure they’re good and crispy! Next, tie up those nuts (but not too tightly) into neat little functions—call them :A, :B, and so on, until your nuts are so firmly in place not one of them dares to escape. And now, the pièce de résistance: take a deep breath, fling your functions about like a madman at a fish market, and upon their glorious unification, shout with the most confident air, “That piece of halibut was good enough for Jehovah!” Voilà! You've written MINT code, sort of.**
+
+
+
+
+![image](https://github.com/user-attachments/assets/76699c73-d350-4f52-a544-398e5a6214a2)
+![image](https://github.com/user-attachments/assets/e15ac155-4a9c-48a9-a4c3-31413bce2aa3)
+
+# Reality
+You can run small programs in 2k but for real halibut you need to max out your ram physically (see below), the tec-1d can take 2k x 7 chips (14k) or if using the asm80.com emulation of the code, max out the ram in file `constants.asm` aka...
+
+```
+; Configuration for TEC-1
+LOADER EQU 0
+BITBANG EQU 0
+        
+ROMSTART    EQU $0000
+RAMSTART    EQU $0800
+ROMSIZE     EQU $0800
+RAMSIZE     EQU $4000   ; this is 14k ram (like a real tec1-D), but you can make it bigger here as its not a real tec-1
+```
+
+This also may help if your nit is too big, by changing `ram.ram` to show `TIBSIZE EQU $800 ` on both tec-1 or asm80 so you can enter huge nuts of code per line.  The text input buffer is where the code lives and is also used again to display code with ctrl-L. For asm80 use my nifty upload code tool called `autotyper.py` tool. Adjust 3 delays in the `.py` file to account for slow old computer. Oh and also fix the yoda path to your source code. 
+
+# Down to business...
+- A small and fast [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) like system for the TEC-1 and SCC, and more 
+- Incredible 400,000 commands /sec (4Mhz clock) or one order of power slower than your clock speed
+- Allows rapid prototyping of code, easy concatenation, no compiling, runs instantly, test as you build
+- We never get an undetected error because it never works as expected until it does, punch! 
+- [THE SOURCE CODE](https://github.com/orgMINT/MINT)
+- [monsonite site](https://github.com/monsonite/MINT)
+- [FB Search](https://www.facebook.com/groups/623556744820045/search/?q=mint)
+- [spreadsheet help files](https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/)
+- [Code to keep punching...](https://github.com/SteveJustin1963/tec-MINT/tree/main/code)
+- my ongoing updated [SJ Manual Mint V2.md](https://github.com/SteveJustin1963/tec-MINT/blob/main/SJ%20Manual%20Mint%20V2.md)
+- my ongoing autopsy analysis [and extraction](https://github.com/SteveJustin1963/tec-MINT/wiki) 
+
 
 
 
