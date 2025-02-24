@@ -1074,19 +1074,19 @@ all these tests hang or dont complete
 | ^S     | print stack       |
 
 
- 
+# Examples
 
 ### 1. Fibonacci Sequence
 A loop that prints the first 10 numbers of the Fibonacci sequence.
 
 ```
-:F n !        // Pop the number of iterations (n) from the stack
-0 a ! 1 b !   // Initialize a = 0, b = 1
+:F n!        // Pop the number of iterations (n) from the stack
+0 a! 1 b!   // Initialize a = 0, b = 1
 n (           // Loop n times
   a .         // Print current Fibonacci number
-  a b + c !   // c = a + b
-  b a !       // a = b
-  c b !       // b = c
+  a b + c!   // c = a + b
+  b a!       // a = b
+  c b!       // b = c
 )
 ;
 ```
@@ -1098,6 +1098,82 @@ Calling the Function:
 10 F  // Print the first 10 Fibonacci numbers
 ```
 its works to a max of 24 F until the result rolls over, then we need to add extra code to account for carry flag and combine the result. 
+
+#### corrected version
+```
+:F
+n !                    // Pop number of iterations
+n 1 < (                // Check for invalid input
+  `Error: n must be >= 1`
+  /N
+) /E (                 // Else process Fibonacci
+  0 a !                // Initialize first number
+  1 b !                // Initialize second number
+  0 /c !               // Clear carry flag
+  
+  n (                  // Loop n times
+    // Print current number
+    a .                // Print current Fibonacci number
+    32 /C              // Print space for readability
+    
+    // Calculate next Fibonacci number
+    a b + c !          // c = a + b
+    /c . 32 /C         // Print carry flag status (debug)
+    
+    // Rotate values
+    b a !              // a = b
+    c b !              // b = c
+    
+    // Check for overflow
+    /c /T = (          // If carry flag is set
+      `(Overflow)`     // Warn about overflow
+      /N               // New line
+      0 /c !           // Clear carry flag
+    )
+  )
+  /N                   // Final new line
+)
+;
+```
+#### test
+```
+// Test various inputs
+1 F     // Should print: 0
+5 F     // Should print: 0 1 1 2 3
+10 F    // Should print: 0 1 1 2 3 5 8 13 21 34
+24 F    // Max before overflow
+25 F    // Will show overflow warning
+```
+
+
+#### For handling larger numbers (beyond 16-bit):
+```
+:L                     // Large number Fibonacci
+n !                    // Get iterations
+0 a ! 0 h !           // Initialize first number (low and high bits)
+1 b ! 0 i !           // Initialize second number (low and high bits)
+
+n (
+  // Print current large number
+  h . `:`             // Print high bits
+  a . 32 /C           // Print low bits and space
+  
+  // Calculate next number
+  a b + c !           // Add low bits
+  /c h i + + j !      // Add high bits with carry
+  
+  // Rotate values
+  b a !  i h !        // Move second number to first
+  c b !  j i !        // Move sum to second number
+)
+/N
+;
+```
+
+#### test
+```
+30 L    // Prints larger Fibonacci numbers
+```
 
 ### 2. Factorial Function
 - A recursive function that calculates the factorial of a number.
@@ -1118,23 +1194,117 @@ its works to a max of 24 F until the result rolls over, then we need to add extr
 - If `n > 1`, it calls itself with `n - 1` and multiplies `n` by the result.
 - If `n` is 1 or less, it returns 1, which is the base case to stop recursion.
 
+#### Corrected version
+```
+:F
+n !                  // Pop input number into n
+n 0 < (             // Check for negative input
+  `Error: n must be >= 0`
+  /N
+  -1                // Push error code
+) /E (              // Else calculate factorial
+  n 0 = (           // If n = 0
+    1               // Factorial of 0 is 1
+  ) /E (            // Else calculate n!
+    0 /c !          // Clear carry flag
+    1 r !           // Initialize result
+    n 1 + i !       // Set up counter (n+1)
+    
+    /U (            // Unlimited loop
+      i 1 - i !     // Decrement counter
+      i 1 > /W      // While counter > 1
+      
+      r i * r !     // r = r * i
+      /c /T = (     // Check for overflow
+        `Overflow at ` i . /N
+        /F /W       // Exit loop
+      )
+    )
+    r              // Push result
+  )
+)
+;
+
+// Helper function to print result
+:P
+n !               // Get result
+n -1 = (          // Check for error
+  // Error already printed
+) /E (
+  n 1 = (         // Special case for 0!
+    `0! = 1` /N
+  ) /E (
+    i . `! = ` n . /N  // Print n! = result
+  )
+)
+;
+```
+
+#### test
+```
+// Test various inputs
+0 F P    // Should print: 0! = 1
+5 F P    // Should print: 5! = 120
+-1 F P   // Should print: Error: n must be >= 0
+13 F P   // Should show overflow warning
+```
+
+#### Error handling:
+```
+// Test error cases
+-1 F P    // Negative number
+0 F P     // Zero input
+1 F P     // One input
+12 F P    // Largest without overflow
+13 F P    // First overflow case
+```
+
+#### For handling larger factorials:
+```
+:L                  // Large factorial
+n !                 // Get input
+0 h !               // High bits
+1 l !               // Low bits
+
+n 1 + i !           // Setup counter
+/U (
+  i 1 - i !         // Decrement counter
+  i 1 > /W          // While counter > 1
+  
+  // Multiply by i
+  l i * l !         // Low bits
+  /c h i * + h !    // High bits with carry
+  
+  // Check overflow
+  /r /T = (         // If overflow in high bits
+    `Overflow in high bits` /N
+    /F /W           // Exit loop
+  )
+)
+
+// Print result
+`Result: ` h . `:` l . /N
+;
+```
+
+
 ### 3. Sieve of Eratosthenes
 - A simple implementation of the Sieve of Eratosthenes to find prime numbers up to 30.
 
 ```
-:S l !             // Pop the limit from the stack
-2 p !              // Initialize p to 2 (start from the first prime)
+:S l!             // Pop the limit from the stack
+2 p!              // Initialize p to 2 (start from the first prime)
 l 2 - (            // Loop from 2 to the limit
-  /T f !           // Set flag assuming p is prime
+  /T f!           // Set flag assuming p is prime
   p 2 * l < (      // Loop for multiples of p within the limit
     p i % 0 = (    // If p is divisible by i
-      /F f !       // Set flag to false if divisible
+      /F f!       // Set flag to false if divisible
     )
   )
   f /T = (         // If the flag is still true, print the prime
     p .
   )
-  p 1 + p !        // Increment p
+  p 1 + p!        // Increment p
 )
 ;
 ```
@@ -1153,15 +1323,91 @@ l 2 - (            // Loop from 2 to the limit
 > 30 S  // Set the limit to 30 and call the sieve function
 ```
 
+#### corrected version:
+```
+:S
+l !                    // Get upper limit
+l 2 < (                // Check if limit < 2
+  `Error: limit must be >= 2` /N
+) /E (                 // Else run sieve
+  // Create array for marking composites
+  l 1 + /A a !        // Allocate array of size limit+1
+  
+  // Initialize array to all true
+  0 i !                // Counter
+  l 1 + (              // Loop to limit+1
+    /T a i ?!          // Set all to true
+    i 1 + i !
+  )
+  
+  // Mark composites
+  2 p !                // Start with 2
+  /U (                 // Unlimited loop
+    p p * l <= /W      // While p*p <= limit
+    
+    // Mark multiples of p
+    p p * i !          // Start at p*p
+    /U (               // Unlimited loop
+      i l <= /W        // While i <= limit
+      /F a i ?!        // Mark as composite
+      i p + i !        // Next multiple
+    )
+    
+    // Find next prime
+    p 1 + p !          // Increment p
+    /U (               // Find next unmarked number
+      a p ? /F = /W    // While p is marked
+      p 1 + p !        // Try next number
+      p p * l <= /W    // And p*p <= limit
+    )
+  )
+  
+  // Print primes
+  `Primes up to ` l . `: ` /N
+  2 i !                // Start at 2
+  /U (                 // Unlimited loop
+    i l <= /W          // While i <= limit
+    a i ? /T = (       // If marked as prime
+      i .              // Print number
+      32 /C            // Print space
+    )
+    i 1 + i !          // Next number
+  )
+  /N
+)
+;
+```
+
+#### test
+```
+30 S    // Find primes up to 30
+100 S   // Find primes up to 100
+1 S     // Should show error
+```
+
+#### Output example:
+```
+Primes up to 30:
+2 3 5 7 11 13 17 19 23 29
+```
+
+#### Error handling:
+```
+// Test error cases
+1 S     // Too small
+0 S     // Zero
+-1 S    // Negative
+```
+
 ### 4. Greatest Common Divisor (GCD) using Euclidean Algorithm
 - This program finds the GCD of two numbers using the Euclidean algorithm.
 
 ```
-:A b ! a !    // Pop two numbers from the stack in LIFO order (b first, then a)
+:A b! a!    // Pop two numbers from the stack in LIFO order (b first, then a)
 /U (          // Begin an unlimited loop
   b 0 > /W    // Continue while b > 0 (break if b == 0)
-  a b % a !   // a = a mod b
-  a b !       // Swap: b = old a, repeat
+  a b % a!   // a = a mod b
+  a b!       // Swap: b = old a, repeat
 )
 a .           // Print the GCD
 ;
@@ -1181,24 +1427,105 @@ Example:
 > 30 20 A       // Call the GCD function with 30 and 20, prints GCD: 10
 ```
 
+#### corrected version:
+```
+:A
+b ! a !              // Pop numbers from stack (b first, then a)
+
+// Handle special cases
+a 0 = b 0 = & (      // If both numbers are 0
+  `Error: Both numbers cannot be 0` /N
+  -1                 // Return error code
+) /E (
+  // Take absolute values
+  a 0 < ( a -1 * a ! )    // If a negative, make positive
+  b 0 < ( b -1 * b ! )    // If b negative, make positive
+  
+  // Main GCD loop
+  /U (
+    b 0 > /W           // While b > 0
+    a b % t !          // t = a mod b
+    b a !              // a = b
+    t b !              // b = t
+  )
+  
+  // Print result
+  `GCD(` x . `,` y . `) = ` a . /N
+)
+;
+
+// Helper function to test GCD
+:T
+y ! x !              // Store original numbers
+x y A                // Calculate GCD
+;
+```
+
+#### test
+```
+// Basic tests
+30 20 T    // Should find GCD of 30 and 20 (= 10)
+48 36 T    // Should find GCD of 48 and 36 (= 12)
+17 5 T     // Should find GCD of 17 and 5 (= 1)
+
+// Edge cases
+0 5 T      // One zero
+5 0 T      // Other zero
+0 0 T      // Both zero (error)
+-30 20 T   // Negative first number
+30 -20 T   // Negative second number
+-30 -20 T  // Both negative
+```
+
+#### Example outputs:
+```
+30 20 T
+GCD(30,20) = 10
+
+48 36 T
+GCD(48,36) = 12
+
+-30 20 T
+GCD(-30,20) = 10
+```
+
+#### Error handling:
+```
+// Test error cases
+0 0 T     // Both zero
+1 0 T     // One zero
+0 1 T     // Other zero
+```
+
+For very large numbers:
+```
+:L                  // Large number GCD
+bh ! bl ! ah ! al ! // Get high/low parts of both numbers
+
+// TODO: Implement large number GCD if needed
+;
+```
+
+
 ### 5. Bubble Sort
 
 ```
-:S l !                         // Store the list passed from the stack into variable l
-l /S s !                       // Get the size of the list and store it in s
-/T c !                         // Initialize the continue flag (c) to true
-/U (                           // Start an unlimited loop for swapping
-  c /W                         // Break the loop early if no swaps occurred (c == false)
-  s 1 - (                      // Iterate over the list (size - 1 times)
-    l i ? x !                  // Store l[i] in x
-    l i 1 + ? y !              // Store l[i+1] in y
-    x y > (                    // Compare x and y (l[i] and l[i+1])
-      y l i !                  // Move y (l[i+1]) to l[i]
-      x l i 1 + !              // Move x (l[i]) to l[i+1]
-      /F c !                   // Set the continue flag to false (indicating a swap occurred)
+:S l!                         // Store the list passed from the stack into variable l
+l /S s!                       // Get the size of the list and store it in s
+/U (                          // Start an unlimited loop for swapping
+  /T c!                       // Reset continue flag to true at start of each pass
+  s 1 - (                     // Iterate over the list (size - 1 times)
+    l i ? x!                  // Store l[i] in x  
+    l i 1 + ? y!             // Store l[i+1] in y
+    x y > (                   // Compare x and y (l[i] and l[i+1])
+      y l i ?!               // Move y (l[i+1]) to l[i]
+      x l i 1 + ?!           // Move x (l[i]) to l[i+1]
+      /T c!                  // Set continue flag to true if swap occurred
     )
   )
+  c /F = /W                  // Continue while swaps occurred
 )
+l                            // Push array reference to stack for display
 ;
 ```
 - **Temporary Variables**: `x` stores `l[i]` and `y` stores `l[i+1]` to avoid repetition when swapping elements.
@@ -1206,6 +1533,7 @@ l /S s !                       // Get the size of the list and store it in s
 - **Early Check for Continue Flag**: The loop checks `c /W` early in each pass. If `c == false` (no swaps occurred in the previous pass), the loop terminates early.
 
 Example running it
+
 ```
 > [5 3 8 4 2] S  // Calls the bubble sort function on the list [5, 3, 8, 4, 2]
 // result
@@ -1214,6 +1542,80 @@ Example running it
 > [5 3 8 4 2] S  // Calls the bubble sort function on the list [5, 3, 8, 4, 2]
 // result
 ```
+
+#### corrected version:
+```
+:S
+l !                    // Get input array
+l /S s !               // Get size of array
+
+// Validate input
+s 1 < (                // Check if array is empty
+  `Error: Empty array` /N
+) /E (                 // Else sort array
+  // Main sorting loop
+  /U (                 // Start unlimited loop
+    /F c !             // Reset continue flag to false
+    
+    // One pass through array
+    s 1 - (            // Loop size-1 times
+      // Get adjacent elements
+      l i ? x !        // Get current element
+      l i 1 + ? y !    // Get next element
+      
+      // Compare and swap if needed
+      x y > (          // If current > next
+        y l i ?!       // Put smaller in current
+        x l i 1 + ?!   // Put larger in next
+        /T c !         // Mark that we made a swap
+      )
+    )
+    
+    // Progress indicator
+    `.`               // Show progress
+    
+    c /W              // Continue if any swaps made
+  )
+  
+  // Print sorted array
+  /N
+  `Sorted: `
+  0 i !               // Reset counter
+  s (                 // Loop through array
+    l i ? .           // Print number
+    32 /C             // Print space
+    i 1 + i !         // Increment counter
+  )
+  /N
+)
+;
+
+// Helper function to test sort
+:T
+`Input: `
+0 i !                // Reset counter
+" /S s !             // Get size (duplicate array first)
+s (                  // Loop through array
+  " i ? .            // Print number (duplicate array)
+  32 /C              // Print space
+  i 1 + i !          // Increment counter
+)
+/N
+S                    // Sort array
+;
+```
+
+#### test
+```
+// Basic tests
+[5 3 8 4 2] T       // Regular array
+[1] T               // Single element
+[2 1] T             // Two elements
+[1 2 3] T           // Already sorted
+[3 2 1] T           // Reverse sorted
+[1 1 1] T           // All same elements
+```
+
 
 ### 6. Binary Search
 - A binary search algorithm that searches for a value in a sorted array.
@@ -1244,6 +1646,44 @@ l h <= (               // While low <= high
 > 0 9 B       // Searches in a sorted array from index 0 to 9
 ```
 
+#### corrected version
+```
+:B 
+a ! t ! l ! h !       // Stack order: array, target, low, high -> pop in reverse
+/U (                  // Start unlimited loop
+  l h <= (           // If low <= high
+    l h + 2 / m !    // Calculate middle
+    m a ? " .        // Print current middle value (for debugging)
+    m a ? t = (      // If middle equals target
+      m .            // Print found index
+      /F h !         // Set high to false (0) to exit
+    ) /E (           // Else
+      m a ? t > (    // If middle > target
+        m 1 - h !    // Search left half
+      ) /E (         // Else
+        m 1 + l !    // Search right half
+      )
+    )
+  ) /E (            // If low > high
+    -1 .            // Print -1 for not found
+    /F h !          // Ensure loop exits
+  )
+  l h <= /W        // Continue while low <= high
+)
+;
+```
+
+#### test
+```
+[1 3 5 7 9] // Array
+5           // Target
+0           // Low
+4           // High
+B           // Call binary search
+```
+
+
+
 ### 7. Quick Sort
 - An implementation of the Quick Sort algorithm.
 
@@ -1263,6 +1703,67 @@ l s > 1 (        // If list length is greater than 1
 ```
 > [5 3 8 4 2] 5 Q  // Sort the list [5, 3, 8, 4, 2]
 ```
+
+#### corrected version
+```
+:Q 
+a ! n !          // Pop array (a) and size (n) from stack
+n 1 > (          // If size > 1, need to sort
+  // Initialize partition variables
+  0 i !          // Left index
+  n 1 - j !      // Right index
+  a n 1 - ? p !  // Use last element as pivot
+  
+  // Partition loop
+  /U (           // Unlimited loop for partitioning
+    // Move i right while element < pivot
+    /U (
+      a i ? p <= /W  // While current element <= pivot
+      i 1 + i !      // Increment i
+      i j < /W       // And while i < j
+    )
+    
+    // Move j left while element > pivot
+    /U (
+      a j ? p > /W   // While current element > pivot
+      j 1 - j !      // Decrement j
+      i j < /W       // And while i < j
+    )
+    
+    // Swap elements if indexes haven't crossed
+    i j < (
+      // Swap a[i] and a[j]
+      a i ? t !      // temp = a[i]
+      a j ? a i ?!   // a[i] = a[j]
+      t a j ?!       // a[j] = temp
+    )
+    
+    i j <= /W        // Continue while i <= j
+  )
+  
+  // Recursively sort partitions
+  j 1 + k !          // Store partition point
+  
+  // Sort left partition if size > 1
+  k 1 > (
+    a k Q           // Sort left side
+  )
+  
+  // Sort right partition if size > 1
+  n k - 1 > (
+    k a n k - Q     // Sort right side
+  )
+)
+;
+```
+
+#### test
+```
+[5 3 8 4 2] // Array to sort
+5           // Size of array
+Q           // Call quicksort
+```
+
 
 ### 8. Tower of Hanoi
 
@@ -1288,6 +1789,58 @@ to the target.
 ```
 > 3 f t s H .  // Solve Tower of Hanoi for 3 disks
 ```
+
+#### corrected version
+```
+:H 
+s ! t ! f ! n !        // Pop spare, target, from, disks from stack
+m 0 !                  // Initialize move counter
+n 1 = (               // If only 1 disk
+  m 1 + m !           // Increment move counter
+  `Move disk from ` f /K // Print source rod
+  ` to ` t /K         // Print target rod
+  /N                  // New line
+) /E (               // Else - more than 1 disk
+  // Move n-1 disks to spare rod
+  n 1 - s t f        // Push params: disks-1, spare, target, source
+  H                  // Recursive call
+  
+  // Move largest disk
+  m 1 + m !          // Increment move counter
+  `Move disk from ` f /K // Print source rod
+  ` to ` t /K        // Print target rod
+  /N                 // New line
+  
+  // Move n-1 disks from spare to target
+  n 1 - f s t        // Push params: disks-1, source, spare, target
+  H                  // Recursive call
+)
+;
+```
+
+#### test
+```
+// Initialize variables for rod names
+65 f !    // ASCII 'A' for source rod
+66 t !    // ASCII 'B' for target rod
+67 s !    // ASCII 'C' for spare rod
+3 n !     // Number of disks
+
+// Call Hanoi function
+n t s f H
+
+// Should output something like:
+// Move disk from A to C
+// Move disk from A to B
+// Move disk from C to B
+// Move disk from A to C
+// Move disk from B to A
+// Move disk from B to C
+// Move disk from A to C
+```
+
+
+
 
 ### 9. Insertion Sort
 - An implementation of the insertion sort algorithm.
@@ -1318,6 +1871,68 @@ s 2 > (        // If list has more than 1 element
 ```
 > [5 3 8 4 2] I  // Sort the list [5, 3, 8, 4, 2]
 ```
+
+#### corrected version
+```
+:I 
+l !                    // Pop the list from the stack
+l /S s !               // Get size of list
+
+// Main insertion sort loop
+1 i !                  // Start from second element (index 1)
+/U (                   // Unlimited loop
+  i s < /W            // While i < size
+  
+  // Get current element as key
+  l i ? k !           // Store current element in k
+  i 1 - j !           // j starts at i-1
+  
+  // Move elements that are greater than key
+  /U (
+    j 0 >= (          // While j >= 0
+      l j ? k > (     // And element at j > key
+        // Shift element right
+        l j ? l j 1 + ?!  // Move element right
+        j 1 - j !         // Decrement j
+      ) /E (
+        0 j !            // Exit inner loop
+      )
+    ) /E (
+      0 j !             // Exit inner loop
+    )
+    j 0 >= /W          // Continue while j >= 0
+  )
+  
+  // Place key in correct position
+  k l j 1 + ?!         // Put key in its proper place
+  
+  // Move to next element
+  i 1 + i !            // Increment i
+)
+
+// Print sorted array for verification
+0 i !                  // Reset i for printing
+s (                    // Loop size times
+  l i ? .              // Print current element
+  32 /C                // Print space
+  i 1 + i !            // Increment i
+)
+/N                     // New line
+;
+```
+
+#### test
+```
+[5 3 8 4 2] I    // Should sort to: 2 3 4 5 8
+[1] I            // Single element
+[2 1] I          // Two elements
+[3 3 3] I        // Same elements
+[1 2 3] I        // Already sorted
+[5 4 3 2 1] I    // Reverse sorted
+```
+
+
+
 
 ### 10. Dijkstra's Algorithm (Shortest Path)
 - An implementation of Dijkstra's algorithm to find the shortest path in a graph.
@@ -1357,7 +1972,119 @@ s 2 > (        // If list has more than 1 element
 - except the start node (which is 0).
 - **Start Node**: `s = 0` sets the start node to 0.
 
-### Interrupt Handler         
+#### corrected version
+```
+// Helper function to find unvisited node with minimum distance
+:N 
+g ! d ! v !          // Pop graph, distances, visited arrays
+999 m !              // Set min to infinity (999)
+-1 n !               // Node index with min distance
+0 i !                // Initialize counter
+
+g /S (               // Loop through all nodes
+  v i ? 0 = (        // If node not visited
+    d i ? m < (      // If distance less than current min
+      d i ? m !      // Update min distance
+      i n !          // Update min node index
+    )
+  )
+  i 1 + i !          // Increment counter
+)
+n .                  // Return minimum node index
+;
+
+// Main Dijkstra's algorithm
+:D 
+g ! s ! d ! p !      // Pop graph, start, distances, paths arrays
+v [0 0 0 0 0] v !    // Initialize visited array
+p [0 0 0 0 0] p !    // Initialize paths array
+
+// Initialize distances
+0 i !                // Counter for initialization
+g /S (               // For all nodes
+  i s = (            // If start node
+    0 d i ?!         // Distance = 0
+  ) /E (             // Else
+    999 d i ?!       // Distance = infinity
+  )
+  i 1 + i !
+)
+
+// Main algorithm loop
+g /S (               // For number of nodes times
+  d v g N n !        // Find unvisited node with min distance
+  n 0 < /W          // While valid node found
+  
+  /T v n ?!         // Mark node as visited
+  
+  // Update distances to neighbors
+  0 j !              // Initialize neighbor counter
+  g /S (             // For all potential neighbors
+    // If edge exists and node not visited
+    g n g /S j + ? 0 > (      // If edge exists
+      v j ? 0 = (             // And not visited
+        // Calculate new distance
+        d n ? g n g /S j + ? + t !  // new = curr + edge
+        
+        // Update if shorter
+        t d j ? < (           // If new distance is shorter
+          t d j ?!           // Update distance
+          n p j ?!           // Update path
+        )
+      )
+    )
+    j 1 + j !               // Next neighbor
+  )
+)
+
+// Print results
+`Distances: `
+0 i !                       // Reset counter
+g /S (                      // For all nodes
+  d i ? .                   // Print distance
+  32 /C                     // Print space
+  i 1 + i !                 // Next node
+)
+/N
+
+`Paths: `
+0 i !                       // Reset counter
+g /S (                      // For all nodes
+  p i ? .                   // Print predecessor
+  32 /C                     // Print space
+  i 1 + i !                 // Next node
+)
+/N
+;
+```
+
+#### test
+```
+// Define graph (adjacency matrix)
+[
+  0  7  9  0  0 
+  7  0  0  4  0
+  9  0  0  2  3
+  0  4  2  0  6
+  0  0  3  6  0
+] g !
+
+// Initialize distances
+[0 999 999 999 999] d !
+
+// Initialize paths
+[0 0 0 0 0] p !
+
+// Set start node
+0 s !
+
+// Run algorithm
+g s d p D
+```
+
+
+
+## Interrupt Handler         
 - experimental code, do not use
 - may or may not be in current source code, see John Hardy
 - usage n /X  /v  :Z.....;        
@@ -1365,7 +2092,7 @@ s 2 > (        // If list has more than 1 element
 - You can tell which interrupt it by looking in the /v variable.
 - You won't be able to test the int 38 interrupt using asm80.com  serial terminal emulator because it is emulating a 6850 UART for the serial port to terminal 
 
-output to screen
+#### output to screen
 - but it will work with big bang serial code in MINT source code 
 - you can simulate a interrupt by jumping to one of the RST addresses. 
 - Eg RST 1 is at $0008 then :Z `hello!` ; // will execute
