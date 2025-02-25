@@ -69,45 +69,7 @@ H convert to segments in buffer
 ```
 
 mint V2
-no comments
-```
-\[0 0 0 0 0 0] b!
-\[#EB #28 #CD #AD #2E #A7 #E7 #29 #EF #2F #6F #E6 #C3 #EC #C7 #47] c!
-:A 2 /O #40|1 /O 10()#40 1 /O;
-:B #20 d! 6(d\? A 1+d}d!)'';
-:E c?+\?;
-:G $#0F&E$\!;
-:H b?3+4(%%G 1-$}}}}$)'';
-:I #FFFF(/i H 100(B));
-```
 
-with comments
-```
-// Display buffer for 6 digits
-\[0 0 0 0 0 0] b!
+tbc
 
-// Segment patterns for hex digits 0-F
-\[#EB #28 #CD #AD #2E #A7 #E7 #29 #EF #2F #6F #E6 #C3 #EC #C7 #47] c!
-
-// Display a segment pattern at current digit position
-:A 2 /O #40 | 1 /O 10() #40 1 /O;
-
-// Scan the display 
-:B #20 d! 6( d \? A 1+ d } d! ) '';
-
-// Convert nibble to segment pattern
-:E c? + \?;
-
-// Convert nibble to segments and store at address
-// (number address -- )
-:G $ #0F & E $ \!;
-
-// Convert a number to segments and store in buffer
-// (number -- )
-:H b? 3+ 4( %% G 1- $ } } } } $ ) '';
-
-// Main program - count in hex
-:I #FFFF( /i H 100( B ) );
-```
-
-
+ 
