@@ -1,4 +1,4 @@
-    ```
+```
 .engine mycomputer
 
     .include "constants.asm"
@@ -69,4 +69,4 @@
     .cstr "`Done!`"
     HALT
 
-    ```
+```
