@@ -1,5 +1,7 @@
 # Dijkstra's Algorithm (Shortest Path)
+
 An implementation of Dijkstra's algorithm to find the shortest path in a graph.
+
 ```
 :N g !           // Pop the graph from the stack
   u 0 !          // Initialize u (index) to 0
