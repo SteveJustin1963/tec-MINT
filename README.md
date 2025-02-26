@@ -172,9 +172,17 @@ FP range is:
 
 ![image](https://github.com/user-attachments/assets/4f85de62-eb23-4f8c-94b9-0629619b52d6)
 
+
+
 https://en.wikipedia.org/wiki/IEEE_754
+ ////////
+ 
 
-#### 25.2.2025  //////////////////////////////////////////////////////////////////////////////////////////////
+playing with the
 
-playing with the 7 seg display  https://github.com/SteveJustin1963/tec-MINT/blob/main/code/8-LED-light-chaser.md
+7 seg display  https://github.com/SteveJustin1963/tec-MINT/blob/main/code/8-LED-light-chaser.md
+
+https://github.com/tec1group/MINT-cookbook/tree/main/misc/4-digit-counter
+
+
 
