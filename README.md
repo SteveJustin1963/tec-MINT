@@ -79,6 +79,7 @@ This also may help if your nuts are too big, by changing `ram.ram` to show `TIBS
 - Allows rapid prototyping of code, easy concatenation, no compiling, runs instantly, test as you build
 - When you get an undetected error, punch your n@@ts and try harder!
 - [THE SOURCE CODE](https://github.com/orgMINT/MINT)
+- https://github.com/tec1group/MINT-cookbook ver1 stuff
 - [monsonite site](https://github.com/monsonite/MINT)
 - [FB Search](https://www.facebook.com/groups/623556744820045/search/?q=mint)
 - [spreadsheet help files](https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/)
