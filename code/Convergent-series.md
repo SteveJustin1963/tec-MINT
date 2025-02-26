@@ -1,11 +1,14 @@
  
 
 The code is calculating the value 2 using an infinite series of negative powers of 2, specifically by computing and summing:
-
+```
 1 + 2^(-1) + 2^(-2) + 2^(-3) + 2^(-4) + ...
+```
 
 Or written in decimal form:
+```
 1 + 0.5 + 0.25 + 0.125 + 0.0625 + ...
+```
 
 The flow diagram shows the logic for computing this series 10 terms at a time, letting the user decide when to stop based on the desired precision. As shown in the document's output, it takes about 40 terms to get very close to the actual value of 2.
 
