@@ -1,7 +1,7 @@
 do not use
 
 
-I'll convert the three main algorithms from the document into valid MINT code, following the MINT manual's specifications strictly.
+ 
 
 1. Binary Search (from §§1):
 ```
