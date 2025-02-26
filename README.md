@@ -75,6 +75,7 @@ This also may help if your nuts are too big, by changing `ram.ram` to show `TIBS
 # Down to business...
 - A small and fast [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) like system for the TEC-1 and SCC, and more 
 - Incredible 400,000 commands /sec (4Mhz clock) or one order of power slower than your clock speed
+- running in asm80 it runs at 16mhz clock thats 1,600,000 cps
 - Allows rapid prototyping of code, easy concatenation, no compiling, runs instantly, test as you build
 - We never get an undetected error because it never works as expected until it does, punch! 
 - [THE SOURCE CODE](https://github.com/orgMINT/MINT)
