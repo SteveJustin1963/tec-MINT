@@ -1,3 +1,4 @@
+```
 // Initialize array with test values
 [ 100 50 75 200 10 ] a!   // store array in variable a
 
@@ -72,3 +73,9 @@
     `Sorted array:` /N  
     P                  // print result
 ;
+
+
+```
+
+
+
