@@ -77,7 +77,7 @@ This also may help if your nuts are too big, by changing `ram.ram` to show `TIBS
 - Incredible 400,000 commands /sec (4Mhz clock) or one order of power slower than your clock speed
 - running in asm80 it runs at 16mhz clock thats 1,600,000 cps
 - Allows rapid prototyping of code, easy concatenation, no compiling, runs instantly, test as you build
-- BTW we never get an undetected error because it never works as expected, punch! Try harder!
+- When you get an undetected error, punch your n@@ts and try harder!
 - [THE SOURCE CODE](https://github.com/orgMINT/MINT)
 - [monsonite site](https://github.com/monsonite/MINT)
 - [FB Search](https://www.facebook.com/groups/623556744820045/search/?q=mint)
