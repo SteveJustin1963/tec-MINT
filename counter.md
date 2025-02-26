@@ -141,3 +141,18 @@ Where:
 :C #04 4( %%B {$ }}}}$ ) '' ;
 :E #FFFF( 100( \j@ C ) ) 0 0B ;
 ```
+
+# my try in ver 2 - work in progress
+
+```
+\[#EB #28 #CD #AD #2E #A7 #E7 #29 #EF #2F #6F #E6 #C3 #EC #C7 #47] c!
+:A #0F & c 0 ? + \? ;
+:B $ A 2 /O #40 | 1 /O 10() #40 1 /O ;
+:C #04 4( " % B { $ } } } } $ ) ' ' ;
+:D 0 n! /U( n #FFFF <= /W 100( n C ) n 1 + n! ) 0 0 B ;
+```
+
+
+
+
+
