@@ -798,6 +798,21 @@ eg
 true
 >
 ```
+when testing the boolean result we dont compare it again with /F 
+we just do this
+```
+> 0 0 =(`t`)
+t
+> 1 0 =(`t`)
+       // null result
+>
+```
+we do not do this, the result does not active the /F, () takes its input form the stack 
+```
+> 0 1 = /F (`t`)
+```
+
+
 
 ### IF-THEN-ELSE 
 - the syntax for IF-THEN-ELSE or "if...else" operator in MINT is an extension of the loop syntax.
