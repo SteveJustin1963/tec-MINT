@@ -990,9 +990,8 @@ all these tests hang or dont complete
 
 | Symbol   | Description                     | Effect |
 | -------- | ------------------------------- | ------ |
-| :A ... ; | define a new command or function DEF        | --     |
-- where "A" represents any uppercase letter
-| :@ ... ; | define an anonymous command DEF | -- a   |
+| :A ... ; | define a new function           | --     | where "A" represents any uppercase letter from A to Z, used uniquely
+| :@ ... ; | define an anonymous function    | -- a   |
 | /G       | execute mint code at address    | a -- ? |
 | /X       | execute machine code at address | a -- ? |
 
