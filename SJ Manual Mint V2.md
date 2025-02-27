@@ -258,7 +258,7 @@ eg
 ### Logical operators
 - MINT uses numbers to define boolean values.
 - false is represented by the number `0` or `/F`
-- true is represented by either `-1` or `1` and `/T` but it defaults to `-1`
+- true is represented by either `-1` or `1` , but `/T` it default to `-1` only
 
 eg 
 ```
@@ -270,6 +270,23 @@ eg
 -1
 >
 ```
+In summary, setting true to -1 leverages the binary property of two’s complement arithmetic, making certain bitwise operations more straightforward and efficient.
+
+In many programming contexts—especially in languages or systems that use two’s complement arithmetic—true is represented as -1 because in binary, -1 corresponds to all bits being set to 1. This can simplify bitwise operations. Here’s a breakdown:
+
+- **Two’s Complement Representation:**  
+  In two’s complement, -1 is represented with all bits set (e.g., 0xFFFFFFFF in a 32‑bit system). This “all-ones” pattern is often useful for bit-level manipulation.
+
+- **Bitwise Operations:**  
+  When true is -1 (i.e., all bits are 1), performing bitwise operations like AND, OR, and NOT behaves intuitively. For instance, ANDing any value with -1 leaves the original value unchanged, which can simplify logic in certain algorithms.
+
+- **Language and Convention Differences:**  
+  Not all languages follow this convention. In C and C++, for example, the boolean value true is typically defined as 1. However, other languages or older systems (such as some variants of BASIC or certain assembly conventions) use -1 for true because of its binary properties.
+
+- **Historical and Practical Reasons:**  
+  The use of -1 can be traced back to low-level programming practices where efficient bit-level manipulation was crucial. The “all-ones” representation of true made it convenient for operations that needed a mask of ones.
+
+
 
 ### Bitwise Logical Operators 
 - MINT has a set of bitwise logical operators that can be used to manipulate bits. 
