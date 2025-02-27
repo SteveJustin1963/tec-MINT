@@ -785,7 +785,10 @@ true
 - the syntax for IF-THEN-ELSE or "if...else" operator in MINT is an extension of the loop syntax.
 
 eg 
-// boolean (code-block-then) /E (code-block-else)
+```
+> boolean (code-block-then) /E (code-block-else)
+```
+- it must be in this formaate else will result in error, especial the placing of /E before the else bracket
 - If the condition is true, then `code-block-then` is executed. 
 - Otherwise, `code-block-else` is executed.
 - if you need for if... else then you can nest it, you cannot use /E twice or more in one line
