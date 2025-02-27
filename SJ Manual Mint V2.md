@@ -257,16 +257,17 @@ eg
 
 ### Logical operators
 - MINT uses numbers to define boolean values.
-- false is represented by the number `0` or `/F`
-- true is represented by either `-1` or `1` , but `/T` it default to `-1` only
+- a boolean test with `=` that returns false places 0 on the stack, and is represented with `/F`
+- a boolean test with `=` that returns true places -1 on the stack, and is represented with `/T`
+- 
 
 eg 
 ```
-> 3 0 = .
+> 3 0 = .   // false
 0
 >
 // also
-> 0 0 = .
+> 0 0 = .   // true
 -1
 >
 ```
