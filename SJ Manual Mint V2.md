@@ -988,6 +988,7 @@ all these tests hang or dont complete
 | ------ | -------------------- | -------- |
 | >      | 16-bit comparison GT | n n -- b |
 | <      | 16-bit comparison LT | n n -- b |
+| you cannot combine >= or <= or <> or >< etc ... all are illegal, each logical operator has be done separately|
 | =      | 16 bit comparison EQ | n n -- b |
 | &      | 16-bit bitwise AND   | n n -- b |
 | |      | 8-bit bitwise OR     | n n -- b |
