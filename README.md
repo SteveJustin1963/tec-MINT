@@ -17,7 +17,7 @@
    in a ridiculous helmet,
    quill in hand, proudly declaring:)
    
-   " `Tis but mīnt coded halibut shall suffice for Jehovah!"
+   " `Tis but this halibut of mīnt code shall suffice for Jehovah!"
 
 ```
 
