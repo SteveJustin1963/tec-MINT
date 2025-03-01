@@ -42,7 +42,7 @@
 # Videos
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1638969598.mp4
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1639658972.mp4
-- https://www.youtube.com/watch?v=m66y6C54Cds WARNING - 3 1/2 HR MOVIE LENGTH
+- https://www.youtube.com/watch?v=m66y6C54Cds WARNING - Alright, buckle up buttercup, because we're about to embark on a cinematic quest longer than a toddler's nap after a sugar rush!  WARNING - 3 1/2 HOURS?!
 
 
 # The n@@ts of MINT
