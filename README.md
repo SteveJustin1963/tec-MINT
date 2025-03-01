@@ -77,7 +77,7 @@ This also may help if your nuts are too big, by changing `ram.ram` to show `TIBS
 - Incredible 400,000 commands /sec (4Mhz clock) or one order of power slower than your clock speed
 - running your code in asm80 (16 Mhz clock) gets you around 1,600,000 parsecs or 4000 shekels +- 6 sigma there abouts on a sunny afternoon around 3:23pm
 - Allows rapid prototyping of code, easy concatenation, no compiling, runs instantly, test as you build
-- When you get an undetected error, punch your n@@ts and try harder!
+- When you get an undetected error, reward yourself with a punch to the n@@ts
 - [THE SOURCE CODE](https://github.com/orgMINT/MINT)
 - https://github.com/tec1group/MINT-cookbook ver1 stuff
 - [monsonite site](https://github.com/monsonite/MINT)
