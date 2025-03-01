@@ -72,7 +72,7 @@ RAMSIZE     EQU $4000   ;this is 14k of ram (like a real tec1-D maxed out), asm8
 This also may help if your nuts are too big, by changing `ram.ram` to show `TIBSIZE EQU $800 ` on both tec-1 or asm80 so you can enter huge nuts of code per line.  The text input buffer is where the code lives and is also used again to display code with ctrl-L. For asm80 use my nifty upload code tool called `autotyper.py` tool, btw it also strips out comments it does not like. Last, if your old Millennium Falcon computer makes the Kessel Run in far more than 12 parsecs then adjust the 3 delays in the `.py` code, make them longer eg 0.2 or more, but it may bore you to tears if to large. Oh and also fix the path to Yoda so the source may be with you :-) 
 
 # Down to business...
-- Its a small fast [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) like system meant especially for the TEC-1 prototype and its lesser copies rev A B C D (E F ?) G and SCC and if all fails for gods sake please use the Micocomp-1 whilst placed under a chair leg. 
+- Its a small fast [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) like system meant especially for the TEC-1 prototype and its lesser cunning monkeys- rev A B C D (E F ?) G and SCC and if all fails for gods sake please use the Micocomp-1 whilst placed under a chair leg. 
 - Incredible 400,000 commands /sec (4Mhz clock) or one order of power slower than your clock speed
 - running your code in asm80 (16 Mhz clock) gets you around 1,600,000 parsecs or 4000 shekels +- 6 sigma there abouts on a sunny afternoon around 3:23pm
 - Allows rapid prototyping of code, easy concatenation, no compiling, runs instantly, test as you build
