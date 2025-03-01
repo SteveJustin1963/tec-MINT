@@ -1,19 +1,5 @@
 # The SJ Manual 
 
-# Humour
-```
-"The Excessively Scribbled-Upon, Over-Explained,
-      and Possibly Bewildering Edition of the MINT Programming Language Manual,
-          Now with 67% More Footnotes and Unnecessary Asides!"
-                By Stephen Justin
-```
-
- 
-
- 
- 
-
-
 # Thou shalt... 
 - if a program, function or command has any type of logical or syntax error, it will corrupt MINTS ability accept even correct input and or run correct input
 - all input MUST be prefect and error free for the code to run error free unless there is a bug in the code.
@@ -54,7 +40,7 @@ language.
 - @ has no use in code, ignore its use for now
 - delays are made with (), for example 100() means do nothing 100 times, this can be nested for longer loops 100(100())
 -
-- all commands that start with / for example /U or /E must have a space before it, eg 12!/E is wrong shud be 12! /E
+- all commands that start with / for example /U or /E must have a space before it, eg 12!/E is wrong should be 12! /E
 - 
 
 ### Reverse Polish Notation (RPN)
@@ -271,15 +257,16 @@ eg
 -1
 >
 ```
-In summary, setting true to -1 leverages the binary property of two’s complement arithmetic, making certain bitwise operations more straightforward and efficient.
+In summary, setting true to -1 leverages the binary property of two’s complement arithmetic, making certain bit-wise operations more straightforward and efficient.
 
-In many programming contexts—especially in languages or systems that use two’s complement arithmetic—true is represented as -1 because in binary, -1 corresponds to all bits being set to 1. This can simplify bitwise operations. Here’s a breakdown:
+In many programming contexts—especially in languages or systems that use two’s complement arithmetic—true is represented as -1 because in binary, -1
+ corresponds to all bits being set to 1. This can simplify bit-wise operations. Here’s a breakdown:
 
 - **Two’s Complement Representation:**  
   In two’s complement, -1 is represented with all bits set (e.g., 0xFFFFFFFF in a 32‑bit system). This “all-ones” pattern is often useful for bit-level manipulation.
 
-- **Bitwise Operations:**  
-  When true is -1 (i.e., all bits are 1), performing bitwise operations like AND, OR, and NOT behaves intuitively. For instance, ANDing any value with -1 leaves the original value unchanged, which can simplify logic in certain algorithms.
+- **Bit-wise Operations:**  
+  When true is -1 (i.e., all bits are 1), performing bit-wise operations like AND, OR, and NOT behaves intuitively. For instance, AND any value with -1 leaves the original value unchanged, which can simplify logic in certain algorithms.
 
 - **Language and Convention Differences:**  
   Not all languages follow this convention. In C and C++, for example, the boolean value true is typically defined as 1. However, other languages or older systems (such as some variants of BASIC or certain assembly conventions) use -1 for true because of its binary properties.
@@ -289,12 +276,12 @@ In many programming contexts—especially in languages or systems that use two�
 
 
 
-### Bitwise Logical Operators 
-- MINT has a set of bitwise logical operators that can be used to manipulate bits. 
+### Bit-wise Logical Operators 
+- MINT has a set of bit-wise logical operators that can be used to manipulate bits. 
 - These operators are:
-- & performs a bitwise AND operation on the two operands.
-- | performs a bitwise OR operation on the two operands.
-- ^ performs a bitwise XOR operation on the two operands.
+- & performs a bit-wise AND operation on the two operands.
+- | performs a bit-wise OR operation on the two operands.
+- ^ performs a bit-wise XOR operation on the two operands.
 - { shifts the bits of the operand to the left by one.
 - } shifts the bits of the operand to the right by one.
 
@@ -306,7 +293,8 @@ They can be used to
  Counting the number of set bits in a number.
 
 eg 
-- Check if the first bit of the number 10 is set
+
+Check if the first bit of the number 10 is set
 ```
 > 11 1 & ,
 0001
@@ -314,6 +302,7 @@ eg
 ```
 
 eg 
+
 Shift 1 three times to the left (i.e. multiple by 8) and then OR 1 with the least significant bit.
 ```
 > 1 {{{ 1 | ,
@@ -321,8 +310,9 @@ Shift 1 three times to the left (i.e. multiple by 8) and then OR 1 with the leas
 >
 ```
 
-eg S
-hift 1 two times to the left (i.e. multiple by 4) and then XOR #000F and then mask with #000F.
+eg 
+
+ Shift 1 two times to the left (i.e. multiple by 4) and then XOR #000F and then mask with #000F.
 ```
 > 1 {{ #F ^ #F & ,
 000B
@@ -337,6 +327,7 @@ hift 1 two times to the left (i.e. multiple by 4) and then XOR #000F and then ma
 - To assign the value `10` to the global variable `x` use the `!` operator.
 
 eg 
+
 ```
 > 10 x !
 > x .
@@ -524,7 +515,7 @@ eg
 1 // looks correct
 
 > a1?.           
-3246 // thats the heap address for the `first` nested array in `a`.
+3246 // that's the heap address for the `first` nested array in `a`.
 > // to access first nested array and its first location use `a1?01?.`
 > a1?0?.
 2 //correct
@@ -535,7 +526,7 @@ eg
 
 this is incorrect
 > [ 3 4 [1 2] a!] b!                                                            
- this is wrong because we dont save an nested array while making the main array                                                                                 
+ this is wrong because we don't save an nested array while making the main array                                                                                 
    
 ```
 
@@ -620,7 +611,7 @@ eg
 >                   // it shows ASCII for abc
 ```
 
-- if you dont want to use keyboard input then the program can store numbers into the array
+- if you don't want to use keyboard input then the program can store numbers into the array
   
 ```
 > // setup functions
@@ -628,7 +619,8 @@ eg
 > : B [a b c] d! ;   // when use save to d this variable cannot be inside the array
 > : C d0?. d1?. d2?. ;
 > 1a! 2b! 3c!
-> D                  //run D 
+>
+ D                  //run D 
 1 2 3   
 > 12a! 56b! 39c!
 >D
@@ -798,7 +790,7 @@ eg
 true
 >
 ```
-when testing the boolean result we dont compare it again with /F 
+when testing the boolean result we don't compare it again with /F 
 we just do this
 ```
 > 0 0 =(`t`)
@@ -816,12 +808,10 @@ we do not do this, the result does not active the /F, () takes its input form th
 
 ### IF-THEN-ELSE 
 - the syntax for IF-THEN-ELSE or "if...else" operator in MINT is an extension of the loop syntax.
-
-eg 
-```
-> boolean (code-block-then) /E (code-block-else)
-```
-- it must be in this formaate else will result in error, especial the placing of /E before the else bracket
+- its in the form of `boolean test (code-block-then) /E (code-block-else)`
+- it means test and based on the result of whats on the stack execute the `then` code if its not met then execute the `else` block in the `(   )`
+ 
+- it must be in this format else will result in error, especial the placing of /E before the else bracket
 - If the condition is true, then `code-block-then` is executed. 
 - Otherwise, `code-block-else` is executed.
 - if you need for if... else then you can nest it, you cannot use /E twice or more in one line
@@ -1004,7 +994,8 @@ all these tests hang or dont complete
 | ------ | -------------------------------------------------------------------- | ------------ |
 | '      | drop the top member of the stack DROP                                | m n -- m     |
 | "      | duplicate the top member of the stack DUP                            | n -- n n     |
-| %      | over - take the 2nd member of the stack and copy to top of the stack | m n -- m n m |
+| %     
+ | over - take the 2nd member of the stack and copy to top of the stack | m n -- m n m |
 | $      | swap the top 2 members of the stack SWAP                             | m n -- n m   |
 | /D     | stack depth                                                          | -- n         |
 
@@ -1025,7 +1016,7 @@ all these tests hang or dont complete
 | Symbol   | Description                     | Effect |
 | -------- | ------------------------------- | ------ |
 | :A ... ; | define a new function           | --     | 
-| where "A" represents any uppercase letter from A to Z, used uniquely. Defining a function is also the lable DEF: in the source code for functions |
+| where "A" represents any uppercase letter from A to Z, used uniquely. Defining a function is also the label DEF: in the source code for functions |
 | :@ ... ; | define an anonymous function    | -- a   |
 | /G       | execute mint code at address    | a -- ? |
 | /X       | execute machine code at address | a -- ? |
@@ -1326,7 +1317,8 @@ n 1 + i !           // Setup counter
 
 
 ### 3. Sieve of Eratosthenes
-- A simple implementation of the Sieve of Eratosthenes to find prime numbers up to 30.
+- A simple implementation
+ of the Sieve of Eratosthenes to find prime numbers up to 30.
 
 ```
 :S l!             // Pop the limit from the stack
@@ -1672,7 +1664,8 @@ l h <= (               // While low <= high
 )
 ;
 ```
-- **`h ! l !`**: Pops the high (`h`) and low (`l`) indices from the stack in the correct LIFO order. When the function is called, you push the high 
+- **`h ! l !`**: Pops the high (`h`) and low (`l`) indices from
+ the stack in the correct LIFO order. When the function is called, you push the high 
 - value first, followed by the low value.
 - The binary search logic proceeds as normal:
 - **Find the middle**: `m l h + 2 / !` calculates the middle index.
@@ -2006,7 +1999,8 @@ s (                    // Loop size times
 - **Graph**: `[ 0 7 9 0 0 14 0 0 10 15 0 11 0 6 ]` represents an adjacency matrix.
 - **Distances**: `[ 0 999 999 999 999 ]` represents the distances from the start node to all other nodes, 
 - initialized with infinity (or a large value) 
-- except the start node (which is 0).
+- except the
+ start node (which is 0).
 - **Start Node**: `s = 0` sets the start node to 0.
 
 #### corrected version
