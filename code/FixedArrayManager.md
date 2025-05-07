@@ -20,9 +20,9 @@ d !        // Get value to add
 s b < (    // If there's space
   d a s ?! // Store at next available position
   s 1 + s! // Increment logical size
-  `Added element. New size: ` s . /N
+  `Added element. New size: ` s . 
 ) /E (
-  `Array is full. Cannot add ` d . /N
+  `Array is full. Cannot add ` d . 
 )
 ;
 
