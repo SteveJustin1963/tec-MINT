@@ -28,7 +28,7 @@ s b < (    // If there's space
 
 // Print logical array contents
 :P
-`Array Contents (` s . ` elements):` /N
+`Array Contents (` s . ` elements):`  
 0 c !     // Initialize loop counter
 s (       // Loop up to logical size
   a c ? . // Print element
