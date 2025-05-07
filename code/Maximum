@@ -1,0 +1,29 @@
+// Example 2: Finding the Maximum Value in a Nested Array
+// Variables: a=nested_array, b=max_value, c=outer_size, d=outer_index, e=inner_array, f=inner_size, g=inner_index, h=current_value
+
+:M
+a !
+-32768 b !
+
+a /S c !
+0 d !
+
+c (
+  a d ? e !
+  e /S f !
+  0 g !
+  f (
+    e g ? h !
+    h b > (
+      h b !
+    )
+    g 1 + g !
+  )
+  d 1 + d !
+)
+
+b .
+;
+
+// Example Usage:
+[[10 5] [25 3 15] [8]] M
