@@ -1,0 +1,33 @@
+// Variables: a=source_array, b=source_size, c=loop_index, d=current_element, e=destination_array_ptr, f=destination_index, g=filter_threshold
+
+// Example 1: Filtering Elements Greater Than a Threshold into a New Array
+// Filters elements from a source array based on a threshold and stores them in a newly allocated memory block.
+
+:F
+a !
+g !
+
+a /S b !
+b /A e ! // Allocate memory for destination (size of source, potentially unused slots)
+
+0 c !
+0 f !
+
+b (
+  a c ? d !
+  d g > (
+    d e f /? /! // Store element using /A access syntax
+    f 1 + f !
+  )
+  c 1 + c !
+)
+
+e // Pointer to the filtered data
+f // Count of filtered elements
+;
+
+// Example Usage:
+// Define a source array and a threshold
+// Pass threshold, then array to the function
+// 10 [1 15 5 20 8 12] F
+// After execution, the memory address of the filtered array is on stack (e), followed by its size (f).
