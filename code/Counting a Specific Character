@@ -1,0 +1,32 @@
+// Variables: a=byte_array, b=array_size, c=loop_index, d=current_byte, e=target_byte, f=count
+
+// Example 2: Counting a Specific Character (Byte) in a Byte Array
+// Counts occurrences of a target byte value within a byte array.
+
+:C
+a !
+e !
+
+a /S b !
+0 c !
+0 f !
+
+b (
+  a c \? d !
+
+  d e = (
+    f 1 + f !
+  )
+
+  c 1 + c !
+)
+
+f .
+;
+
+// Example Usage:
+// Define a byte array (using \ to indicate bytes)
+// Define a target character's ASCII value
+// Pass target byte, then byte array to the function
+// 97 \[97 98 97 99 97] C // Count occurrences of 'a' (ASCII 97)
+// 100 \[101 102 103] C // Count occurrences of 'd' (ASCII 100)
