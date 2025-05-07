@@ -1,0 +1,39 @@
+// Example 1: Reversing an Array In-Place
+// Variables: a=array, b=size, c=half_size, d=loop_counter, e=secondary_index, f=temp1, g=temp2
+
+:R
+a !
+a /S b !
+b 2 / c !
+0 d !
+c (
+  a d ? f !
+  b 1 - d - e !
+  a e ? g !
+  g a d ?!
+  f a e ?!
+  d 1 + d !
+)
+a
+;
+
+// Helper function to print array contents
+// Variables: a=array, b=size, d=loop_counter
+:P
+a !
+a /S b !
+0 d !
+b (
+  a d ? .
+  32 /C
+  d 1 + d !
+)
+/N
+;
+
+// Example Usage:
+[1 2 3 4 5] R P
+[10 20 30] R P
+[7] R P
+[] R P
+
