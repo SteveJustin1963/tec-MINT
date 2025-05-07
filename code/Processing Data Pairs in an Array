@@ -1,27 +1,29 @@
 // Variables: a=data_array, b=array_size, c=loop_index, d=value1, e=value2, f=result
 
 // Example 3: Processing Data Pairs in an Array (Simple Addition)
-// Iterates through an array containing pairs of numbers and performs an operation on each pair.
+// Iterates through an array containing pairs of numbers and performs an operation (e.g., addition) on each pair.
+// Array format: [v1 v2 v3 v4 ...] where operations are on (v1, v2), (v3, v4), etc.
 
 :P
-a !
+a ! // Pop data array
 
-a /S b !
-0 c !
+a /S b ! // Get array size
+0 c ! // Loop index
 
-b 2 / (
-  a c ? d !
-  c 1 +
-  a swap ? e !
+// Assuming array size is always even for pairs
+b 2 / ( // Loop size / 2 times (once for each pair)
+  a c ? d ! // Get first value of the pair
+  c 1 + // Calculate index of the second value
+  a swap ? e ! // Get second value of the pair (swap is needed after c+1)
 
-  d e + f !
+  d e + f ! // Perform addition on the pair and store result
 
-  f .
-  32 /C
+  f . // Print the result of the operation for this pair
+  32 /C // Print a space
 
-  c 2 + c !
+  c 2 + c ! // Increment loop index by 2 for the next pair
 )
-/N
+/N // Newline
 ;
 
 // Example Usage:
