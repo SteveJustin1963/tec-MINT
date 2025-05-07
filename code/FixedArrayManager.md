@@ -3,6 +3,42 @@
 
 # FixedArrayManager  
 
+
+
+```
+// FixedArrayManager - MINT implementation for managing fixed arrays
+// Variables: a=array, b=capacity, c=loop_index, d=value_to_add, s=logical_size
+
+// Create array of 10 zeros
+[0 0 0 0 0 0 0 0 0 0] a !
+a /S b !  // Store physical capacity (10)
+0 s !     // Initialize logical size to 0
+
+// Add element to array if space available
+:A
+d !        // Get value to add
+s b < (    // If there's space
+  d a s ?! // Store at next available position
+  s 1 + s! // Increment logical size
+  `Added element. New size: ` s . /N
+) /E (
+  `Array is full. Cannot add ` d . /N
+)
+;
+
+// Print logical array contents
+:P
+`Array Contents (` s . ` elements):` /N
+0 c !     // Initialize loop counter
+s (       // Loop up to logical size
+  a c ? . // Print element
+  32 /C   // Print space
+  c 1 + c ! // Increment counter
+)
+/N
+;
+```
+
 ## Introduction
 The FixedArrayManager is a simple MINT implementation that demonstrates how to work with fixed-size arrays while simulating dynamic array behavior. 
 Since MINT doesn't support true dynamic arrays and has limited memory, this approach uses a fixed-size array with a separate variable to track the logical size.
@@ -87,39 +123,3 @@ When adding elements, we place them at the next available position (index `s`) a
 
 
 
-
-
-
-```
-// FixedArrayManager - MINT implementation for managing fixed arrays
-// Variables: a=array, b=capacity, c=loop_index, d=value_to_add, s=logical_size
-
-// Create array of 10 zeros
-[0 0 0 0 0 0 0 0 0 0] a !
-a /S b !  // Store physical capacity (10)
-0 s !     // Initialize logical size to 0
-
-// Add element to array if space available
-:A
-d !        // Get value to add
-s b < (    // If there's space
-  d a s ?! // Store at next available position
-  s 1 + s! // Increment logical size
-  `Added element. New size: ` s . /N
-) /E (
-  `Array is full. Cannot add ` d . /N
-)
-;
-
-// Print logical array contents
-:P
-`Array Contents (` s . ` elements):` /N
-0 c !     // Initialize loop counter
-s (       // Loop up to logical size
-  a c ? . // Print element
-  32 /C   // Print space
-  c 1 + c ! // Increment counter
-)
-/N
-;
-```
