@@ -4,29 +4,29 @@
 // Counts occurrences of a target byte value within a byte array.
 
 :C
-a !
-e !
+a ! // Pop byte array
+e ! // Pop target byte
 
-a /S b !
-0 c !
-0 f !
+a /S b ! // Get array size
+0 c ! // Loop index
+0 f ! // Count
 
-b (
-  a c \? d !
+b ( // Loop through byte array
+  a c \? d ! // Get byte from array (using byte access)
 
-  d e = (
-    f 1 + f !
+  d e = ( // If current byte equals target byte
+    f 1 + f ! // Increment count
   )
 
-  c 1 + c !
+  c 1 + c ! // Increment loop index
 )
 
-f .
+f . // Print the final count
 ;
 
 // Example Usage:
 // Define a byte array (using \ to indicate bytes)
 // Define a target character's ASCII value
 // Pass target byte, then byte array to the function
-// 97 \[97 98 97 99 97] C // Count occurrences of 'a' (ASCII 97)
+// 97 \[97 98 97 99 97] C // Count occurrences of 'a' (ASCII 97) in the byte array
 // 100 \[101 102 103] C // Count occurrences of 'd' (ASCII 100)
