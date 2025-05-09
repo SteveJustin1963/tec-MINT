@@ -632,10 +632,80 @@ eg
 - if you overwrite d you will loose the address to the array so protect it by not using it
 
 
+### FixedArrayManager
+```
+// FixedArrayManager - MINT implementation for managing fixed arrays
+// Variables: a=array, b=capacity, c=loop_index, d=value_to_add, s=logical_size
+
+// Create array of 10 zeros
+[0 0 0 0 0 0 0 0 0 0] a !
+a /S b !  // Store physical capacity (10)
+0 s !     // Initialize logical size to 0
+
+// Add element to array if space available
+:A
+d !        // Get value to add
+s b < (    // If there's space
+  d a s ?! // Store at next available position
+  s 1 + s! // Increment logical size
+  `Added element. New size: ` s . 
+) /E (
+  `Array is full. Cannot add ` d . 
+)
+;
+
+// Print logical array contents
+:P
+`Array Contents (` s . ` elements):`  
+0 c !     // Initialize loop counter
+s (       // Loop up to logical size
+  a c ? . // Print element
+  32 /C   // Print space
+  c 1 + c ! // Increment counter
+)
+/N
+;
+```
+
+### Introduction
+The FixedArrayManager is a simple MINT implementation that demonstrates how to work with fixed-size arrays while simulating dynamic array behavior. Since MINT doesn't support true dynamic arrays and has limited memory, this approach uses a fixed-size array with a separate variable to track the logical size.
+
+### Variables
+a: The fixed array (capacity of 10)
+b: Physical capacity of the array
+c: Loop counter (for internal use)
+d: Temporary storage for values to add
+s: Current logical size of the array
+Functions
+A - Add Element
+Adds a value to the end of the logical array if there's space available.
+
+Usage:
+
+value A
+Parameters:
+
+value: The element to add to the array (taken from stack)
+
+### Behavior:
+
+Checks if the logical size is less than physical capacity
+If there's space, adds the element and increments the logical size
+If full, displays an error message
+P - Print Array
+Prints all elements in the logical array (up to size s).
+
+#### Usage:
+
+P
+
+### Output:
+
+Displays the count of elements
+Lists all elements in the logical array, separated by spaces
 
 
-
-### Control loops and counters 
+# Control loops and counters 
 - with /i and /j to control array size and access
 - [ 0 0 0 0 0 ] a! // we need to initialise array each time in loops
  
@@ -668,7 +738,7 @@ ABC
 ```
 
 
-### Loops
+# Loops
 - Looping in MINT is of the form
 
 > n(code)  // n is number of loops
@@ -712,9 +782,9 @@ eg
 >
 ```
 
-### Loop Counter
+# Loop Counter
 
-### Inner Loop counter
+## Inner Loop counter
 - called `/i` which acts as a inner loop counter. 
 - The counter counts up from zero 
 - Just before the counter reaches the limit number it terminates the loop.
@@ -727,7 +797,7 @@ eg
 >
 ```
 
-### Unlimited Loops 
+## Unlimited Loops 
 - repeat loop forever with /U. 
 - controlled with the "while" operator `/W`
 - passing a false value to /W via a conditional test ( like > < or = ) will terminate the loop
@@ -745,10 +815,11 @@ eg
 > // so it did it 5 times from 0 to 4
 >
 ```
-### Outer Loop counter 
+## Outer Loop counter 
 - nested look like 
 
 eg
+
 ```
 > 10 ( `x` 10 (`y`)) 
 xyyyyyyyyyyxyyyyyyyyyyxyyyyyyyyyyxyyyyyyyyyyxyyyyyyyyyyxyyyyyyyyyyxyyyyyyyyyyxyyyyyyyyyyxyyyyyyyyyyxyyyyyyyyyy
@@ -769,7 +840,7 @@ eg
 >
 ```
 
-### Conditional code
+## Conditional code
 - the looping mechanism can also be used to execute code conditionally. 
 - boolean `false` is represented by 0 or `/F`  // uppercase F 
 - boolean `true` is represented by 1 or `/T`   // uppercase T
@@ -806,7 +877,7 @@ we do not do this, the result does not active the /F, () takes its input form th
 
 
 
-### IF-THEN-ELSE 
+# IF-THEN-ELSE 
 - the syntax for IF-THEN-ELSE or "if...else" operator in MINT is an extension of the loop syntax.
 - its in the form of `boolean test (code-block-then) /E (code-block-else)`
 - it means test and based on the result of whats on the stack execute the `then` code if its not met then execute the `else` block in the `(   )`
