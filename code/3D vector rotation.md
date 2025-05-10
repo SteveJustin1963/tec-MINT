@@ -402,4 +402,76 @@ Rotated vector: 0 2 3
 This corrected code should now run without syntax errors in the MINT interpreter, producing the expected rotation results within the constraints of 16-bit integer arithmetic. If you encounter specific issues when running it, please provide the error output or behavior, and I can assist further!
 
 //////////////////////////////////////////////
- 
+ v3
+
+ 1000 s !
+
+[ 1000 2000 3000 ]v!
+
+[ 866 -500 0 500 866 0 0 0 1000 ]m!
+
+:M a ! b ! a b * s / ;
+
+:X
+  v ! m !
+  `X start` /N
+  m 0 ? v 0 ? M x !
+  `x1=` x . /N
+  m 1 ? v 1 ? M t !
+  x t + x !
+  `x2=` x . /N
+  m 2 ? v 2 ? M t !
+  x t + x !
+  `x3=` x . /N
+  x
+;
+
+:Y
+  v ! m !
+  `Y start` /N
+  m 3 ? v 0 ? M y !
+  `y1=` y . /N
+  m 4 ? v 1 ? M t !
+  y t + y !
+  `y2=` y . /N
+  m 5 ? v 2 ? M t !
+  y t + y !
+  `y3=` y . /N
+  y
+;
+
+:Z
+  v ! m !
+  `Z start` /N
+  m 6 ? v 0 ? M z !
+  `z1=` z . /N
+  m 7 ? v 1 ? M t !
+  z t + z !
+  `z2=` z . /N
+  m 8 ? v 2 ? M t !
+  z t + z !
+  `z3=` z . /N
+  z
+;
+
+:R
+  v ! m !
+  `R start` /N
+  m v X x !
+  m v Y y !
+  m v Z z !
+  `Creating vector` /N
+  [ x y z ]w!
+  `R done` /N
+  w
+;
+
+m v R t !
+t w !
+`Rotation done` /N
+
+`Original vector: ` v 0 ? s / . 32 /C v 1 ? s / . 32 /C v 2 ? s / . /N
+`Rotated vector: ` w 0 ? s / . 32 /C w 1 ? s / . 32 /C w 2 ? s / . /N
+
+
+
