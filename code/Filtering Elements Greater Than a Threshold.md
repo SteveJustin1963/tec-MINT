@@ -1,3 +1,4 @@
+```
 // Variables: a=source_array, b=source_size, c=loop_index, d=current_element, e=destination_array, f=destination_index, g=filter_threshold
 
 // Example 1: Filtering Elements Greater Than a Threshold into a New Array
@@ -44,6 +45,8 @@ b ( // Loop through source array
 e // Leave destination array pointer on stack
 f // Leave effective size on stack
 ;
+```
+
 
 // Example Usage:
 // Define a source array and a threshold
