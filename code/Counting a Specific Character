@@ -1,3 +1,4 @@
+```
 // Variables: a=byte_array, b=array_size, c=loop_index, d=current_byte, e=target_byte, f=count
 
 // Example 2: Counting a Specific Character (Byte) in a Byte Array
@@ -23,6 +24,7 @@ b ( // Loop through byte array
 
 f . // Print the final count
 ;
+```
 
 // Example Usage:
 // Define a byte array (using \ to indicate bytes)
