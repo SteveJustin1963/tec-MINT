@@ -17,7 +17,7 @@
    in a ridiculous helmet,
    quill in hand, proudly declaring:)
    
-   " Tis wee bit halibut aka mīnt code, shall even suffice for Jehovah ! "
+  
 
 ```
 
@@ -47,7 +47,7 @@ The structuring or acknowledgment of the individuals involved in the development
 
 # MINTing your n@@ts
  
-**Ah, right then, gather 'round, ye code-crunching wizards! You must read my excessively scribbled-upon, over-explained, and possibly bewildering edition of the "[MINT Programming Language Manual V2](https://github.com/SteveJustin1963/tec-MINT/blob/main/SJ%20Manual%20Mint%20V2.md)", now with 67% more footnotes and unnecessary asides. Next, code some wild and mysterious code fragments and give them a good ol' "smoke test"—which, in this case, may or may not involve a few questionable items of dubious legality. As the test progresses, you’ll inevitably amass a sizeable collection of nuts—be sure they’re good and crispy! Next, tie up those nuts (but not too tightly) into neat little functions—call them :A, :B, and so on, until your nuts are so firmly in place not one of them dares to escape. And now, the pièce de résistance: take a deep breath, fling your functions about like a madman at a fish market, and upon their glorious unification, shout with the most confident air, “That piece of halibut was so nice it would be good enough for Jehovah!” Voilà! You've written MINT code, sort of.**
+**Ah, right then, gather 'round, ye code-crunching wizards! You must read my excessively scribbled-upon, over-explained, and possibly bewildering edition of the "[MINT Programming Language Manual V2](https://github.com/SteveJustin1963/tec-MINT/blob/main/SJ%20Manual%20Mint%20V2.md)", now with 67% more footnotes and unnecessary asides. Next, code some wild and mysterious code fragments and give them a good ol' "smoke test"—which, in this case, may or may not involve a few questionable items of dubious legality. As the test progresses, you’ll inevitably amass a sizeable collection of nuts—be sure they’re good and crispy! Next, tie up those nuts (but not too tightly) into neat little functions—call them :A, :B, and so on, until your nuts are so firmly in place not one of them dares to escape. And now, the pièce de résistance: take a deep breath, fling your functions about like a madman at a fish market, and upon their glorious unification, shout with the most confident air, “That piece of halibut with MINT sauce was so nice it would be good enough for Jehovah!” Voilà! You've written MINT code, sort of.**
 
 
 
