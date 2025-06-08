@@ -5,8 +5,8 @@
          __________________________
         |  ______________________  |
         | | :M `MINT CODE, OI!`; | |   <-- Ye Olde Computer (complete with levers & gears)  
-        | |______________________| |    (... in the background two hills away, "OI dats naught ay cumputer". The big nose next to him says "shudup you, I cant hear whad hiz saying...)
-        |__________________________|
+        | |______________________| |    (... in the background two hills away, "OI dats naught ay cumputer". 
+        |__________________________|        ...The big nose next to him says "shudup you, I cant hear whad hiz saying...)
                 ||      ||
                 ||      ||
      [O]      __||______||__
