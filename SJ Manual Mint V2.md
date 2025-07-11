@@ -24,7 +24,7 @@ language.
 - this means we define a function with : and end with ;
 - when designing code use plenty comments per line and CRLF
 - but when uploading code into the interpreter put each function as a one whole line with no comments, strip all comments out
-- make all inline strings short, we only have 2k of ram
+- program broken down into small buffer-safe chunks, following your interpreter’s buffer and syntax rules (≤256 bytes, one function per line, no inline comments): make all inline strings short, we only have 2k of ram as base system
 - 
 - The mint can only handle signed 16-bit integers in decimal and unsigned in hexadecimal
 - to increase integer accuracy write your code by using signed 16-bit (2-byte) cells and store intermediate results using 32-bit (4-byte)
