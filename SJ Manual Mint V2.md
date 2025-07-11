@@ -376,9 +376,9 @@ ie
 ```
 ### Arrays
 
-### Basic arrays
-- arrays are a type of data structure that can be used to store a collection of elements.
+### Basic arrays- arrays are a type of data structure that can be used to store a collection of elements.
 - they are stored in the heap area of MINT until rebooted, 
+- MINT mandates arrays be stored via pointers
 - very important - once defined, their size and contents cannot be changed
 - Arrays are indexed, which means that each element in the array has a unique number associated with it. 
 - This number is called the index of the element.
@@ -444,6 +444,10 @@ eg
 ```
 
 ### Updating contents of array
+MINT arrays are static, why use them at all?
+Because "static" doesn’t mean useless — it means fixed in size, not that they're immobile or inert. In MINT, arrays:
+Can’t be resized after creation but Can absolutely be updated element-by-element using ? and ?!
+
 eg
 
 ```
@@ -457,6 +461,33 @@ eg
 -222                                                                            
 >                      // good its worked
 ```
+
+another example
+
+```
+// Step 1: Create a fixed-size array of 3 zeroes
+[0 0 0] a!
+
+// Step 2: Print all elements (should be 0 0 0)
+a 0? . a 1? . a 2? .
+
+// Step 3: Change index 1 to value 42
+42 a 1?!
+
+// Step 4: Print all elements again (should be 0 42 0)
+a 0? . a 1? . a 2? .
+```
+
+when we run it we get 
+```
+> 0 0 0
+// then we get
+> 0 42 0
+```
+
+
+
+
 
 ### Array size
 - as noted before the array size cannot change once set
