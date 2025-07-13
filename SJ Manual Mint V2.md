@@ -489,9 +489,15 @@ a 0? . a 1? . a 2? .
 
 when we run it we get 
 ```
-> 0 0 0
-// then we get
-> 0 42 0
+> [0 0 0] a!
+
+> a 0? . a 1? . a 2? .
+0 0 0
+> 42 a 1?!
+
+> a 0? . a 1? . a 2? .
+0 42 0
+>
 ```
 
 
@@ -687,7 +693,7 @@ a /S b !  // Store physical capacity (10)
 d !        // Get value to add
 s b < (    // If there's space
   d a s ?! // Store at next available position
-  s 1 + s! // Increment logical size
+  s 1 + s! // Increment logical size, must allways store the incremement, not done automaticly
   `Added element. New size: ` s . 
 ) /E (
   `Array is full. Cannot add ` d . 
@@ -707,75 +713,131 @@ s (       // Loop up to logical size
 ;
 ```
 
-### Introduction
-The FixedArrayManager is a simple MINT implementation that demonstrates how to work with fixed-size arrays while simulating dynamic array behavior. Since MINT doesn't support true dynamic arrays and has limited memory, this approach uses a fixed-size array with a separate variable to track the logical size.
+# Fixed-Array-Manager program
 
-### Variables
-a: The fixed array (capacity of 10)
-b: Physical capacity of the array
-c: Loop counter (for internal use)
-d: Temporary storage for values to add
-s: Current logical size of the array
-Functions
-A - Add Element
-Adds a value to the end of the logical array if there's space available.
+```
+:A [0 0 0 0 0 0 0 0 0 0] a! ;
+:B 10(`Enter digit: ` /K 48 - n! n a /i ?! /N) ;
+:C 10(`Value ` /i . `: ` a /i ? . /N) ;
+:D A `Array initialized with 10 zeros` /N B `Input complete` /N C `Output complete` /N ;
 
 Usage:
+D = Run complete demo (initialize, input, output)
+A = Initialize array only  
+B = Input 10 digits only
+C = Display array contents only
+```
 
-value A
-Parameters:
+## How the MINT Array Program Works
 
-value: The element to add to the array (taken from stack)
+### **Program Overview**
+This MINT program demonstrates basic array operations: initialization, input, and output using a 10-element fixed array.
 
-### Behavior:
+### **Function Breakdown**
 
-Checks if the logical size is less than physical capacity
-If there's space, adds the element and increments the logical size
-If full, displays an error message
-P - Print Array
-Prints all elements in the logical array (up to size s).
+#### **Function A - Array Initialization**
+```mint
+:A [0 0 0 0 0 0 0 0 0 0] a! ;
+```
 
-#### Usage:
+**What it does:**
+- Creates a 10-element array filled with zeros
+- Stores the array's heap address in variable `a`
+- The array occupies memory positions 0-9
 
-P
+**Step-by-step:**
+1. `[0 0 0 0 0 0 0 0 0 0]` - Define array in heap memory
+2. `a!` - Store heap address in variable `a`
 
-### Output:
+#### **Function B - Input Loop**
+```mint
+:B 10(`Enter digit: ` /K 48 - n! n a /i ?! /N) ;
+```
 
-Displays the count of elements
-Lists all elements in the logical array, separated by spaces
+**What it does:**
+- Prompts user to enter 10 digits
+- Converts ASCII input to numbers
+- Stores each digit at array position `/i`
+
+**Step-by-step execution:**
+1. `10(` - Loop 10 times, `/i` goes 0→9
+2. `Enter digit: ` - Display prompt
+3. `/K` - Read one character from keyboard
+4. `48 -` - Convert ASCII to number (ASCII '0'=48, so '5' becomes 5)
+5. `n!` - Store converted number in variable `n`
+6. `n a /i ?!` - Store `n` at array position `/i`
+7. `/N` - Print newline for next prompt
+
+#### **Function C - Output Loop**
+```mint
+:C 10(`Value ` /i . `: ` a /i ? . /N) ;
+```
+
+**What it does:**
+- Displays all 10 stored values with position labels
+- Shows "Value 0: [number]" format
+
+**Step-by-step execution:**
+1. `10(` - Loop 10 times, `/i` goes 0→9
+2. `Value ` - Print label
+3. `/i .` - Print current position number
+4. `: ` - Print separator
+5. `a /i ?` - Retrieve value from array at position `/i`
+6. `.` - Print the retrieved value
+7. `/N` - Print newline
+
+#### **Function D - Complete Demo**
+```mint
+:D A `Array initialized with 10 zeros` /N B `Input complete` /N C `Output complete` /N ;
+```
+
+**What it does:**
+- Runs the complete sequence: initialize → input → output
+- Provides status messages between each step
+
+### **Program Flow Example**
+
+**Input Session:**
+```
+> D
+Array initialized with 10 zeros
+Enter digit: 5
+Enter digit: 3
+Enter digit: 8
+Enter digit: 1
+Enter digit: 9
+Enter digit: 2
+Enter digit: 7
+Enter digit: 4
+Enter digit: 6
+Enter digit: 0
+Input complete
+Value 0: 5
+Value 1: 3
+Value 2: 8
+Value 3: 1
+Value 4: 9
+Value 5: 2
+Value 6: 7
+Value 7: 4
+Value 8: 6
+Value 9: 0
+Output complete
+```
+
+### **Key MINT Concepts Demonstrated**
+
+1. **Array Management**: Fixed-size arrays with heap allocation
+2. **Loop Counters**: Using `/i` for automatic indexing (0-based)
+3. **User Input**: Keyboard reading with `/K` and ASCII conversion
+4. **Array Access**: `?` for reading, `?!` for writing
+5. **String Output**: Using backticks for text display
+
+This program is a foundation for more complex array operations in MINT!
 
 
-# Control loops and counters 
-- with /i and /j to control array size and access
-- [ 0 0 0 0 0 ] a! // we need to initialise array each time in loops
+
  
-
-eg
-
-```
-> // Define an array of 5 elements and store its address in 'a'
-> [ 0 0 0 0 0 ] a! 	// need to initialize each time 
-> 			      // Loop 5 times to read input and store in the array
-> 5( `Enter a digit:`   // Prompt the user
-/K 48 - n!              // Read a character, convert ASCII digit to number, store in 'n'
-n a /i ?!  /N           // Store 'n' into array at index /i
-)
->
->
-> // Loop 5 times to print each element of the array
-5 ( `Value is:`		// Print label
-a /i ? .  /N		// Fetch array element at index /i and print it
-)
-
-
-
-:A [ 0 0 0 0 0 ] a! ; 
-:B 5 ( `Enter a digit: `  /K 48 - n!  n a /i ?!  /N ) ;
-:C 5 ( `Value is: ` a /i ? .  /N ) ;
-
-// run it
-ABC
-```
 
 
 # Loops
