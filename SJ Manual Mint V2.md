@@ -408,7 +408,7 @@ eg
 
 ie
 ```
-> [1 2 3]a!  // not no space between ]a!
+> [1 2 3] a !   
 ```
 - An array of 16-bit numbers can be defined by enclosing them within square brackets:
 
@@ -420,6 +420,7 @@ next we
 // but we do not use it this way, so save it to a variable like a!
 >
 ```
+
 - when defining an array, its contents is placed in the heap and its address onto the stack unless stored in a variable, which is recommended.
 - once defined that array size cannot change. make more arrays as needed.
 - for example `> [1] ` will place its address on stack, we can see it with `>.` showing 3234 
@@ -434,14 +435,22 @@ ie
 ```
 then
 - To fetch the Nth member of the array, we use a index operator `?`
-- The following prints the item at index 2 (which is 3).
+- The following prints the item at index 2 (which is value 3).
 
 eg
 ```
 > [1 2 3] 2? .
 3
 >
+
+or if we have saved it in a!
+> [ 1 2 3 ] a !
+> // then get index 2
+>  a 2? .
+3
+> 
 ```
+
 
 ### Updating contents of array
 MINT arrays are static, why use them at all?
