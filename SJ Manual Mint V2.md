@@ -12,18 +12,20 @@
 - MINT is a byte-code interpreter - this means that all of its instructions are 1 byte long. 
 - However, the choice of instruction uses printable ASCII characters, as a human readable alternative to assembly
 language. 
-- Variables are a to z lowercase and only as single character followed by a space, double letter allowed if commented at top of program
+- Variables are a to z lowercase and only as single character followed by a space
 - Functions labelled from A to Z uppercase as single character followed by a space, they are created with beginning with `:` eg :F, there is strictly now space between : and F, and function ends with with `;`
-- if you run out of function letters you can use double letters, note it with comment //
+- 
 - if a variable is updated eg a b + and you want to store it, you cannot use ! on its own it must be with a variable, ie b!
-
 
 - Z is reserved for interrupt calls. You write your interrupt routine under this function.
 - eg :R 1 2 + . ;
 - do not enter a space between `:` and the function letter
 - this means we define a function with : and end with ;
-- when designing code use plenty comments per line and CRLF
-- but when uploading code into the interpreter put each function as a one whole line with no comments, strip all comments out
+
+# comments
+- Comments can only go at end of line after `;` but is bette to place on the next line on its own
+- Comments are preceded with // then CRLF
+- when uploading code into interpreter better to strip all comments out so input is not overloaded
 - program broken down into small buffer-safe chunks, following your interpreter’s buffer and syntax rules (≤256 bytes, one function per line, no inline comments): make all inline strings short, we only have 2k of ram as base system
 - 
 - The mint can only handle signed 16-bit integers in decimal and unsigned in hexadecimal
@@ -31,12 +33,12 @@ language.
 - scale your number accordingly to prevent overflows where possible
 - it is known that integer maths has less complexity and more efficiency than floating point for may tasks 
 - if we need 32bit floating point we can optionally call the AP9511 APU chip placed at port 0x80 for /CS and port 0x81 for C,/D where D = port 80 and C = port 81
-- When stripping out all comments, also best to place one function per line, not stagger across several lines; reduces crashes.
+- always list smaller one function per line, not stagger across several lines; reduces crashes.
 - Comments are preceded with //
 - Comment must not occur on same line as code (bug) but placed on the next line
 - In this manual we will place them on the same line for explanation purposes only.
 - Do not use it in actual code as it interferes with MINT's buffer
-- Better to remove all comments when loading final code.
+ 
 - @ has no use in code, ignore its use for now
 - delays are made with (), for example 100() means do nothing 100 times, this can be nested for longer loops 100(100())
 -
@@ -1253,8 +1255,34 @@ all these tests hang or dont complete
 | ------ | --------------------------------------------- | ------ |
 | //     | comment text, skips reading until end of line | --     | 
 
-- there is a bug with comments, it does not skip when inline with code
-- so always place comments on the next line on its own
+Comments are preceded with  //.
+
+Crucially, inline comments on the same line as executable code are illegal and will lead to unpredictable behavior, including interpreter crashes or resets. For example:
+
+Illegal: :A 10(  xxx // my comment );
+
+Legal:
+
+// This is a comment for function A
+:A 10( ` xxx` );
+
+To ensure stability and prevent buffer interference, 
+
+always place comments on their own separate lines.
+
+When uploading code to the interpreter, it is best practice to strip all comments out.
+
+Lines of input cannot exceed 256 bytes in length, including any comments, before processing. Exceeding this limit will cause buffer overflows.
+
+Comments must not occur on the same line as code but placed on the next line.
+
+Do not use it in actual code as it interferes with MINT's buffer.
+
+Better to remove all comments when loading final code.
+
+Comments are not stored as part of the function definition; they are discarded during input processing.
+
+
 
 ### Utility commands
 
