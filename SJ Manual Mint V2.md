@@ -1,8 +1,8 @@
 # The SJ Manual 
 
 # Thou shalt... 
-- if a program, function or command has any type of logical or syntax error, it will corrupt MINTS ability accept even correct input and or run correct input
-- all input MUST be prefect and error free for the code to run error free unless there is a bug in the code.
+- if a program, function or command has any type of logical or syntax error, it will corrupt MINTS ability to accept further code even if is correct or correct input
+- all input MUST be prefect and error free for the code to run error free unless there is a bug in the code. but correct code can still fail due to limits.
 - MINT is a minimalist character-based interpreter but one which aims at fast performance, readability and ease of use. 
 - this is the prompt of MINT `> ` ready to accept input
 - On initialisation it will present a user prompt ">"
