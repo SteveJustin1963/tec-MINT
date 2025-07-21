@@ -24,14 +24,14 @@
 
 The structuring or acknowledgment of the individuals involved in the development of the MINT interpreter follows no discernible hierarchy or prioritization of recognition, implying that their contributions are regarded in a manner devoid of any preordained or systematic reverence. This lack of sequentiality reflects an egalitarian or arbitrary approach, wherein no specific developer is elevated above another in terms of the order of respect or recognition for their work.
 
-- Chucky the Charles Havice Moore II we all know and love
+- Chucky the Charles Havice Moore the II, that we all know and love
 - John Hardy - genius
 - Ken Boak - genius
 - Ken Stone - genius
 - Craig Jones - genius
 - Craig Hart-RIP genius
 - Steve Justin - OI!
-- TEC-1 group - wake up and smell the halibut
+- TEC-1 group - wake up and smell the fried halibut and chips
 
 # Announcements
   - https://www.facebook.com/groups/tec1z80/posts/1250512652124448/ 
