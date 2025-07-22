@@ -2321,11 +2321,11 @@ g s d p D
 - may or may not be in current source code, see John Hardy
 - usage n /X  /v  :Z.....;        
 - Interrupt Handler is triggered it executes the Z function on all interrupts including the RST instructions. 
-- You can tell which interrupt it by looking in the /v variable.
-- You won't be able to test the int 38 interrupt using asm80.com  serial terminal emulator because it is emulating a 6850 UART for the serial port to terminal 
+- You can tell what interrupted it by looking in the /v variable.
+- You won't be able to test the int 38 interrupt using asm80.com with its serial terminal emulator because its emulating a 6850 UART for the serial port to terminal 
 
 #### output to screen
-- but it will work with big bang serial code in MINT source code 
+- but it will work with bit bang serial code in MINT source code 
 - you can simulate a interrupt by jumping to one of the RST addresses. 
 - Eg RST 1 is at $0008 then :Z `hello!` ; // will execute
 
