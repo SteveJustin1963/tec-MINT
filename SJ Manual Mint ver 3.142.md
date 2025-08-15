@@ -21,10 +21,14 @@ language.
 - eg :R 1 2 + . ;
 - do not enter a space between `:` and the function letter
 - this means we define a function with : and end with ;
-
-# comments
-- Comments can only go at end of line after `;` but is bette to place on the next line on its own
+- also
+- Comments can only go at end of line after `;` but is better to place on the next line on its own
 - Comments are preceded with // then CRLF
+- In this manual we will place them on the same line for explanation purposes only.
+- Do not use it in actual code as it interferes with MINT's buffer
+
+
+
 - when uploading code into interpreter better to strip all comments out so input is not overloaded
 - program broken down into small buffer-safe chunks, following your interpreter’s buffer and syntax rules (≤256 bytes, one function per line, no inline comments): make all inline strings short, we only have 2k of ram as base system
 - 
@@ -33,11 +37,7 @@ language.
 - scale your number accordingly to prevent overflows where possible
 - it is known that integer maths has less complexity and more efficiency than floating point for may tasks 
 - if we need 32bit floating point we can optionally call the AP9511 APU chip placed at port 0x80 for /CS and port 0x81 for C,/D where D = port 80 and C = port 81
-- always list smaller one function per line, not stagger across several lines; reduces crashes.
-- Comments are preceded with //
-- Comment must not occur on same line as code (bug) but placed on the next line
-- In this manual we will place them on the same line for explanation purposes only.
-- Do not use it in actual code as it interferes with MINT's buffer
+
  
 - @ has no use in code, ignore its use for now
 - delays are made with (), for example 100() means do nothing 100 times, this can be nested for longer loops 100(100())
@@ -2353,3 +2353,4 @@ g s d p D
 - So when you run a mint from ROM in the tec-1 and you interrupt it with an INT or a NMI, mint will not crash it will execute the function Z.
 
 ////end for now ///////
+
