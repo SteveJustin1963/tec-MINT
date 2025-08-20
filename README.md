@@ -16,7 +16,7 @@
    (I the MINT-esque knight
    in a ridiculous helmet,
    quill in hand, proudly declaring:...
-   daaahh what do I say now?)
+   um, um,...oi!...ines please..)
    
   
 
