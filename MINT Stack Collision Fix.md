@@ -1,6 +1,18 @@
 # MINT Stack Collision Fix Manual
 **TEC-1 Z80 Computer - MINT 2.0 Interpreter**
 
+make this changes in ram.asm file
+```
+;dStack:        
+dStack EQU 0x0FF0
+```
+
+
+         
+
+
+
+
 ## Problem Description
 
 MINT hangs or crashes immediately after boot due to a **stack collision**. The Z80 CPU hardware stack and MINT interpreter's data structures are using the same memory location (0x0A00), causing corruption of the interpreter's control flow.
