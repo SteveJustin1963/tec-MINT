@@ -1,9 +1,0 @@
-.engine mycomputer
-
-.include "constants.asm"
-.include "IOSerial.asm"
-
-    jp   start              ; into #180 of the prog
-
-.include "MAIN.asm"
-.include "ram.asm"
