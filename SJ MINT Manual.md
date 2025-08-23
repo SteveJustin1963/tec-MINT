@@ -12,7 +12,7 @@
 language. 
 - Variables are a to z lowercase and only as single character followed by a space
 - Functions labelled from A to Z uppercase as single character followed by a space, they are created with beginning with `:` eg :F, there is strictly now space between : and F, and function ends with with `;`
-- 
+- each function fits ≤256 bytes. This the limit of TIB (Text Input buffer)
 - if a variable is updated eg a b + and you want to store it, you cannot use ! on its own it must be with a variable, ie b!
 
 - Z is reserved for interrupt calls. You write your interrupt routine under this function.
@@ -2351,5 +2351,6 @@ g s d p D
 - So when you run a mint from ROM in the tec-1 and you interrupt it with an INT or a NMI, mint will not crash it will execute the function Z.
 
 ////end for now ///////
+
 
 
