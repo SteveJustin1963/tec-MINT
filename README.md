@@ -3,8 +3,8 @@
 
 ```
 Ye Olde Computer (complete with levers & gears)
-in the background two hills away, "OI dats naught ay cumputa".
-The big nose next to him says "shudup you, I cant hear wad hiz saying..
+ in the background two hills away, "OI dats naught ay cumputa".
+  The big nose next to him says "shudup you, I cant hear wad hiz saying..
 
          __________________________
         |  ______________________  |
@@ -17,11 +17,10 @@ The big nose next to him says "shudup you, I cant hear wad hiz saying..
      /|\--   /              \
      / \    |                |
 
-   (I the MINT-esque knight
+  I the MINT-esque knight
    in a ridiculous helmet,
-   quill in hand, proudly declaring:...
-   um, um,...oi!...lines please..)
-   
+    quill in hand, proudly declaring:...
+      um, um,...oi!...lines please..   
   
 
 ```
