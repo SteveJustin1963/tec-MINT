@@ -2,11 +2,15 @@
 
 
 ```
+Ye Olde Computer (complete with levers & gears)
+in the background two hills away, "OI dats naught ay cumputa".
+The big nose next to him says "shudup you, I cant hear wad hiz saying..
+
          __________________________
         |  ______________________  |
-        | | :M `MINT CODE, OI!`; | |   <-- Ye Olde Computer (complete with levers & gears)  
-        | |______________________| |    (... in the background two hills away, "OI dats naught ay cumputa". 
-        |__________________________|        ...The big nose next to him says "shudup you, I cant hear wad hiz saying...)
+        | | :M `MINT CODE, OI!`; | | <
+        | |______________________| | ( 
+        |__________________________| 
                 ||      ||
                 ||      ||
      [O]      __||______||__
