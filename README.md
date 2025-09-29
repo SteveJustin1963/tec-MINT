@@ -142,11 +142,11 @@ This also may help if your nuts are too big, by changing `ram.ram` to show `TIBS
 
 # Ver 2 getting respectable
 - new release, see my updated ver 2 manual 
-- John really really promised to fix bugs that same night [bugs](https://github.com/orgMINT/MINT/issues)
-- my 2k cannot handle big halibut, i should move to 4k or more, or the mighty G 
+- John still fixing bugs  [bugs](https://github.com/orgMINT/MINT/issues)
+- my 2k cannot handle big halibut, i should move to 4k or more, or the mighty G ? 
 - I wish to add SPI cct .. see [tec-SCOPE ](https://github.com/SteveJustin1963/tec-SCOPE)
-- edge play time with /int calls :Z function
-- need a larger variable and function set, iincreased tto 2 ccharacters wwould bbe aa ggood sstart
+- need to test /int calls :Z function
+- need a larger variable and function set, increased to 2 characters would be a good start
 
 # Ver 3 2025 maybe 
 - adapted from JH's comments
@@ -178,14 +178,15 @@ The range depends on the allocation of bits for the sign, exponent, and mantissa
 - https://en.wikipedia.org/wiki/IEEE_754
 
 
-# playing with 7 seg display
+# aug 2025
+- playing with 7 seg display
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/code/8-LED-light-chaser.md
 - https://github.com/tec1group/MINT-cookbook/tree/main/misc/4-digit-counter
 
 crashes all the time!
 
-# 29 sept 2025
-implementing mint in octave from scratch
+# sept 2025
+- implementing mint in octave from scratch
 
 
 
