@@ -49,7 +49,7 @@ The structuring or acknowledgment of the individuals involved in the development
 - https://www.youtube.com/watch?v=m66y6C54Cds WARNING - Alright, buckle up buttercup, because we're about to embark on a cinematic quest longer than a toddler's nap after a sugar rush!  WARNING - 3 1/2 HOURS?!
 
 
-# MINTing your first n@@ts
+# MINTing your N@@TS
  
 **Ah, right then, gather 'round, ye code-crunching wizards! You must read my excessively scribbled-upon, over-explained, and possibly bewildering edition of the "[MINT Programming Language Manual V2](https://github.com/SteveJustin1963/tec-MINT/blob/main/SJ%20Manual%20Mint%20V2.md)", now with 67% more footnotes and unnecessary asides. When done reading, try and code some wild and mysterious code fragments then give em a good ol smoke test and modify on the fly— which, in this case, may or may not be assisted by some questionable items of dubious legality. As the test hacking progresses, you’ll inevitably amass a sizeable collection of code nuts — so be sure they’re good and crispy! Next, tie up those nuts but not too tightly into neat function bundles labeled with :A....: , :B....; and so on, until all your nuts are firmly in place so not one dares to escape from use. And now for the Pièce de Résistance: take a deep breath, fling your functions around like a fish monger upon their glorious unification shouting with confidence, “This piece of halibut is good enough for Jehovah!” and Voilà! You've now written and used MINT code for intergalactic conquest.**
 
