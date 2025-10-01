@@ -1,3 +1,4 @@
+```
 10 20 + .  // 30
 
 50 20 - .  // 30
@@ -166,6 +167,9 @@ H  // 0 1 2
 
 list  // (shows all defined functions)
 
+```
+
+```
 
 ////////////////////////////////////
 
@@ -183,7 +187,9 @@ list  // (shows all defined functions)
 8 . ` << 1 = ` 8 { . /N
 /N
 ;
+```
 
+```
 // Test 2: Basic Shift Right (divide by 2)
 :B
 `Test 2: Basic Shift Right (divide by 2)` /N
@@ -194,7 +200,9 @@ list  // (shows all defined functions)
 1 . ` >> 1 = ` 1 } . /N
 /N
 ;
+```
 
+```
 // Test 3: Multiple Shifts Left (powers of 2)
 :C
 `Test 3: Multiple Shifts Left (multiply by 2^n)` /N
@@ -203,7 +211,9 @@ list  // (shows all defined functions)
 1 . ` << 5 times = ` 1 {{{{{ . ` (1 * 2^5 = 32)` /N
 /N
 ;
+```
 
+```
 // Test 4: Multiple Shifts Right (divide by 2^n)
 :D
 `Test 4: Multiple Shifts Right (divide by 2^n)` /N
@@ -212,7 +222,9 @@ list  // (shows all defined functions)
 256 . ` >> 5 times = ` 256 }}}}} . ` (256 / 2^5 = 8)` /N
 /N
 ;
+```
 
+```
 // Test 5: Hexadecimal Shift Operations
 :E
 `Test 5: Hexadecimal Bit Shifts` /N
@@ -223,7 +235,9 @@ list  // (shows all defined functions)
 `#0010 >> 1 = ` #0010 } , /N
 /N
 ;
+```
 
+```
 // Test 6: Shift and OR pattern (setting bits)
 :F
 `Test 6: Building bit patterns with shifts` /N
@@ -234,7 +248,9 @@ list  // (shows all defined functions)
 `In hex: ` 1 {{{ 1 | , /N
 /N
 ;
+```
 
+```
 // Test 7: Shift and XOR pattern
 :G
 `Test 7: Shift with XOR operations` /N
@@ -245,7 +261,9 @@ list  // (shows all defined functions)
 `In hex: ` 1 {{ #F ^ #F & , /N
 /N
 ;
+```
 
+```
 // Test 8: Fast Multiplication by 8 (shift left 3 times)
 :H
 `Test 8: Fast Multiplication by 8 using shifts` /N
@@ -257,7 +275,9 @@ list  // (shows all defined functions)
 `Bit shift:   ` n {{{ . /N
 /N
 ;
+```
 
+```
 // Test 9: Fast Division by 4 (shift right 2 times)
 :I
 `Test 9: Fast Division by 4 using shifts` /N
@@ -269,6 +289,9 @@ list  // (shows all defined functions)
 `Bit shift:   ` n }} . /N
 /N
 ;
+```
+
+```
 
 // Test 10: Checking specific bit positions
 :J
@@ -282,7 +305,9 @@ list  // (shows all defined functions)
 `Bit 3: ` n }}} 1 & . /N
 /N
 ;
+```
 
+```
 // Test 11: Building powers of 2 using only shifts
 :K
 `Test 11: Powers of 2 using shifts only` /N
@@ -297,7 +322,9 @@ list  // (shows all defined functions)
 `2^8 = ` 1 {{{{{{{{ . /N
 /N
 ;
+```
 
+```
 // Test 12: Shift loop - visualize shifting
 :L
 `Test 12: Loop demonstration of shifts` /N
@@ -316,7 +343,9 @@ list  // (shows all defined functions)
 )
 /N
 ;
+```
 
+```
 // Test 13: Practical example - RGB color manipulation
 :M
 `Test 13: RGB color bit manipulation` /N
@@ -328,7 +357,9 @@ g {{{{{{{{ . ` (green shifted)` /N
 `Combined in hex: ` r {{{{{{{{{{{{{{{{ g {{{{{{{{ | b | , /N
 /N
 ;
+```
 
+```
 // Test 14: Edge cases
 :N
 `Test 14: Edge Cases` /N
@@ -338,7 +369,9 @@ g {{{{{{{{ . ` (green shifted)` /N
 `Shift back then forward: ` 42 } { . /N
 /N
 ;
+```
 
+```
 // Master test runner
 :T
 `====================================` /N
@@ -350,13 +383,15 @@ A B C D E F G H I J K L M N
 `ALL TESTS COMPLETE` /N
 `====================================` /N
 ;
+```
 
+```
 // Run all tests
 T
+```
 
 
-/////////////////////////////////////////////////////////////
-
+```
 // ========================================================================
 // COMPREHENSIVE LOGICAL OPERATORS TEST SUITE FOR MINT
 // Tests: >, <, =, &, |, ^, ~, {, }
@@ -375,7 +410,9 @@ T
 
 // Run Test 1
 A B C D E F G
+```
 
+```
 
 // TEST 2: BASIC COMPARISON OPERATORS (<)
 // ========================================================================
@@ -391,6 +428,9 @@ A B C D E F G
 // Run Test 2
 H I J K L M N
 
+```
+
+```
 
 // TEST 3: BASIC COMPARISON OPERATORS (=)
 // ========================================================================
@@ -407,6 +447,9 @@ H I J K L M N
 O P Q R S T U
 
 
+```
+
+```
 // TEST 4: BITWISE AND (&)
 // ========================================================================
 :V `TEST 4: Bitwise AND (&) Operator` /N ;
@@ -419,6 +462,9 @@ O P Q R S T U
 // Run Test 4
 V W X Y Z
 
+```
+
+```
 
 // TEST 5: BITWISE OR (|)
 // ========================================================================
@@ -433,6 +479,9 @@ V W X Y Z
 // Run Test 5
 A B C D E F
 
+```
+
+```
 
 // TEST 6: BITWISE XOR (^)
 // ========================================================================
@@ -448,6 +497,9 @@ A B C D E F
 G H I J K L
 
 
+```
+
+```
 // TEST 7: BITWISE NOT (~)
 // ========================================================================
 :M `TEST 7: Bitwise NOT (~) Operator` /N ;
@@ -460,6 +512,9 @@ G H I J K L
 // Run Test 7
 M N O P Q
 
+```
+
+```
 
 // TEST 8: SHIFT LEFT ({)
 // ========================================================================
@@ -474,6 +529,9 @@ M N O P Q
 // Run Test 8
 R S T U V W
 
+```
+
+```
 
 // TEST 9: SHIFT RIGHT (})
 // ========================================================================
@@ -488,6 +546,9 @@ R S T U V W
 // Run Test 9
 X Y Z A B C
 
+```
+
+```
 
 // TEST 10: COMPLEX COMPARISON CHAINS
 // ========================================================================
@@ -509,6 +570,9 @@ X Y Z A B C
 D E F G H
 
 
+```
+
+```
 // TEST 11: BIT MANIPULATION PATTERNS
 // ========================================================================
 :I `TEST 11: Bit Manipulation Patterns` /N ;
@@ -529,6 +593,9 @@ D E F G H
 I J K L M
 
 
+```
+
+```
 // TEST 12: CONDITIONAL EXECUTION WITH COMPARISONS
 // ========================================================================
 :N `TEST 12: Conditional Execution` /N ;
@@ -553,6 +620,9 @@ I J K L M
 // Run Test 12
 N O P Q R
 
+```
+
+```
 
 // TEST 13: LOOP CONTROL WITH COMPARISONS
 // ========================================================================
@@ -575,6 +645,9 @@ N O P Q R
 // Run Test 13
 S T U
 
+```
+
+```
 
 // TEST 14: BITWISE OPERATIONS IN CALCULATIONS
 // ========================================================================
@@ -593,6 +666,9 @@ S T U
 // Run Test 14
 V W X Y Z
 
+```
+
+```
 
 // TEST 15: EDGE CASES AND BOUNDARY CONDITIONS
 // ========================================================================
@@ -619,6 +695,9 @@ V W X Y Z
 // Run Test 15
 A B C D E F G H I
 
+```
+
+```
 
 // TEST 16: COMBINING ALL LOGICAL OPERATORS
 // ========================================================================
@@ -654,6 +733,9 @@ A B C D E F G H I
 // Run Test 16
 J K L M
 
+```
+
+```
 
 // TEST 17: REAL-WORLD SCENARIOS
 // ========================================================================
@@ -689,6 +771,9 @@ J K L M
 N O P Q
 
 
+```
+
+```
 // TEST 18: PERFORMANCE AND STRESS TESTS
 // ========================================================================
 :R `TEST 18: Performance Tests` /N ;
@@ -714,6 +799,9 @@ N O P Q
 // Run Test 18
 R S T
 
+```
+
+```
 
 // MASTER TEST RUNNER
 // ========================================================================
@@ -728,7 +816,10 @@ R S T
 
 M
 
-////////////////////////////////////////
+```
+
+```
+
 
 
 
@@ -756,6 +847,9 @@ M
 `Run with: T` /N /N
 
 
+```
+
+```
 // TEST 2: BITWISE AND (&) - Edge Cases
 // ========================================================================
 :K `=== TEST 2: BITWISE AND EDGE CASES ===` /N ;
@@ -774,6 +868,9 @@ M
 `Run with: U` /N /N
 
 
+```
+
+```
 // TEST 3: BITWISE OR (|) - Edge Cases
 // ========================================================================
 :V `=== TEST 3: BITWISE OR EDGE CASES ===` /N ;
@@ -792,6 +889,9 @@ M
 `Run with: E` /N /N
 
 
+```
+
+```
 // TEST 4: BITWISE XOR (^) - Edge Cases
 // ========================================================================
 :F `=== TEST 4: BITWISE XOR EDGE CASES ===` /N ;
@@ -809,6 +909,9 @@ M
 `Run with: N` /N /N
 
 
+```
+
+```
 // TEST 5: SHIFT LEFT ({) - Overflow Edge Cases
 // ========================================================================
 :O `=== TEST 5: SHIFT LEFT EDGE CASES ===` /N ;
@@ -827,6 +930,9 @@ M
 `Run with: X` /N /N
 
 
+```
+
+```
 // TEST 6: SHIFT RIGHT (}) - Edge Cases
 // ========================================================================
 :Y `=== TEST 6: SHIFT RIGHT EDGE CASES ===` /N ;
@@ -845,6 +951,9 @@ M
 
 
 ```
+
+```
+
 Great debugging! I can see **two critical issues** from the trace:
 
 ## Issue 1: Stack Pollution Between Tests
