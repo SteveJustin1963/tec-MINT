@@ -165,3 +165,194 @@ H  // 0 1 2
 5 ( /i " . ) /N  // 0 1 2 3 4
 
 list  // (shows all defined functions)
+
+
+////////////////////////////////////
+
+// ===================================================================================================
+// MINT BIT SHIFT OPERATORS TEST SUITE
+// Tests for { (shift left) and } (shift right)
+// ===================================================================================================
+
+// Test 1: Basic Shift Left (multiply by 2)
+:A
+`Test 1: Basic Shift Left (multiply by 2)` /N
+1 . ` << 1 = ` 1 { . /N
+2 . ` << 1 = ` 2 { . /N
+4 . ` << 1 = ` 4 { . /N
+8 . ` << 1 = ` 8 { . /N
+/N
+;
+
+// Test 2: Basic Shift Right (divide by 2)
+:B
+`Test 2: Basic Shift Right (divide by 2)` /N
+16 . ` >> 1 = ` 16 } . /N
+8 . ` >> 1 = ` 8 } . /N
+4 . ` >> 1 = ` 4 } . /N
+2 . ` >> 1 = ` 2 } . /N
+1 . ` >> 1 = ` 1 } . /N
+/N
+;
+
+// Test 3: Multiple Shifts Left (powers of 2)
+:C
+`Test 3: Multiple Shifts Left (multiply by 2^n)` /N
+1 . ` << 3 times = ` 1 {{{ . ` (1 * 2^3 = 8)` /N
+1 . ` << 4 times = ` 1 {{{{ . ` (1 * 2^4 = 16)` /N
+1 . ` << 5 times = ` 1 {{{{{ . ` (1 * 2^5 = 32)` /N
+/N
+;
+
+// Test 4: Multiple Shifts Right (divide by 2^n)
+:D
+`Test 4: Multiple Shifts Right (divide by 2^n)` /N
+64 . ` >> 3 times = ` 64 }}} . ` (64 / 2^3 = 8)` /N
+128 . ` >> 4 times = ` 128 }}}} . ` (128 / 2^4 = 8)` /N
+256 . ` >> 5 times = ` 256 }}}}} . ` (256 / 2^5 = 8)` /N
+/N
+;
+
+// Test 5: Hexadecimal Shift Operations
+:E
+`Test 5: Hexadecimal Bit Shifts` /N
+`#0001 << 1 = ` #0001 { , /N
+`#000F << 1 = ` #000F { , /N
+`#00FF << 1 = ` #00FF { , /N
+`#0100 >> 1 = ` #0100 } , /N
+`#0010 >> 1 = ` #0010 } , /N
+/N
+;
+
+// Test 6: Shift and OR pattern (setting bits)
+:F
+`Test 6: Building bit patterns with shifts` /N
+`Build 0x09 (binary 1001):` /N
+1 {{{ . ` (shift 1 left 3 times = 8)` /N
+1 { . ` (shift 1 left once = 2)` /N
+1 {{{ 1 | . ` (OR with 1 = 9)` /N
+`In hex: ` 1 {{{ 1 | , /N
+/N
+;
+
+// Test 7: Shift and XOR pattern
+:G
+`Test 7: Shift with XOR operations` /N
+`Start with 4, shift left twice, XOR with 0x0F, mask with 0x0F:` /N
+1 {{ . ` (1 << 2 = 4)` /N
+1 {{ #F ^ . ` (4 XOR 0x0F = 11)` /N
+1 {{ #F ^ #F & . ` (result AND 0x0F = 11)` /N
+`In hex: ` 1 {{ #F ^ #F & , /N
+/N
+;
+
+// Test 8: Fast Multiplication by 8 (shift left 3 times)
+:H
+`Test 8: Fast Multiplication by 8 using shifts` /N
+5 n!
+`Traditional: ` n 8 * . /N
+`Bit shift:   ` n {{{ . /N
+10 n!
+`Traditional: ` n 8 * . /N
+`Bit shift:   ` n {{{ . /N
+/N
+;
+
+// Test 9: Fast Division by 4 (shift right 2 times)
+:I
+`Test 9: Fast Division by 4 using shifts` /N
+100 n!
+`Traditional: ` n 4 / . /N
+`Bit shift:   ` n }} . /N
+64 n!
+`Traditional: ` n 4 / . /N
+`Bit shift:   ` n }} . /N
+/N
+;
+
+// Test 10: Checking specific bit positions
+:J
+`Test 10: Check if bit is set using shifts` /N
+11 n!  // Binary: 1011
+`Number: ` n . ` (binary: 1011)` /N
+`Bit 0 (LSB): ` n 1 & . /N
+`Bit 1: ` n } 1 & . /N
+`Bit 2: ` n }} 1 & . /N
+`Bit 3: ` n }}} 1 & . /N
+/N
+;
+
+// Test 11: Building powers of 2 using only shifts
+:K
+`Test 11: Powers of 2 using shifts only` /N
+`2^0 = ` 1 . /N
+`2^1 = ` 1 { . /N
+`2^2 = ` 1 {{ . /N
+`2^3 = ` 1 {{{ . /N
+`2^4 = ` 1 {{{{ . /N
+`2^5 = ` 1 {{{{{ . /N
+`2^6 = ` 1 {{{{{{ . /N
+`2^7 = ` 1 {{{{{{{ . /N
+`2^8 = ` 1 {{{{{{{{ . /N
+/N
+;
+
+// Test 12: Shift loop - visualize shifting
+:L
+`Test 12: Loop demonstration of shifts` /N
+1 n!
+`Shift left 8 times:` /N
+8 (
+  n . 32 /C
+  n { n!
+)
+/N
+256 n!
+`Shift right 8 times:` /N
+8 (
+  n . 32 /C
+  n } n!
+)
+/N
+;
+
+// Test 13: Practical example - RGB color manipulation
+:M
+`Test 13: RGB color bit manipulation` /N
+`Red = 0xFF, Green = 0x80, Blue = 0x40` /N
+#FF r! #80 g! #40 b!
+`Compose RGB (24-bit): R << 16 | G << 8 | B` /N
+r {{{{{{{{{{{{{{{{ . ` (red shifted)` /N
+g {{{{{{{{{ . ` (green shifted)` /N
+`Combined in hex: ` r {{{{{{{{{{{{{{{{ g {{{{{{{{{ | b | , /N
+/N
+;
+
+// Test 14: Edge cases
+:N
+`Test 14: Edge Cases` /N
+`Shift 0: ` 0 { . /N
+`Shift right 0: ` 0 } . /N
+`Shift 1 then back: ` 42 { } . /N
+`Shift back then forward: ` 42 } { . /N
+/N
+;
+
+// Master test runner
+:T
+`====================================` /N
+`MINT BIT SHIFT TEST SUITE` /N
+`====================================` /N
+/N
+A B C D E F G H I J K L M N
+`====================================` /N
+`ALL TESTS COMPLETE` /N
+`====================================` /N
+;
+
+// Run all tests
+T
+
+
+/////////////////////////////////////////////////////////////
+
