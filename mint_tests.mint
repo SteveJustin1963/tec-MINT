@@ -324,8 +324,8 @@ list  // (shows all defined functions)
 #FF r! #80 g! #40 b!
 `Compose RGB (24-bit): R << 16 | G << 8 | B` /N
 r {{{{{{{{{{{{{{{{ . ` (red shifted)` /N
-g {{{{{{{{{ . ` (green shifted)` /N
-`Combined in hex: ` r {{{{{{{{{{{{{{{{ g {{{{{{{{{ | b | , /N
+g {{{{{{{{ . ` (green shifted)` /N
+`Combined in hex: ` r {{{{{{{{{{{{{{{{ g {{{{{{{{ | b | , /N
 /N
 ;
 
