@@ -393,7 +393,8 @@ function s = bitwise_and(s)
     debug_before_op("&", s);
   endif
   [s,b]=pop(s); [s,a]=pop(s);
-  result = bitand(int64(a), int64(b));
+  ## Mask to 16 bits
+  result = bitand(bitand(int64(a), 65535), bitand(int64(b), 65535));
   s=push(s, result);
   if state.debug
     debug_after_op("&", sprintf("%g & %g = %g", a, b, result), s);
@@ -406,12 +407,16 @@ function s = bitwise_or(s)
     debug_before_op("|", s);
   endif
   [s,b]=pop(s); [s,a]=pop(s);
-  result = bitor(int64(a), int64(b));
+  ## Mask to 16 bits
+  a_16 = bitand(int64(a), 65535);
+  b_16 = bitand(int64(b), 65535);
+  result = bitor(a_16, b_16);
   s=push(s, result);
   if state.debug
     debug_after_op("|", sprintf("%g | %g = %g", a, b, result), s);
   endif
 endfunction
+
 
 function s = bitwise_xor(s)
   global state;
@@ -419,7 +424,10 @@ function s = bitwise_xor(s)
     debug_before_op("^", s);
   endif
   [s,b]=pop(s); [s,a]=pop(s);
-  result = bitxor(int64(a), int64(b));
+  ## Mask to 16 bits
+  a_16 = bitand(int64(a), 65535);
+  b_16 = bitand(int64(b), 65535);
+  result = bitxor(a_16, b_16);
   s=push(s, result);
   if state.debug
     debug_after_op("^", sprintf("%g ^ %g = %g", a, b, result), s);
@@ -432,7 +440,10 @@ function s = bitwise_not(s)
     debug_before_op("~", s);
   endif
   [s,a]=pop(s);
-  result = bitcmp(int64(a), 64);
+  ## MINT is 16-bit, so mask input to 16 bits first
+  a_16bit = bitand(int64(a), int64(65535));
+  ## XOR with 0xFFFF (all 16 bits set) to flip all bits
+  result = bitxor(a_16bit, int64(65535));
   s=push(s, result);
   if state.debug
     debug_after_op("~", sprintf("~%g = %g", a, result), s);
@@ -445,12 +456,15 @@ function s = shift_left(s)
     debug_before_op("{", s);
   endif
   [s,a]=pop(s);
-  result = bitshift(int64(a), 1);
+  ## Mask to 16 bits before and after shift
+  a_16 = bitand(int64(a), 65535);
+  result = bitand(bitshift(a_16, 1), 65535);
   s=push(s, result);
   if state.debug
     debug_after_op("{", sprintf("%g << 1 = %g", a, result), s);
   endif
 endfunction
+
 
 function s = shift_right(s)
   global state;
@@ -458,13 +472,14 @@ function s = shift_right(s)
     debug_before_op("}", s);
   endif
   [s,a]=pop(s);
-  result = bitshift(int64(a), -1);
+  ## Mask to 16 bits before shift (logical shift, not arithmetic)
+  a_16 = bitand(int64(a), 65535);
+  result = bitshift(a_16, -1);
   s=push(s, result);
   if state.debug
     debug_after_op("}", sprintf("%g >> 1 = %g", a, result), s);
   endif
 endfunction
-
 
 ## --------------------------
 ## Variable Functions
@@ -785,12 +800,15 @@ function interpret_line(line)
   endwhile
 endfunction
 
-
 ## NEW FUNCTION: Tokenize preserving backtick strings and handling comments
+## FIXED: Split consecutive special characters into individual tokens
 function tokens = tokenize_with_strings(line)
   tokens = {};
   i = 1;
   current_token = "";
+  
+  ## Define single-character operators that should always be separate tokens
+  single_char_ops = '{};[]()''\"$%!.,~&|^<>=+*/';  ## Removed - from here
   
   while i <= length(line)
     ch = line(i);
@@ -801,50 +819,92 @@ function tokens = tokenize_with_strings(line)
       if !isempty(current_token)
         tokens{end+1} = strtrim(current_token);
       endif
-      ## Stop processing - rest of line is comment
       break;
     endif
     
-    if ch == '`'
-      ## Save any accumulated token
+    ## NEW: Check for negative number (- followed immediately by digit)
+    if ch == '-' && i < length(line) && isstrprop(line(i+1), 'digit')
+      ## This is a negative number, accumulate it
       if !isempty(current_token)
         tokens{end+1} = strtrim(current_token);
         current_token = "";
       endif
-      
-      ## Find closing backtick
+      current_token = '-';
+      i++;
+      continue;
+    endif
+    
+    ## Check for multi-char operators starting with /
+    if ch == '/' && i < length(line)
+      next_ch = line(i+1);
+      if any(next_ch == 'NWEFTUijcrhszkVCKDSAIOPGX')
+        if !isempty(current_token)
+          tokens{end+1} = strtrim(current_token);
+          current_token = "";
+        endif
+        tokens{end+1} = line(i:i+1);
+        i = i + 2;
+        continue;
+      endif
+    endif
+    
+    ## Check for two-character operator ?!
+    if ch == '?' && i < length(line) && line(i+1) == '!'
+      if !isempty(current_token)
+        tokens{end+1} = strtrim(current_token);
+        current_token = "";
+      endif
+      tokens{end+1} = '?!';
+      i = i + 2;
+      continue;
+    endif
+    
+    if ch == '`'
+      if !isempty(current_token)
+        tokens{end+1} = strtrim(current_token);
+        current_token = "";
+      endif
       j = i + 1;
       while j <= length(line) && line(j) != '`'
         j++;
       endwhile
-      
       if j <= length(line)
-        ## Store backtick string as special token WITH backticks
         tokens{end+1} = line(i:j);
         i = j + 1;
       else
         error("Unclosed backtick string");
       endif
     elseif ch == ' ' || ch == sprintf('\t')
-      ## Whitespace - save token if any
       if !isempty(current_token)
         tokens{end+1} = strtrim(current_token);
         current_token = "";
       endif
       i++;
+    elseif ch == '-'
+      ## Minus sign not followed by digit - treat as operator
+      if !isempty(current_token)
+        tokens{end+1} = strtrim(current_token);
+        current_token = "";
+      endif
+      tokens{end+1} = ch;
+      i++;
+    elseif any(ch == single_char_ops)
+      if !isempty(current_token)
+        tokens{end+1} = strtrim(current_token);
+        current_token = "";
+      endif
+      tokens{end+1} = ch;
+      i++;
     else
-      ## Regular character
       current_token = [current_token, ch];
       i++;
     endif
   endwhile
   
-  ## Save final token if any
   if !isempty(current_token)
     tokens{end+1} = strtrim(current_token);
   endif
 endfunction
-
 
 ## Extract loop body between ( and )
 function [body, end_idx] = extract_loop_body(tokens, start_idx)
@@ -1221,9 +1281,16 @@ function s = print_num(s)
 endfunction
 
 function s = print_hex(s)
-  [s,a]=pop(s); printf("%04X ",a);
+  [s,a]=pop(s);
+  ## Convert to unsigned 16-bit for proper hex display
+  if a < 0
+    ## Two's complement: convert negative to positive 16-bit equivalent
+    a_unsigned = bitand(int64(a), int64(65535));
+  else
+    a_unsigned = mod(int64(a), 65536);  ## Wrap to 16-bit range
+  endif
+  printf("%04X ", a_unsigned);
 endfunction
-
 
 ## --------------------------
 ## List Functions
