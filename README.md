@@ -182,14 +182,16 @@ The range depends on the allocation of bits for the sign, exponent, and mantissa
 - playing with 7 seg display
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/code/8-LED-light-chaser.md
 - https://github.com/tec1group/MINT-cookbook/tree/main/misc/4-digit-counter
+- crashes all the time!
 
-crashes all the time!
-
-# sept 2025
-- implementing mint in octave from scratch
+ 
+# implementing mint in octave from scratch
+- sept 29 2025
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/mint_octave.m
-- issues with ` character
 - 
+  
+# implementing mint in gnu forth
+- oct 1 2025
 - 
 
 
