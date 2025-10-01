@@ -273,7 +273,8 @@ list  // (shows all defined functions)
 // Test 10: Checking specific bit positions
 :J
 `Test 10: Check if bit is set using shifts` /N
-11 n!  // Binary: 1011
+11 n!  
+// Binary: 1011
 `Number: ` n . ` (binary: 1011)` /N
 `Bit 0 (LSB): ` n 1 & . /N
 `Bit 1: ` n } 1 & . /N
