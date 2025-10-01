@@ -1055,25 +1055,8 @@ The key insight: **MINT's stack persists between function calls**, so you must e
 1. Consume all values you push
 2. Explicitly clean up with `'` (drop)
 3. Clear the stack between tests
+
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // TEST 8: BIT TESTING PATTERNS
 // ========================================================================
 :P `=== TEST 8: BIT TESTING PATTERNS ===` /N ;
@@ -1099,6 +1082,9 @@ The key insight: **MINT's stack persists between function calls**, so you must e
 // Run Test 8
 :V P Q R S T U ;
 `Run with: V` /N /N
+```
+
+```
 
 
 // TEST 9: HEX PRINTER WITH NEGATIVE NUMBERS
@@ -1118,6 +1104,9 @@ The key insight: **MINT's stack persists between function calls**, so you must e
 // Run Test 9
 :D W X Y Z A B C ;
 `Run with: D` /N /N
+```
+
+```
 
 
 // TEST 10: BOUNDARY ARITHMETIC WITH BITWISE
@@ -1139,6 +1128,9 @@ The key insight: **MINT's stack persists between function calls**, so you must e
 // Run Test 10
 :N E F G H I J K L M ;
 `Run with: N` /N /N
+```
+
+```
 
 
 // TEST 11: REAL-WORLD BIT MANIPULATION
@@ -1168,6 +1160,9 @@ The key insight: **MINT's stack persists between function calls**, so you must e
 :W O P Q R S T U V ;
 `Run with: W` /N /N
 
+```
+
+```
 
 // MASTER TEST RUNNER
 // ========================================================================
@@ -1192,10 +1187,5 @@ The key insight: **MINT's stack persists between function calls**, so you must e
 ;
 
 X
-
-///////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
+```
 
