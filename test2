@@ -34,9 +34,9 @@
 
 `Test 18: ` 5 " + . /N     // (10)
 `Test 19: ` 1 2 $ ' . /N   // (2)
-`Test 20: ` 1 2 3 ' . ' /N   // (2) - added cleanup
-`Test 21: ` 1 2 % ' ' . ' /N // (1) - added cleanup
-`Test 22: ` 1 2 3 /D . ' ' ' ' /N  // (3) - cleanup all
+`Test 20: ` 1 2 3 .' ' /N   // (2) - added cleanup
+`Test 21: ` 1 2 % . '  .  /N // (1) - added cleanup
+`Test 22: ` 1 2 3 /D . ' ' '  /N  // (3) - cleanup all
 
 `=== VARIABLE TESTS ===` /N
 
@@ -81,7 +81,8 @@
 
 `Test 42: ` 10 20 + ' /c . /N             // (0)
 `Test 43: ` 17 5 / ' /r . /N              // (2)
-`Test 44: ` 0 t! 5 ( /i 3 = ( /i t! ) ) t . /N  // (3)
+`Test 44: ` 0 t! 5 ( /i 3 = ( /i t! ) /E ( ) ) t . /N  // (3) - fixed with /E
+
 
 `=== HEXADECIMAL TESTS ===` /N
 
@@ -91,13 +92,14 @@
 
 `=== COMPLEX TESTS ===` /N
 
+
 :I n! 0 a! 1 b! n ( a b + c! b a! c b! ) a ;
-`Test 48: ` 10 I . /N                     // (34)
+`Test 48: ` 10 I . /N                     // (55) - corrected: Fib(10)=55
 
 :A a! 0 s! a /S ( a /i ? s + s! ) s ;
 `Test 49: ` [1 2 3 4 5] A . /N            // (15)
 
-`Test 50: ` 0 c! 10 ( /i 2 % 0 = ( c 1 + c! ) ) c . /N  // (5)
+`Test 50: ` 0 c! 10 ( /i 2 % 0 = ( c 1 + c! ) /E ( ) ) c . /N  // (5) - fixed with /E
 
 `=== TEST SUITE COMPLETE ===` /N
 `All tests should show values matching the comments` /N
