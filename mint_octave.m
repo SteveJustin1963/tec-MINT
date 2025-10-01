@@ -1175,10 +1175,15 @@ function s = show_help(s)
   printf("===================================================================================================\n");
   printf("MINT Operator Reference (* = implemented)\n");
   printf("===================================================================================================\n\n");
+  
   printf("NUMBER FORMATS:\n");
-  printf("  Decimal:      123, -456, 3.14159, 1.23e+36  (64-bit floating point)\n");
-  printf("  Hexadecimal:  #FF, #1F3A, #FFFF  (prefix with #, displayed as 0000-FFFF)\n");
-  printf("  Display:      format long (15-16 significant digits for scientific work)\n\n");
+printf("  Decimal:      123, -456, 3.14159, 1.23e+36  (64-bit floating point)\n");
+printf("  Hexadecimal:  #FF, #1F3A, #FFFF  (prefix with #, displayed as 0000-FFFF)\n");
+printf("  Display:      format long (15-16 significant digits for scientific work)\n");
+printf("  Range:        ±1.8e308 (much larger than original MINT's 16-bit limit)\n");
+printf("  Arrays:       Support both integers and floating point numbers\n");
+printf("  Note:         This Octave version uses 64-bit floats, not 16-bit integers\n\n");
+
   printf("===================================================================================================\n");
   printf("Category  | Symbol | Description                               | Effect       | Status\n");
   printf("--------- | ------ | ----------------------------------------- | ------------ | ------\n");
@@ -1222,7 +1227,7 @@ function s = show_help(s)
   printf("VARIABLE  | *  a-z | variable access                           | -- n         | DONE\n");
   printf("VARIABLE  | *  !   | STORE value to memory                     | n a --       | DONE\n");
   printf("VARIABLE  |   /V   | address of last access                    | -- a         | TODO\n");
-  printf("ARRAY     | *  [   | begin array definition                    | --           | DONE\n");
+  printf("ARRAY     | *  [   | begin array definition (64-bit floats)    | --           | DONE\n");
   printf("ARRAY     | *  ]   | end array definition                      | -- a         | DONE\n");
   printf("ARRAY     | *  ?   | get array item                            | a n -- n     | DONE\n");
   printf("ARRAY     | *  ?!  | set array item                            | n a n --     | DONE\n");
