@@ -188,8 +188,8 @@ crashes all the time!
 # sept 2025
 - implementing mint in octave from scratch
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/mint_octave.m
-- issues with ```
-
+- issues with ` character
+- 
 - 
 
 
