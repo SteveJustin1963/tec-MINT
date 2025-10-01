@@ -729,3 +729,268 @@ R S T
 M
 
 ////////////////////////////////////////
+
+
+
+// ========================================================================
+// EDGE CASE TESTS FOR BITWISE OPERATIONS (16-bit System)
+// Tests: ~, &, |, ^, {, } with boundary conditions
+// ========================================================================
+
+// TEST 1: BITWISE NOT (~) - Edge Cases
+// ========================================================================
+:A `=== TEST 1: BITWISE NOT EDGE CASES ===` /N ;
+
+:B `Zero:           ~0x0000 = ` 0 ~ , `  (expect FFFF)` /N ;
+:C `All ones:       ~0xFFFF = ` #FFFF ~ , `  (expect 0000)` /N ;
+:D `Low byte:       ~0x00FF = ` #00FF ~ , `  (expect FF00)` /N ;
+:E `High byte:      ~0xFF00 = ` #FF00 ~ , `  (expect 00FF)` /N ;
+:F `Single bit 0:   ~0x0001 = ` #0001 ~ , `  (expect FFFE)` /N ;
+:G `Single bit 15:  ~0x8000 = ` #8000 ~ , `  (expect 7FFF)` /N ;
+:H `Alternating:    ~0xAAAA = ` #AAAA ~ , `  (expect 5555)` /N ;
+:I `Alternating:    ~0x5555 = ` #5555 ~ , `  (expect AAAA)` /N ;
+:J `Mid value:      ~0x7FFF = ` #7FFF ~ , `  (expect 8000)` /N ;
+
+// Run Test 1
+:T A B C D E F G H I J ;
+`Run with: T` /N /N
+
+
+// TEST 2: BITWISE AND (&) - Edge Cases
+// ========================================================================
+:K `=== TEST 2: BITWISE AND EDGE CASES ===` /N ;
+
+:L `AND with 0:     0xFFFF & 0x0000 = ` #FFFF 0 & , `  (expect 0000)` /N ;
+:M `AND with self:  0xAAAA & 0xAAAA = ` #AAAA #AAAA & , `  (expect AAAA)` /N ;
+:N `AND complement: 0xAAAA & 0x5555 = ` #AAAA #5555 & , `  (expect 0000)` /N ;
+:O `Mask low byte:  0x1234 & 0x00FF = ` #1234 #00FF & , `  (expect 0034)` /N ;
+:P `Mask high byte: 0x1234 & 0xFF00 = ` #1234 #FF00 & , `  (expect 1200)` /N ;
+:Q `Check bit 15:   0x8000 & 0x8000 = ` #8000 #8000 & , `  (expect 8000)` /N ;
+:R `Check bit 0:    0x0001 & 0x0001 = ` #0001 #0001 & , `  (expect 0001)` /N ;
+:S `Max values:     0xFFFF & 0xFFFF = ` #FFFF #FFFF & , `  (expect FFFF)` /N ;
+
+// Run Test 2
+:U K L M N O P Q R S ;
+`Run with: U` /N /N
+
+
+// TEST 3: BITWISE OR (|) - Edge Cases
+// ========================================================================
+:V `=== TEST 3: BITWISE OR EDGE CASES ===` /N ;
+
+:W `OR with 0:      0x0000 | 0x0000 = ` 0 0 | , `  (expect 0000)` /N ;
+:X `OR with self:   0xAAAA | 0xAAAA = ` #AAAA #AAAA | , `  (expect AAAA)` /N ;
+:Y `OR complement:  0xAAAA | 0x5555 = ` #AAAA #5555 | , `  (expect FFFF)` /N ;
+:Z `Combine bytes:  0xFF00 | 0x00FF = ` #FF00 #00FF | , `  (expect FFFF)` /N ;
+:A `Combine nibbles: 0xF0F0 | 0x0F0F = ` #F0F0 #0F0F | , `  (expect FFFF)` /N ;
+:B `Set bit 15:     0x0000 | 0x8000 = ` 0 #8000 | , `  (expect 8000)` /N ;
+:C `Set bit 0:      0x0000 | 0x0001 = ` 0 #0001 | , `  (expect 0001)` /N ;
+:D `Max OR:         0xFFFF | 0xFFFF = ` #FFFF #FFFF | , `  (expect FFFF)` /N ;
+
+// Run Test 3
+:E V W X Y Z A B C D ;
+`Run with: E` /N /N
+
+
+// TEST 4: BITWISE XOR (^) - Edge Cases
+// ========================================================================
+:F `=== TEST 4: BITWISE XOR EDGE CASES ===` /N ;
+
+:G `XOR with 0:     0xAAAA ^ 0x0000 = ` #AAAA 0 ^ , `  (expect AAAA)` /N ;
+:H `XOR with self:  0xAAAA ^ 0xAAAA = ` #AAAA #AAAA ^ , `  (expect 0000)` /N ;
+:I `XOR complement: 0xAAAA ^ 0x5555 = ` #AAAA #5555 ^ , `  (expect FFFF)` /N ;
+:J `XOR all ones:   0x1234 ^ 0xFFFF = ` #1234 #FFFF ^ , `  (expect EDCB)` /N ;
+:K `Toggle bit 15:  0x0000 ^ 0x8000 = ` 0 #8000 ^ , `  (expect 8000)` /N ;
+:L `Toggle bit 0:   0xFFFF ^ 0x0001 = ` #FFFF #0001 ^ , `  (expect FFFE)` /N ;
+:M `Swap pattern:   0xF0F0 ^ 0xFFFF = ` #F0F0 #FFFF ^ , `  (expect 0F0F)` /N ;
+
+// Run Test 4
+:N F G H I J K L M ;
+`Run with: N` /N /N
+
+
+// TEST 5: SHIFT LEFT ({) - Overflow Edge Cases
+// ========================================================================
+:O `=== TEST 5: SHIFT LEFT EDGE CASES ===` /N ;
+
+:P `Shift 1x1:      1 << 1 = ` 1 { , `  (expect 0002)` /N ;
+:Q `Shift 1x8:      1 << 8 = ` 1 {{{{{{{{ , `  (expect 0100)` /N ;
+:R `Shift 1x15:     1 << 15 = ` 1 {{{{{{{{{{{{{{{ , `  (expect 8000)` /N ;
+:S `Shift 1x16:     1 << 16 = ` 1 {{{{{{{{{{{{{{{{ , `  (expect 0000 - overflow!)` /N ;
+:T `Shift max:      0xFFFF << 1 = ` #FFFF { , `  (expect FFFE)` /N ;
+:U `Shift 0x8000:   0x8000 << 1 = ` #8000 { , `  (expect 0000 - bit lost!)` /N ;
+:V `Shift 0x7FFF:   0x7FFF << 1 = ` #7FFF { , `  (expect FFFE)` /N ;
+:W `Shift pattern:  0xAAAA << 1 = ` #AAAA { , `  (expect 5554)` /N ;
+
+// Run Test 5
+:X O P Q R S T U V W ;
+`Run with: X` /N /N
+
+
+// TEST 6: SHIFT RIGHT (}) - Edge Cases
+// ========================================================================
+:Y `=== TEST 6: SHIFT RIGHT EDGE CASES ===` /N ;
+
+:Z `Shift 0xFF:     0xFF >> 1 = ` #FF } , `  (expect 007F)` /N ;
+:A `Shift max:      0xFFFF >> 1 = ` #FFFF } , `  (expect 7FFF)` /N ;
+:B `Shift 0x8000:   0x8000 >> 1 = ` #8000 } , `  (expect 4000)` /N ;
+:C `Shift 1:        1 >> 1 = ` 1 } , `  (expect 0000)` /N ;
+:D `Shift 0:        0 >> 1 = ` 0 } , `  (expect 0000)` /N ;
+:E `Shift pattern:  0x5555 >> 1 = ` #5555 } , `  (expect 2AAA)` /N ;
+:F `Divide by 8:    256 >> 3 = ` 256 }}} , `  (expect 0020)` /N ;
+
+// Run Test 6
+:G Y Z A B C D E F ;
+`Run with: G` /N /N
+
+
+// TEST 7: COMBINED OPERATIONS - Complex Patterns
+// ========================================================================
+:H `=== TEST 7: COMBINED OPERATIONS ===` /N ;
+
+// Double NOT (should return original)
+:I `~~0xAA:         ~~0xAA = ` #AA ~ ~ , `  (expect 00AA)` /N ;
+
+// Shift and mask
+:J `(1<<8) & 0xFF:  ` 1 {{{{{{{{ #FF & , `  (expect 0000)` /N ;
+:K `(1<<8) & 0xFF00: ` 1 {{{{{{{{ #FF00 & , `  (expect 0100)` /N ;
+
+// XOR twice (cancel out)
+:L `A^B^B:          0x12^0x34^0x34 = ` #12 #34 ^ #34 ^ , `  (expect 0012)` /N ;
+
+// Rotate left via shift and OR
+:M `Rotate 0x80:    (0x80<<1)|(0x80>>15) ` #80 { #80 #7FFF } | , `  (expect 0101?)` /N ;
+
+// Create mask with NOT
+:N `Mask via NOT:   ~(~0<<8) = ` #FFFF {{{{{{{{ ~ , `  (expect 00FF)` /N ;
+
+// Run Test 7
+:O H I J K L M N ;
+`Run with: O` /N /N
+
+
+// TEST 8: BIT TESTING PATTERNS
+// ========================================================================
+:P `=== TEST 8: BIT TESTING PATTERNS ===` /N ;
+
+// Test if bit 7 is set in 0xFF
+:Q `Bit 7 in 0xFF:  ` #FF 1 {{{{{{{ & 0 > . `  (expect -1)` /N ;
+
+// Test if bit 0 is set in 0xFE  
+:R `Bit 0 in 0xFE:  ` #FE 1 & 0 = . `  (expect -1, bit is clear)` /N ;
+
+// Count set bits in 0x0F (should be 4)
+:S `Set bits test:  0x0F has bits: ` 
+   #0F 1 & 0 > 
+   #0F 2 & 0 > + 
+   #0F 4 & 0 > + 
+   #0F 8 & 0 > + 
+   . /N ;
+
+// Check if number is power of 2
+:T `Is 0x80 power of 2? ` #80 #80 1 - & 0 = . `  (expect -1)` /N ;
+:U `Is 0x81 power of 2? ` #81 #81 1 - & 0 = . `  (expect 0)` /N ;
+
+// Run Test 8
+:V P Q R S T U ;
+`Run with: V` /N /N
+
+
+// TEST 9: HEX PRINTER WITH NEGATIVE NUMBERS
+// ========================================================================
+:W `=== TEST 9: HEX PRINTER EDGE CASES ===` /N ;
+
+// Test negative numbers displayed as hex
+:X `Negative -1:    ` 1 -1 * , `  (expect FFFF in 16-bit)` /N ;
+:Y `Negative -256:  ` 256 -1 * , `  (expect FF00 in 16-bit)` /N ;
+:Z `Negative -32768: ` 32768 -1 * , `  (expect 8000 in 16-bit)` /N ;
+
+// Test large positive numbers
+:A `Large 65535:    ` 65535 , `  (expect FFFF)` /N ;
+:B `Large 65536:    ` 65536 , `  (expect 0000 - wraps!)` /N ;
+:C `Large 65537:    ` 65537 , `  (expect 0001 - wraps!)` /N ;
+
+// Run Test 9
+:D W X Y Z A B C ;
+`Run with: D` /N /N
+
+
+// TEST 10: BOUNDARY ARITHMETIC WITH BITWISE
+// ========================================================================
+:E `=== TEST 10: BOUNDARY ARITHMETIC ===` /N ;
+
+// Max value operations
+:F `Max & Max:      ` #FFFF #FFFF & , `  (expect FFFF)` /N ;
+:G `Max | 0:        ` #FFFF 0 | , `  (expect FFFF)` /N ;
+:H `Max ^ Max:      ` #FFFF #FFFF ^ , `  (expect 0000)` /N ;
+:I `~Max:           ` #FFFF ~ , `  (expect 0000)` /N ;
+
+// Min value operations
+:J `0 & anything:   ` 0 #AAAA & , `  (expect 0000)` /N ;
+:K `0 | anything:   ` 0 #AAAA | , `  (expect AAAA)` /N ;
+:L `0 ^ anything:   ` 0 #AAAA ^ , `  (expect AAAA)` /N ;
+:M `~0:             ` 0 ~ , `  (expect FFFF)` /N ;
+
+// Run Test 10
+:N E F G H I J K L M ;
+`Run with: N` /N /N
+
+
+// TEST 11: REAL-WORLD BIT MANIPULATION
+// ========================================================================
+:O `=== TEST 11: REAL-WORLD PATTERNS ===` /N ;
+
+// Extract high byte
+:P `High byte of 0x1234: ` #1234 }}}}}}}} , `  (expect 0012)` /N ;
+
+// Extract low byte
+:Q `Low byte of 0x1234:  ` #1234 #FF & , `  (expect 0034)` /N ;
+
+// Swap bytes
+:R `Swap bytes 0x1234:   ` #1234 }}}}}}}} #1234 #FF & {{{{{{{{ | , `  (expect 3412)` /N ;
+
+// Set multiple bits
+:S `Set bits 0,1,2:      ` 0 1 | 2 | 4 | , `  (expect 0007)` /N ;
+
+// Clear specific bit
+:T `Clear bit 4 from 0xFF: ` #FF 16 ~ & , `  (expect 00EF)` /N ;
+
+// Toggle bit
+:U `Toggle bit 7 in 0x00:  ` 0 128 ^ , `  (expect 0080)` /N ;
+:V `Toggle bit 7 in 0xFF:  ` #FF 128 ^ , `  (expect 007F)` /N ;
+
+// Run Test 11
+:W O P Q R S T U V ;
+`Run with: W` /N /N
+
+
+// MASTER TEST RUNNER
+// ========================================================================
+:X 
+  `==========================================` /N
+  `  BITWISE OPERATIONS EDGE CASE TESTS` /N
+  `  16-bit System with Overflow Handling` /N
+  `==========================================` /N /N
+  `Available Tests:` /N
+  `  T - Test 1: NOT edge cases` /N
+  `  U - Test 2: AND edge cases` /N
+  `  E - Test 3: OR edge cases` /N
+  `  N - Test 4: XOR edge cases` /N
+  `  X - Test 5: Shift Left overflow` /N
+  `  G - Test 6: Shift Right edge cases` /N
+  `  O - Test 7: Combined operations` /N
+  `  V - Test 8: Bit testing patterns` /N
+  `  D - Test 9: Hex printer edge cases` /N
+  `  N - Test 10: Boundary arithmetic` /N
+  `  W - Test 11: Real-world patterns` /N
+  `==========================================` /N
+;
+
+X
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
