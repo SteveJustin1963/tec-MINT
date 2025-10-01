@@ -844,6 +844,23 @@ M
 `Run with: G` /N /N
 
 
+```
+Great debugging! I can see **two critical issues** from the trace:
+
+## Issue 1: Stack Pollution Between Tests
+Look at the final state: `[DEBUG] STACK: [256]` - Test M left 256 on the stack, which pollutes Test N!
+
+## Issue 2: Rotate Logic is Still Wrong
+The stack trace shows:
+```
+[DEBUG] BEFORE }: stack=[256 128 32767]
+```
+
+The problem is that we're pushing THREE values when we only need TWO for the rotation.
+
+## Fixed Test 7:
+
+```mint
 // TEST 7: COMBINED OPERATIONS - Complex Patterns
 // ========================================================================
 :H `=== TEST 7: COMBINED OPERATIONS ===` /N ;
@@ -858,15 +875,94 @@ M
 // XOR twice (cancel out)
 :L `A^B^B:          0x12^0x34^0x34 = ` #12 #34 ^ #34 ^ , `  (expect 0012)` /N ;
 
-// Rotate left via shift and OR
-:M `Rotate 0x80:    (0x80<<1)|(0x80>>15) ` #80 { #80 #7FFF } | , `  (expect 0101?)` /N ;
+// Rotate left by 1 bit: (x<<1) | (x>>15)
+// For 0x8000: shift left wraps to 0, shift right 15 gives bit that wraps
+:M `Rotate 0x8000:  (0x8000<<1)|(0x8000>>15) ` 
+   #8000 " { $ }}}}}}}}}}}}}}} | , 
+   `  (expect 0001)` /N ;
 
-// Create mask with NOT
-:N `Mask via NOT:   ~(~0<<8) = ` #FFFF {{{{{{{{ ~ , `  (expect 00FF)` /N ;
+// Alternative: rotate bit 7 to bit 0 is impossible - bit gets lost
+// Instead test a clear rotation pattern
+:N `Rotate 0xC000:  (0xC000<<1)|(0xC000>>15) ` 
+   #C000 " { $ }}}}}}}}}}}}}}} | , 
+   `  (expect 8001)` /N ;
+
+// Create mask with NOT and shifts  
+:O `Mask via NOT:   ~(~0<<8) = ` 
+   0 ~ {{{{{{{{ ~ , 
+   `  (expect 00FF)` /N ;
+
+// Complex: Set bits 0-3, clear bit 2
+:P `Set 0-3, clear 2: ` 
+   #0F 4 ~ & , 
+   `  (expect 000B)` /N ;
 
 // Run Test 7
-:O H I J K L M N ;
-`Run with: O` /N /N
+:Q H I J K L M N O P ;
+`Run with: Q` /N /N
+```
+
+## Explanation of Fixes:
+
+### Fix 1: Proper Rotate with Duplicate (`"`)
+```mint
+#8000 " { $ }}}}}}}}}}}}}}} | ,
+```
+- `#8000` → push 0x8000: `[0x8000]`
+- `"` → duplicate: `[0x8000, 0x8000]`
+- `{` → shift left top: `[0x8000, 0x0000]` (bit 15 wraps off)
+- `$` → swap: `[0x0000, 0x8000]`
+- `}}}...` (15 times) → shift right: `[0x0000, 0x0001]` (bit 15 → bit 0)
+- `|` → OR: `[0x0001]` ✓
+
+### Fix 2: Better Rotate Example
+For `0xC000` (bits 15 and 14 set):
+- `0xC000 << 1` = `0x8000` (bit 15 wraps off, bit 14 → bit 15)
+- `0xC000 >> 15` = `0x0001` (bit 15 → bit 0)
+- `0x8000 | 0x0001` = `0x8001` ✓
+
+## Alternative: Add Stack Cleanup
+
+If you want to keep the original test but fix stack pollution:
+
+```mint
+:M `Rotate test:  ` 
+   #8000 " { $ }}}}}}}}}}}}}}} | 
+   " , `  Result: ` .    // Duplicate, print hex, print decimal
+   ' ;                   // Drop the duplicate - clean stack!
+```
+
+Or add a helper to clear stack between tests:
+
+```mint
+// Clear stack helper
+:Z /D ( ' ) ;  // Drop all items: get depth, loop that many times dropping
+
+// Use it:
+:Q H Z I Z J Z K Z L Z M Z N Z O Z P ;
+```
+
+The key insight: **MINT's stack persists between function calls**, so you must either:
+1. Consume all values you push
+2. Explicitly clean up with `'` (drop)
+3. Clear the stack between tests
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // TEST 8: BIT TESTING PATTERNS
