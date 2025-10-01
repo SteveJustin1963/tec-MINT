@@ -188,6 +188,8 @@ The range depends on the allocation of bits for the sign, exponent, and mantissa
 # implementing mint in octave from scratch
 - sept 29 2025
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/mint_octave.m
+- https://github.com/SteveJustin1963/tec-MINT/blob/main/mint_tests.mint
+
 - 
   
 # implementing mint in gnu forth
