@@ -230,13 +230,12 @@ function s = math_div(s)
   if b == 0
     error("DIVISION BY ZERO");
   endif
-  result = floor(a / b);
-  remainder = mod(a, b);
+  result = a / b;  ## True floating point division
   s=push(s, result);
   state.sys_c = 0;  ## Clear carry
-  state.sys_r = remainder;  ## Store remainder
+  state.sys_r = 0;  ## No remainder in FP division
   if state.debug
-    debug_after_op("/", sprintf("%g / %g = %g (remainder: %g)", a, b, result, remainder), s);
+    debug_after_op("/", sprintf("%g / %g = %g", a, b, result), s);
   endif
 endfunction
 
@@ -1183,23 +1182,27 @@ printf("  Display:      format long (15-16 significant digits for scientific wor
 printf("  Range:        ±1.8e308 (much larger than original MINT's 16-bit limit)\n");
 printf("  Arrays:       Support both integers and floating point numbers\n");
 printf("  Note:         This Octave version uses 64-bit floats, not 16-bit integers\n\n");
+printf("DIVISION BEHAVIOR:\n");
+printf("  All division (/) returns floating point results, not integer quotients.\n");
+printf("  Example: 5 2 / gives 2.5, not 2 with remainder 1\n");
+printf("  The /r system variable is always 0 (no remainder in FP division)\n\n");
 
   printf("===================================================================================================\n");
   printf("Category  | Symbol | Description                               | Effect       | Status\n");
   printf("--------- | ------ | ----------------------------------------- | ------------ | ------\n");
-  printf("MATHS     | *  -   | 16-bit integer subtraction SUB            | n n -- n     | DONE\n");
-  printf("MATHS     | *  /   | 16-bit by 8-bit division DIV              | n n -- n     | DONE\n");
-  printf("MATHS     | *  +   | 16-bit integer addition ADD               | n n -- n     | DONE\n");
-  printf("MATHS     | *  *   | 8-bit by 8-bit integer multiplication MUL | n n -- n     | DONE\n");
-  printf("LOGICAL   | *  >   | 16-bit comparison GT                      | n n -- b     | DONE\n");
-  printf("LOGICAL   | *  <   | 16-bit comparison LT                      | n n -- b     | DONE\n");
-  printf("LOGICAL   | *  =   | 16-bit comparison EQ                      | n n -- b     | DONE\n");
-  printf("LOGICAL   | *  &   | 16-bit bitwise AND                        | n n -- b     | DONE\n");
-  printf("LOGICAL   | *  |   | 16-bit bitwise OR                         | n n -- b     | DONE\n");
-  printf("LOGICAL   | *  ^   | 16-bit bitwise XOR                        | n n -- b     | DONE\n");
-  printf("LOGICAL   | *  ~   | 16-bit NOT                                | n -- n       | DONE\n");
-  printf("LOGICAL   | *  {   | shift left                                | n -- n       | DONE\n");
-  printf("LOGICAL   | *  }   | shift right                               | n -- n       | DONE\n");
+  printf("MATHS     | *  -   | 64-bit floating point subtraction         | n n -- n     | DONE\n");
+  printf("MATHS     | *  /   | 64-bit floating point division            | n n -- n     | DONE\n");
+  printf("MATHS     | *  +   | 64-bit floating point addition            | n n -- n     | DONE\n");
+  printf("MATHS     | *  *   | 64-bit floating point multiplication      | n n -- n     | DONE\n");
+  printf("LOGICAL   | *  >   | 64-bit floating point comparison GT       | n n -- b     | DONE\n");
+  printf("LOGICAL   | *  <   | 64-bit floating point comparison LT       | n n -- b     | DONE\n");
+  printf("LOGICAL   | *  =   | 64-bit floating point comparison EQ       | n n -- b     | DONE\n");
+  printf("LOGICAL   | *  &   | 64-bit bitwise AND (on integer part)      | n n -- b     | DONE\n");
+  printf("LOGICAL   | *  |   | 64-bit bitwise OR (on integer part)       | n n -- b     | DONE\n");
+  printf("LOGICAL   | *  ^   | 64-bit bitwise XOR (on integer part)      | n n -- b     | DONE\n");
+  printf("LOGICAL   | *  ~   | 64-bit bitwise NOT (on integer part)      | n -- n       | DONE\n");
+  printf("LOGICAL   | *  {   | shift left (on integer part)              | n -- n       | DONE\n");
+  printf("LOGICAL   | *  }   | shift right (on integer part)             | n -- n       | DONE\n")
   printf("STACK     | *  '   | drop top member DROP                      | m n -- m     | DONE\n");
   printf('STACK     | *  "   | duplicate top member DUP                  | n -- n n     | DONE\n');
   printf("STACK     | *  %%   | over - copy 2nd to top                    | m n -- m n m | DONE\n");
@@ -1242,7 +1245,7 @@ printf("  Note:         This Octave version uses 64-bit floats, not 16-bit integ
   printf("SYSVAR    | *  /i  | loop variable                             | -- n         | DONE\n");
   printf("SYSVAR    | *  /j  | outer loop variable                       | -- n         | DONE\n");
   printf("SYSVAR    |   /k   | offset into text input buffer             | -- a         | TODO\n");
-  printf("SYSVAR    | *  /r  | remainder/overflow of last div/mul        | -- n         | DONE\n");
+  printf("SYSVAR    | *  /r  | always 0 (FP division has no remainder)   | -- n         | DONE\n");
   printf("SYSVAR    |   /s   | address of start of stack                 | -- a         | TODO\n");
   printf("SYSVAR    |   /z   | name of last defined function             | -- c         | TODO\n");
   printf("MISC      | *  //  | comment (skips to end of line)            | --           | DONE\n");
