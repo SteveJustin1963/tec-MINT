@@ -1,0 +1,101 @@
+## ========================================================================
+## MINT-Octave Simple Test Suite
+## Run each test and compare output to expected value in comment
+## ========================================================================
+
+`=== ARITHMETIC TESTS ===` /N
+
+`Test 1: ` 10 20 + . /N    // (30)
+`Test 2: ` 50 30 - . /N    // (20)
+`Test 3: ` 5 4 * . /N      // (20)
+`Test 4: ` 20 4 / . /N     // (5)
+`Test 5: ` 17 5 / . ` r=` /r . /N    // (3 r=2)
+
+`=== COMPARISON TESTS ===` /N
+
+`Test 6: ` 10 5 > . /N     // (-1 = true)
+`Test 7: ` 5 10 > . /N     // (0 = false)
+`Test 8: ` 5 10 < . /N     // (-1 = true)
+`Test 9: ` 10 5 < . /N     // (0 = false)
+`Test 10: ` 7 7 = . /N     // (-1 = true)
+`Test 11: ` 7 8 = . /N     // (0 = false)
+
+`=== BITWISE TESTS ===` /N
+
+`Test 12: ` 15 7 & . /N    // (7)
+`Test 13: ` 8 4 | . /N     // (12)
+`Test 14: ` 15 7 ^ . /N    // (8)
+`Test 15: ` 0 ~ . /N       // (65535)
+`Test 16: ` 4 { . /N       // (8)
+`Test 17: ` 8 } . /N       // (4)
+
+`=== STACK TESTS ===` /N
+
+`Test 18: ` 5 " + . /N     // (10)
+`Test 19: ` 1 2 $ ' . /N   // (2)
+`Test 20: ` 1 2 3 ' . /N   // (2)
+`Test 21: ` 1 2 % ' ' . /N // (1)
+`Test 22: ` 1 2 3 /D . /N  // (3)
+
+`=== VARIABLE TESTS ===` /N
+
+`Test 23: ` 42 x! x . /N           // (42)
+`Test 24: ` 5 a! 3 b! a b + . /N   // (8)
+`Test 25: ` 10 x! 20 y! 30 z! x y z + + . /N  // (60)
+
+`=== LOOP TESTS ===` /N
+
+`Test 26: ` 0 t! 5 ( /i 1 + t + t! ) t . /N      // (15)
+`Test 27: ` 0 t! 10 ( /i t! ) t . /N             // (9)
+`Test 28: ` 0 t! 3 ( 3 ( /i /j + t + t! ) ) t . /N  // (18)
+`Test 29: ` 0 t! /U ( /i 5 < /W /i t! ) t . /N   // (4)
+
+`=== CONDITIONAL TESTS ===` /N
+
+`Test 30: ` 10 5 > ( 100 ) /E ( 200 ) . /N   // (100)
+`Test 31: ` 5 10 > ( 100 ) /E ( 200 ) . /N   // (200)
+`Test 32: ` 10 x! x 5 > ( x 15 < ( 1 ) /E ( 2 ) ) /E ( 3 ) . /N  // (1)
+
+`=== ARRAY TESTS ===` /N
+
+`Test 33: ` [1 2 3] a! a 1 ? . /N         // (2)
+`Test 34: ` [1 2 3 4 5] /S . /N           // (5)
+`Test 35: ` [1 2 3] a! 99 a 0 ?! a 0 ? . /N  // (99)
+`Test 36: ` 10 x! 20 y! [x y 30] a! a 2 ? . /N  // (30)
+`Test 37: ` [5 10 15] 0 ? . /N            // (5)
+`Test 38: ` [5 10 15] a! a 2 ? . /N       // (15)
+
+`=== FUNCTION TESTS ===` /N
+
+:F 10 20 + ;
+`Test 39: ` F . /N                        // (30)
+
+:G 2 * ;
+`Test 40: ` 5 G . /N                      // (10)
+
+:R " 1 > ( " 1 - R * ) /E ( ' 1 ) ;
+`Test 41: ` 5 R . /N                      // (120)
+
+`=== SYSTEM VARIABLE TESTS ===` /N
+
+`Test 42: ` 10 20 + ' /c . /N             // (0)
+`Test 43: ` 17 5 / ' /r . /N              // (2)
+`Test 44: ` 0 t! 5 ( /i 3 = ( /i t! ) ) t . /N  // (3)
+
+`=== HEXADECIMAL TESTS ===` /N
+
+`Test 45: ` #FF . /N                      // (255)
+`Test 46: ` #10 #20 + . /N                // (48)
+`Test 47: ` #FF #0F > . /N                // (-1 = true)
+
+`=== COMPLEX TESTS ===` /N
+
+:I n! 0 a! 1 b! n ( a b + c! b a! c b! ) a ;
+`Test 48: ` 10 I . /N                     // (34)
+
+:A a! 0 s! a /S ( a /i ? s + s! ) s ;
+`Test 49: ` [1 2 3 4 5] A . /N            // (15)
+
+`Test 50: ` 0 c! 10 ( /i 2 % 0 = ( c 1 + c! ) ) c . /N  // (5)
+
+`=== TEST SUITE COMPLETE ===` /N
