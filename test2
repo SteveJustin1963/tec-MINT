@@ -1,6 +1,7 @@
 ## ========================================================================
-## MINT-Octave Simple Test Suite
+## MINT-Octave Simple Test Suite - WITH STACK CLEANUP
 ## Run each test and compare output to expected value in comment
+## Each test now properly cleans up the stack to prevent interference
 ## ========================================================================
 
 `=== ARITHMETIC TESTS ===` /N
@@ -33,9 +34,9 @@
 
 `Test 18: ` 5 " + . /N     // (10)
 `Test 19: ` 1 2 $ ' . /N   // (2)
-`Test 20: ` 1 2 3 ' . /N   // (2)
-`Test 21: ` 1 2 % ' ' . /N // (1)
-`Test 22: ` 1 2 3 /D . /N  // (3)
+`Test 20: ` 1 2 3 ' . ' /N   // (2) - added cleanup
+`Test 21: ` 1 2 % ' ' . ' /N // (1) - added cleanup
+`Test 22: ` 1 2 3 /D . ' ' ' ' /N  // (3) - cleanup all
 
 `=== VARIABLE TESTS ===` /N
 
@@ -99,3 +100,4 @@
 `Test 50: ` 0 c! 10 ( /i 2 % 0 = ( c 1 + c! ) ) c . /N  // (5)
 
 `=== TEST SUITE COMPLETE ===` /N
+`All tests should show values matching the comments` /N
