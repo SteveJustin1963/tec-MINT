@@ -1,0 +1,34 @@
+:T e! a! `Expected: ` e . `  Got: ` a . `  ` a e = ( `PASS` ) /E ( `FAIL` ) /N `[SPACE]` /K ' /N ;
+
+`Test 51: DUP single` /N 7 " ' 7 T
+`Test 52: DUP multiply` /N 7 " * 49 T
+`Test 53: SWAP order` /N 1 2 $ ' 2 T
+`Test 54: OVER copy 2nd` /N 10 20 % ' ' 10 T
+`Test 55: DROP remove top` /N 1 2 3 ' ' 1 T
+`Test 56: Multiple DUP` /N 5 " " " + + + 20 T
+`Test 57: SWAP SWAP` /N 1 2 $ $ ' 1 T
+`Test 58: DUP SWAP DROP` /N 3 4 " $ ' ' 3 T
+`Test 59: Complex chain` /N 1 2 3 $ % ' ' 2 T
+`Test 60: OVER then add` /N 3 4 % + + 10 T
+`Test 61: DUP in loop` /N 0 s! 3 ( 5 " + s + s! ' ) s 30 T
+`Test 62: SWAP in conditional` /N 5 10 $ > ( 1 ) /E ( 0 ) 0 T
+`Test 63: Stack with array` /N [1 2 3] " 0 ? $ 1 ? + ' 3 T
+`Test 64: DUP then square` /N 9 " * 81 T
+`Test 65: Triple SWAP` /N 1 2 $ $ $ ' 1 T
+`Test 66: OVER DROP OVER` /N 1 2 3 % ' % ' ' ' 1 T
+`Test 67: DUP to variable` /N 15 " x! x 15 T
+`Test 68: SWAP store` /N 5 10 $ y! y 5 T
+`Test 69: Depth after DUP` /N 1 2 " /D ' ' ' 3 T
+`Test 70: Depth after DROP` /N 1 2 3 4 ' ' /D ' ' 2 T
+`Test 71: 5 DUPs` /N 1 " " " " " /D /D ( ' ) 6 T
+`Test 72: OVER chain` /N 1 2 % % % /D /D ( ' ) 5 T
+`Test 73: DUP DUP SWAP` /N 9 " " $ ' ' 9 T
+`Test 74: Stack juggle` /N 1 2 3 $ % $ ' ' 3 T
+`Test 75: OVER store calc` /N 3 7 % z! + z + 13 T
+`Test 76: Build destroy` /N 10 " " " " + + + 40 T
+`Test 77: Nested OVER` /N 1 2 3 % % ' ' ' ' 2 T
+`Test 78: SWAP subtract` /N 10 3 $ - -7 T
+`Test 79: Complex calc` /N 2 3 " * $ + 11 T
+`Test 80: 5 items manip` /N 1 2 3 4 5 % $ ' ' ' ' 3 T
+
+`ALL TESTS COMPLETE` /N
