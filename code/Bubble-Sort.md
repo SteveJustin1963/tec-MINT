@@ -1,6 +1,6 @@
 ///////////////// tested working 3.10.2025
 
-
+```
 :S
 l ! l /S s !
 s 1 - p !
@@ -22,16 +22,17 @@ p (
 s ( l k ? . 32 /C k 1 + k ! ) 
 /N
 ;
+```
 
-
-
+// usage
+// [ 4 7 6 3 5 567 3 56 2 ] S
 
 
 //////////////////////////////////////////////////////
 
 
 
-
+```
 :S
 l !                          // Pop array from stack, store in variable l
 l /S s !                     // Get array size, store in variable s
@@ -73,3 +74,4 @@ s (                          // Loop through all s elements
 
 
 
+```
