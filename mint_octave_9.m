@@ -243,6 +243,9 @@ function add_builtin_words()
   state.dict("/round") = @(s) math_round(s);
   state.dict("/mod") = @(s) math_mod(s);
 
+  ## Min/max functions
+  state.dict("/min") = @(s) math_min(s);
+  state.dict("/max") = @(s) math_max(s);
 
   ## Stack ops
   state.dict("'") = @(s) drop(s);
@@ -477,6 +480,34 @@ function s = math_mod(s)
 endfunction
 
 
+## Min/Max Functions
+function s = math_min(s)
+  global state;
+  if state.debug
+    debug_before_op("/min", s);
+  endif
+  [s, b] = pop(s);
+  [s, a] = pop(s);
+  result = min(a, b);
+  s = push(s, result);
+  if state.debug
+    debug_after_op("/min", sprintf("min(%g, %g) = %g", a, b, result), s);
+  endif
+endfunction
+
+function s = math_max(s)
+  global state;
+  if state.debug
+    debug_before_op("/max", s);
+  endif
+  [s, b] = pop(s);
+  [s, a] = pop(s);
+  result = max(a, b);
+  s = push(s, result);
+  if state.debug
+    debug_after_op("/max", sprintf("max(%g, %g) = %g", a, b, result), s);
+  endif
+endfunction
 
 
 ## --------------------------
@@ -1307,7 +1338,7 @@ if ch == '/' && i < length(line)
  ## Check for four-character operators
   if i <= length(line)-3
     four_char = line(i:i+3);
-    if any(strcmp(four_char, {'/sin', '/cos', '/tan', '/abs', '/exp', '/log', '/deg', '/rad', '/mod'}))
+    if any(strcmp(four_char, {'/sin', '/cos', '/tan', '/abs', '/exp', '/log', '/deg', '/rad', '/mod', '/min', '/max'}))
       if !isempty(current_token)
         tokens{end+1} = strtrim(current_token);
         current_token = "";
@@ -1872,6 +1903,8 @@ function s = show_help(s)
   printf("MATHS     | * /ceil| round up to nearest integer               | n -- n       | DONE\n");
   printf("MATHS     | */round| round to nearest integer                  | n -- n       | DONE\n");
   printf("MATHS     | * /mod | modulo (remainder of a/b)                 | a b -- n     | DONE\n");
+  printf("MATHS     | * /min | minimum of two numbers                    | a b -- n     | DONE\n");
+  printf("MATHS     | * /max | maximum of two numbers                    | a b -- n     | DONE\n");
   printf("TRIG      | * /sin | sine (radians)                            | n -- n       | DONE\n");
   printf("TRIG      | * /cos | cosine (radians)                          | n -- n       | DONE\n");
   printf("TRIG      | * /tan | tangent (radians)                         | n -- n       | DONE\n");
