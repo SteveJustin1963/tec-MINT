@@ -246,6 +246,10 @@ function add_builtin_words()
   ## Min/max functions
   state.dict("/min") = @(s) math_min(s);
   state.dict("/max") = @(s) math_max(s);
+  ## Sign and truncate functions
+  state.dict("/sign") = @(s) math_sign(s);
+  state.dict("/trunc") = @(s) math_trunc(s);
+
 
   ## Stack ops
   state.dict("'") = @(s) drop(s);
@@ -506,6 +510,33 @@ function s = math_max(s)
   s = push(s, result);
   if state.debug
     debug_after_op("/max", sprintf("max(%g, %g) = %g", a, b, result), s);
+  endif
+endfunction
+
+## Sign and Truncate Functions
+function s = math_sign(s)
+  global state;
+  if state.debug
+    debug_before_op("/sign", s);
+  endif
+  [s, val] = pop(s);
+  result = sign(val);
+  s = push(s, result);
+  if state.debug
+    debug_after_op("/sign", sprintf("sign(%g) = %g", val, result), s);
+  endif
+endfunction
+
+function s = math_trunc(s)
+  global state;
+  if state.debug
+    debug_before_op("/trunc", s);
+  endif
+  [s, val] = pop(s);
+  result = fix(val);  ## fix() truncates toward zero in Octave
+  s = push(s, result);
+  if state.debug
+    debug_after_op("/trunc", sprintf("trunc(%g) = %g", val, result), s);
   endif
 endfunction
 
@@ -1310,7 +1341,7 @@ if ch == '/' && i < length(line)
 ## Check for six-character operators first
   if i <= length(line)-5
     six_char = line(i:i+5);
-    if any(strcmp(six_char, {'/atan2', '/asinh', '/acosh', '/atanh', '/floor', '/round'}))
+    if any(strcmp(six_char, {'/atan2', '/asinh', '/acosh', '/atanh', '/floor', '/round', '/trunc'}))
       if !isempty(current_token)
         tokens{end+1} = strtrim(current_token);
         current_token = "";
@@ -1324,7 +1355,7 @@ if ch == '/' && i < length(line)
 ## Check for five-character operators
   if i <= length(line)-4
     five_char = line(i:i+4);
-    if any(strcmp(five_char, {'/sinh', '/cosh', '/tanh', '/asin', '/acos', '/atan', '/sqrt', '/ceil'}))
+    if any(strcmp(five_char, {'/sinh', '/cosh', '/tanh', '/asin', '/acos', '/atan', '/sqrt', '/ceil', '/sign'}))
       if !isempty(current_token)
         tokens{end+1} = strtrim(current_token);
         current_token = "";
@@ -1905,6 +1936,8 @@ function s = show_help(s)
   printf("MATHS     | * /mod | modulo (remainder of a/b)                 | a b -- n     | DONE\n");
   printf("MATHS     | * /min | minimum of two numbers                    | a b -- n     | DONE\n");
   printf("MATHS     | * /max | maximum of two numbers                    | a b -- n     | DONE\n");
+  printf("MATHS     | * /sign| sign of number (-1, 0, or 1)              | n -- n       | DONE\n");
+  printf("MATHS     | */trunc| truncate toward zero                      | n -- n       | DONE\n");
   printf("TRIG      | * /sin | sine (radians)                            | n -- n       | DONE\n");
   printf("TRIG      | * /cos | cosine (radians)                          | n -- n       | DONE\n");
   printf("TRIG      | * /tan | tangent (radians)                         | n -- n       | DONE\n");
