@@ -29,6 +29,10 @@ function mint_octave_8()
   state.capture_buffer = "";
   state.capture_name = "";
 
+  ## I/O Port simulation state
+  state.port_dir = "mint_ports";  ## Directory for port files
+  state.port_buffers = containers.Map('KeyType', 'double', 'ValueType', 'any');  ## Cache of read data
+
   ## Initialize builtins
   add_builtin_words();
 
@@ -292,6 +296,8 @@ function add_builtin_words()
   state.dict("/N") = @(s) print_newline(s); ## Print newline
   state.dict("/K") = @(s) read_char(s);    ## Read character
   state.dict("/KS") = @(s) read_string(s);  ## Read string (extension)
+  state.dict("/O") = @(s) port_output(s);  ## Output to port
+  state.dict("/I") = @(s) port_input(s);   ## Input from port
 
   ## Print ops
   state.dict(".") = @(s) print_num(s);
@@ -1077,6 +1083,110 @@ function s = read_string(s)
   s = push(s, length(str));
 endfunction
 
+## --------------------------
+## Port I/O Functions (Simulated via Files)
+## --------------------------
+function s = port_output(s)
+  global state;
+  [s, port] = pop(s);    ## Port number
+  [s, value] = pop(s);   ## Value to write
+
+  if port < 0 || port > 255
+    error("Port number must be 0-255");
+  endif
+
+  ## Create port directory if it doesn't exist
+  if !exist(state.port_dir, "dir")
+    mkdir(state.port_dir);
+    if state.debug
+      printf("[DEBUG] PORT: created directory '%s'\n", state.port_dir);
+    endif
+  endif
+
+  ## Construct filename
+  filename = sprintf("%s/port%d.txt", state.port_dir, port);
+
+  if state.debug
+    printf("[DEBUG] PORT OUTPUT: writing %g to port %d (%s)\n", value, port, filename);
+  endif
+
+  ## Append value to file (space-delimited)
+  fid = fopen(filename, "a");
+  if fid == -1
+    error("Failed to open port file: %s", filename);
+  endif
+
+  fprintf(fid, "%g ", value);
+  fclose(fid);
+
+    ## Clear buffer so next read will reload the file
+  if isKey(state.port_buffers, port)
+    remove(state.port_buffers, port);
+  endif
+endfunction
+
+function s = port_input(s)
+  global state;
+  [s, port] = pop(s);    ## Port number
+
+  if port < 0 || port > 255
+    error("Port number must be 0-255");
+  endif
+
+  ## Construct filename
+  filename = sprintf("%s/port%d.txt", state.port_dir, port);
+
+  if state.debug
+    printf("[DEBUG] PORT INPUT: reading from port %d (%s)\n", port, filename);
+  endif
+
+  ## Check if we have buffered data for this port
+  if !isKey(state.port_buffers, port)
+    ## Read entire file and parse into buffer
+    if !exist(filename, "file")
+      error("Port file does not exist: %s (port %d not ready)", filename, port);
+    endif
+
+    fid = fopen(filename, "r");
+    if fid == -1
+      error("Failed to open port file: %s", filename);
+    endif
+
+    content = fread(fid, Inf, "char=>char")';
+    fclose(fid);
+
+    ## Parse space-delimited numbers
+    values = str2num(content);
+    if isempty(values)
+      error("No data available in port %d", port);
+    endif
+
+    ## Store as buffer (convert to cell array for sequential access)
+    state.port_buffers(port) = num2cell(values);
+
+    if state.debug
+      printf("[DEBUG] PORT: loaded %d values from port %d\n", length(values), port);
+    endif
+  endif
+
+  ## Get buffer for this port
+  buffer = state.port_buffers(port);
+
+  if isempty(buffer)
+    error("No more data available in port %d", port);
+  endif
+
+  ## Pop first value from buffer
+  value = buffer{1};
+  buffer(1) = [];
+  state.port_buffers(port) = buffer;
+
+  if state.debug
+    printf("[DEBUG] PORT INPUT: read %g from port %d (%d values remaining)\n", value, port, length(buffer));
+  endif
+
+  s = push(s, value);
+endfunction
 
 ## --------------------------
 ## Array Functions
@@ -1976,8 +2086,8 @@ function s = show_help(s)
   printf("I/O       | *  /C  | print character to output                 | n --         | DONE\n");
   printf("I/O       | *  /K  | read char from input                      | -- n         | DONE\n");
   printf("I/O       | *  /KS | read string (all ASCII codes + length)    | -- n n... n  | DONE\n");
-  printf("I/O       |    /O  | output to I/O port                        | n p --       | TODO\n");
-  printf("I/O       |    /I  | input from I/O port                       | p -- n       | TODO\n");
+  printf("I/O       | *  /O  | output to I/O port (file-based)           | n p --       | DONE\n");
+  printf("I/O       | *  /I  | input from I/O port (file-based)          | p -- n       | DONE\n");
   printf("FUNCTION  | * :A;  | define function (A-Z)                     | --           | DONE\n");
   printf("FUNCTION  |   :@;  | define anonymous function                 | -- a         | TODO\n");
   printf("FUNCTION  |   /G   | execute mint code at address              | a -- ?       | TODO\n");
