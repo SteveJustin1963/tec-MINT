@@ -1553,6 +1553,17 @@ endif
       endif
       tokens{end+1} = '**';
       i = i + 2;
+    elseif ch == '?' && i < length(line) && line(i+1) == '!'
+      ## Array set operator ?! - MUST come before single char ops check
+      if !isempty(current_token)
+        tokens{end+1} = strtrim(current_token);
+        current_token = "";
+      endif
+      tokens{end+1} = '?!';
+      i = i + 2;
+
+
+
     elseif ch == '.' && i < length(line) && isstrprop(line(i+1), 'digit')
       ## Decimal point followed by digit - part of a number
       current_token = [current_token, ch];
