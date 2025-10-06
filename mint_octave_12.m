@@ -2034,7 +2034,7 @@ function s = show_help(s)
   printf("MISC      | *  //  | comment (skips to end of line)            | --           | DONE\n");
   printf("MISC      | *  /N  | print CRLF                                | --           | DONE\n");
   printf("MISC      |   /P   | print prompt                              | --           | TODO\n");
-  printf("MISC      | * debug| toggle debug mode on/off                  | --           | DONE\n");
+  printf("MISC      | * debug| toggle on/off to screen and file          | --           | DONE\n");
   printf("===================================================================================================\n");
   printf("Type 'bye' to quit\n");
   printf("Type 'debug' to toggle debug mode\n");
