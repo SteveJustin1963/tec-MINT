@@ -72,8 +72,10 @@ MINT-Octave is a stack-based programming language interpreter inspired by Forth 
 ### Your First MINT Program
 
 ```mint
-> 5 3 + .
-8
+5 3 + .
+
+// 8
+
 ```
 
 This pushes 5 and 3 onto the stack, adds them, and prints the result.
@@ -91,10 +93,15 @@ MINT uses a **stack** - a Last-In-First-Out (LIFO) data structure. Operations ty
 
 **Example:**
 ```mint
-> 10        // Stack: [10]
-> 20        // Stack: [10, 20]
-> +         // Stack: [30]
-> .         // Print: 30, Stack: []
+10
+// Stack: [10]
+20
+// Stack: [10, 20]
++
+// Stack: [30]
+.
+// Print: 30, Stack: []
+
 ```
 
 ### Reverse Polish Notation (RPN)
@@ -120,20 +127,21 @@ Documentation uses this notation:
 MINT-Octave uses **64-bit floating-point** numbers:
 
 ```mint
-> 42 .              // Integer
-42
+42 .
+// Integer  42
 
-> 3.14159 .         // Floating-point
-3.14159
+3.14159 .
+// Floating-point 3.14159
 
-> -273.15 .         // Negative
--273.15
+-273.15 .
+// Negative -273.15
 
-> 1.23e+36 .        // Scientific notation
-1.23e+36
+1.23e+36 .
+// Scientific notation 1.23e+36
 
-> -5.67e-12 .       // Negative scientific
--5.67e-12
+-5.67e-12 .
+// Negative scientific -5.67e-12
+
 ```
 
 **Range:** ±1.8e308 (much larger than original MINT's 16-bit limit)
@@ -145,14 +153,20 @@ MINT-Octave uses **64-bit floating-point** numbers:
 Prefix with `#` for hexadecimal:
 
 ```mint
-> #FF .             // 255
-255
 
-> #1A2B .           // 6699
-6699
+#FF .
 
-> #FFFF .           // 65535
-65535
+// 255
+
+
+#1A2B .
+
+// 6699
+
+
+#FFFF .
+// 65535
+
 ```
 
 **Note:** Hex display (`,` operator) masks to 16-bit (0000-FFFF)
@@ -166,8 +180,13 @@ Prefix with `#` for hexadecimal:
 Removes the top item from the stack.
 
 ```mint
-> 10 20 30 '        // Stack: [10, 20]
-> .                 // Prints: 20
+10 20 30 '
+
+// Stack: [10, 20]
+.
+
+// Prints: 20
+
 ```
 
 ### " (Dup)
@@ -175,8 +194,12 @@ Removes the top item from the stack.
 Duplicates the top item.
 
 ```mint
-> 5 " .             // Prints: 5
-> .                 // Prints: 5 (duplicate)
+5 " .
+// Prints: 5
+
+.
+// Prints: 5 (duplicate)
+
 ```
 
 ### $ (Swap)
@@ -184,7 +207,10 @@ Duplicates the top item.
 Swaps the top two items.
 
 ```mint
-> 10 20 $ . .       // Prints: 10 then 20
+10 20 $ . .
+
+// Prints: 10 then 20
+
 ```
 
 ### % (Over)
@@ -192,7 +218,10 @@ Swaps the top two items.
 Copies the second item to the top.
 
 ```mint
-> 10 20 % . . .     // Prints: 10, 20, 10
+10 20 % . . .
+
+// Prints: 10, 20, 10
+
 ```
 
 ### /D (Stack Depth)
@@ -200,7 +229,9 @@ Copies the second item to the top.
 Pushes the current stack depth.
 
 ```mint
-> 1 2 3 /D .        // Prints: 3 (three items on stack)
+1 2 3 /D .
+// Prints: 3 (three items on stack)
+
 ```
 
 ### /CS (Clear Stack)
@@ -208,8 +239,11 @@ Pushes the current stack depth.
 Clears the entire stack.
 
 ```mint
-> 1 2 3 4 5 /CS     // Stack is now empty
-> /D .              // Prints: 0
+1 2 3 4 5 /CS
+// Stack is now empty
+
+/D .
+// Prints: 0
 ```
 
 ---
@@ -222,30 +256,36 @@ Clears the entire stack.
 Effect: `n m -- result`
 
 ```mint
-> 15 27 + .         // 42
+15 27 + .
+// 42
 ```
 
 **Subtraction: -**  
 Effect: `n m -- result`
 
 ```mint
-> 50 8 - .          // 42
+50 8 - .
+// 42
 ```
 
 **Multiplication: ***  
 Effect: `n m -- result`
 
 ```mint
-> 6 7 * .           // 42
+6 7 * .
+// 42
 ```
 
 **Division: /**  
 Effect: `n m -- result`
 
 ```mint
-> 84 2 / .          // 42 (floating-point division)
-> 10 3 / .          // 3.33333 (not integer division!)
-> 7 2 / .           // 3.5
+84 2 / .
+// 42 (floating-point division)
+10 3 / .
+// 3.33333 (not integer division!)
+7 2 / .
+// 3.5
 ```
 
 **Important:** Unlike original MINT, this performs true floating-point division, not integer division. Use `/floor` after division if you need integer results.
@@ -254,14 +294,18 @@ Effect: `n m -- result`
 Effect: `base exponent -- result`
 
 ```mint
-> 2 8 ** .          // 256 (2^8)
-> 5 3 ** .          // 125 (5^3)
-> 2 0.5 ** .        // 1.41421 (√2)
+2 8 ** .
+// 256 (2^8)
+5 3 ** .
+// 125 (5^3)
+2 0.5 ** .
+// 1.41421 (√2)
 ```
 
 **Error handling:**
 ```mint
-> -4 0.5 **         // ERROR: Cannot raise negative to fractional power
+-4 0.5 **
+// ERROR: Cannot raise negative to fractional power
 ```
 
 ### Advanced Math Functions
@@ -270,8 +314,10 @@ Effect: `base exponent -- result`
 Effect: `n -- result`
 
 ```mint
-> 144 /sqrt .       // 12
-> 2 /sqrt .         // 1.41421
+144 /sqrt .
+// 12
+2 /sqrt .
+// 1.41421
 ```
 
 **Domain:** x ≥ 0 (error for negative numbers)
@@ -280,16 +326,20 @@ Effect: `n -- result`
 Effect: `n -- result`
 
 ```mint
-> -42 /abs .        // 42
-> 17 /abs .         // 17
+-42 /abs .
+// 42
+17 /abs .
+// 17
 ```
 
 **Natural Logarithm: /ln**  
 Effect: `n -- result`
 
 ```mint
-> /e /ln .          // 1 (ln(e) = 1)
-> 2.71828 /ln .     // 1
+/e /ln .
+// 1 (ln(e) = 1)
+2.71828 /ln .
+// 1
 ```
 
 **Domain:** x > 0 (error for zero or negative)
@@ -298,8 +348,10 @@ Effect: `n -- result`
 Effect: `n -- result`
 
 ```mint
-> 100 /log .        // 2 (log₁₀(100) = 2)
-> 1000 /log .       // 3
+100 /log .
+// 2 (log₁₀(100) = 2)
+1000 /log .
+// 3
 ```
 
 **Domain:** x > 0 (error for zero or negative)
@@ -308,8 +360,10 @@ Effect: `n -- result`
 Effect: `n -- result`
 
 ```mint
-> 1 /exp .          // 2.71828 (e^1)
-> 0 /exp .          // 1 (e^0)
+1 /exp .
+// 2.71828 (e^1)
+0 /exp .
+// 1 (e^0)
 ```
 
 ### Rounding Functions
@@ -318,33 +372,42 @@ Effect: `n -- result`
 Rounds down to nearest integer.
 
 ```mint
-> 3.7 /floor .      // 3
-> -2.3 /floor .     // -3
+3.7 /floor .
+// 3
+-2.3 /floor .
+// -3
 ```
 
 **Ceiling: /ceil**  
 Rounds up to nearest integer.
 
 ```mint
-> 3.2 /ceil .       // 4
-> -2.7 /ceil .      // -2
+3.2 /ceil .
+// 4
+-2.7 /ceil .
+// -2
 ```
 
 **Round: /round**  
 Rounds to nearest integer.
 
 ```mint
-> 3.5 /round .      // 4
-> 3.4 /round .      // 3
-> -2.5 /round .     // -2
+3.5 /round .
+// 4
+3.4 /round .
+// 3
+-2.5 /round .
+// -2
 ```
 
 **Truncate: /trunc**  
 Truncates toward zero.
 
 ```mint
-> 3.9 /trunc .      // 3
-> -3.9 /trunc .     // -3
+3.9 /trunc .
+// 3
+-3.9 /trunc .
+// -3
 ```
 
 ### Other Math Operations
@@ -353,8 +416,10 @@ Truncates toward zero.
 Effect: `a b -- remainder`
 
 ```mint
-> 17 5 /mod .       // 2
-> 100 7 /mod .      // 2
+17 5 /mod .
+// 2
+100 7 /mod .
+// 2
 ```
 
 **Error:** Division by zero
@@ -363,25 +428,32 @@ Effect: `a b -- remainder`
 Effect: `a b -- min`
 
 ```mint
-> 5 3 /min .        // 3
-> -10 -20 /min .    // -20
+5 3 /min .
+// 3
+-10 -20 /min .
+// -20
 ```
 
 **Maximum: /max**  
 Effect: `a b -- max`
 
 ```mint
-> 5 3 /max .        // 5
-> -10 -20 /max .    // -10
+5 3 /max .
+// 5
+-10 -20 /max .
+// -10
 ```
 
 **Sign: /sign**  
 Returns -1, 0, or 1.
 
 ```mint
-> 42 /sign .        // 1
-> -17 /sign .       // -1
-> 0 /sign .         // 0
+42 /sign .
+// 1
+-17 /sign .
+// -1
+0 /sign .
+// 0
 ```
 
 ---
@@ -396,24 +468,30 @@ All trig functions use **radians** by default.
 Effect: `radians -- result`
 
 ```mint
-> 0 /sin .          // 0
-> /pi 2 / /sin .    // 1 (sin(π/2) = 1)
+0 /sin .
+// 0
+/pi 2 / /sin .
+// 1 (sin(π/2) = 1)
 ```
 
 **Cosine: /cos**  
 Effect: `radians -- result`
 
 ```mint
-> 0 /cos .          // 1
-> /pi /cos .        // -1 (cos(π) = -1)
+0 /cos .
+// 1
+/pi /cos .
+// -1 (cos(π) = -1)
 ```
 
 **Tangent: /tan**  
 Effect: `radians -- result`
 
 ```mint
-> 0 /tan .          // 0
-> /pi 4 / /tan .    // 1 (tan(π/4) = 1)
+0 /tan .
+// 0
+/pi 4 / /tan .
+// 1 (tan(π/4) = 1)
 ```
 
 ### Inverse Trigonometry
@@ -422,10 +500,12 @@ Effect: `radians -- result`
 Returns radians. Domain: [-1, 1]
 
 ```mint
-> 0.5 /asin /deg .  // 30 degrees
-> 1 /asin .         // 1.5708 (π/2 radians)
+0.5 /asin /deg .
+// 30 degrees
+1 /asin .
+// 1.5708 (π/2 radians)
 ```
-
+xxx
 **Error:** Input must be in [-1, 1]
 
 **Arccosine: /acos**  
