@@ -22,6 +22,10 @@
 15. [Debug Mode](#debug-mode)
 16. [Complete Command Reference](#complete-command-reference)
 17. [Examples](#examples)
+18. [Tips and Tricks](#tips-and-tricks)
+19. [Common Pitfalls](#common-pitfalls)
+20. [Quick Reference Card](#quick-reference-card)
+21. [Differences from Original MINT](#differences-from-original-mint)
 
 ---
 
@@ -34,7 +38,7 @@ MINT-Octave is a stack-based programming language interpreter inspired by Forth 
 - 64-bit floating-point arithmetic
 - 26 variables (a-z)
 - User-defined functions (A-Z)
-- Arrays with heap storage
+- Arrays with heap storage (4096 locations)
 - Loops and conditionals
 - Comprehensive trigonometric functions
 - Debug mode with file logging
@@ -133,6 +137,8 @@ MINT-Octave uses **64-bit floating-point** numbers:
 ```
 
 **Range:** ±1.8e308 (much larger than original MINT's 16-bit limit)
+
+**Precision:** 15-16 significant digits (format long)
 
 ### Hexadecimal Numbers
 
@@ -238,7 +244,11 @@ Effect: `n m -- result`
 
 ```mint
 > 84 2 / .          // 42 (floating-point division)
+> 10 3 / .          // 3.33333 (not integer division!)
+> 7 2 / .           // 3.5
 ```
+
+**Important:** Unlike original MINT, this performs true floating-point division, not integer division. Use `/floor` after division if you need integer results.
 
 **Power: ****  
 Effect: `base exponent -- result`
@@ -264,6 +274,8 @@ Effect: `n -- result`
 > 2 /sqrt .         // 1.41421
 ```
 
+**Domain:** x ≥ 0 (error for negative numbers)
+
 **Absolute Value: /abs**  
 Effect: `n -- result`
 
@@ -280,6 +292,8 @@ Effect: `n -- result`
 > 2.71828 /ln .     // 1
 ```
 
+**Domain:** x > 0 (error for zero or negative)
+
 **Base-10 Logarithm: /log**  
 Effect: `n -- result`
 
@@ -287,6 +301,8 @@ Effect: `n -- result`
 > 100 /log .        // 2 (log₁₀(100) = 2)
 > 1000 /log .       // 3
 ```
+
+**Domain:** x > 0 (error for zero or negative)
 
 **Exponential: /exp**  
 Effect: `n -- result`
@@ -340,6 +356,8 @@ Effect: `a b -- remainder`
 > 17 5 /mod .       // 2
 > 100 7 /mod .      // 2
 ```
+
+**Error:** Division by zero
 
 **Minimum: /min**  
 Effect: `a b -- min`
@@ -408,6 +426,8 @@ Returns radians. Domain: [-1, 1]
 > 1 /asin .         // 1.5708 (π/2 radians)
 ```
 
+**Error:** Input must be in [-1, 1]
+
 **Arccosine: /acos**  
 Returns radians. Domain: [-1, 1]
 
@@ -415,6 +435,8 @@ Returns radians. Domain: [-1, 1]
 > 0 /acos .         // 1.5708 (π/2 radians)
 > 1 /acos .         // 0
 ```
+
+**Error:** Input must be in [-1, 1]
 
 **Arctangent: /atan**  
 Returns radians.
@@ -430,7 +452,10 @@ Effect: `y x -- radians`
 ```mint
 > 1 1 /atan2 /deg . // 45 degrees
 > 1 0 /atan2 /deg . // 90 degrees
+> 1 -1 /atan2 /deg .// 135 degrees
 ```
+
+**Note:** Stack order is y (first), then x (second), matching mathematical convention atan2(y, x)
 
 ### Hyperbolic Functions
 
@@ -471,12 +496,16 @@ Domain: x ≥ 1
 > 2 /acosh .        // 1.31696
 ```
 
+**Error:** Input must be ≥ 1
+
 **Inverse Hyperbolic Tangent: /atanh**  
 Domain: -1 < x < 1
 
 ```mint
 > 0.5 /atanh .      // 0.549306
 ```
+
+**Error:** Input must be strictly between -1 and 1
 
 ### Angle Conversion
 
@@ -619,6 +648,13 @@ Syntax: `value variable !`
 > x .               // Retrieve and print: 42
 ```
 
+**Important:** The variable must come immediately before the `!` operator. The following will cause an error:
+
+```mint
+> 42 ! x            // ERROR: ! requires a variable before it
+> x 42 !            // WRONG: stores to address 42, not variable x
+```
+
 ### Using Variables
 
 Simply type the variable name to push its value:
@@ -651,6 +687,8 @@ Simply type the variable name to push its value:
 
 Arrays are stored in heap memory and can contain 64-bit floating-point numbers.
 
+**Heap Storage:** MINT-Octave provides 4096 heap locations for array storage.
+
 ### Creating Arrays
 
 Syntax: `[ element1 element2 ... ]`
@@ -660,6 +698,8 @@ Syntax: `[ element1 element2 ... ]`
 ```
 
 This creates an array and stores its address in variable `arr`.
+
+**Array Format in Heap:** `[size, elem1, elem2, ...]`
 
 ### Accessing Array Elements
 
@@ -671,6 +711,8 @@ Effect: `array_addr index -- value`
 > arr 2 ? .         // 30 (third element)
 > arr 4 ? .         // 50 (fifth element)
 ```
+
+**Note:** Arrays use 0-based indexing
 
 **Set Element: ?!**  
 Effect: `value array_addr index -- `
@@ -695,7 +737,7 @@ Effect: `array_addr -- size`
 // Sum array elements
 > [ 1 2 3 4 5 ] arr !
 > 0 sum !           // Initialize sum
-> 5 ( arr /i ? sum + sum ! ) // Loop through array
+> arr /S ( arr /i ? sum + sum ! ) // Loop through array
 > sum .             // 15
 
 // Find maximum in array
@@ -785,6 +827,8 @@ Executes `body` `count` times.
 
 **/U** - Unlimited loop constant
 
+The combination of `/U` with `/W` creates a while-loop pattern. `/U` pushes -1 to the stack, and when used as a loop count with a `/W` inside the loop body, creates an effectively unlimited loop that breaks on a condition.
+
 ```mint
 // Infinite loop with condition
 > 0 i !
@@ -794,6 +838,8 @@ Executes `body` `count` times.
     i 5 > /W      // Break when i > 5
   )
 ```
+
+**Note:** A negative loop count without `/W` runs exactly once (treating it as a boolean "true").
 
 ### Conditionals (If-Then-Else)
 
@@ -845,6 +891,8 @@ Define reusable functions with letters **A** through **Z**.
 > 5 D .             // 25
 ```
 
+**Note:** The semicolon `;` is only meaningful for ending function definitions. Standalone semicolons outside function definitions are ignored.
+
 ### Multi-Line Functions
 
 ```mint
@@ -854,6 +902,8 @@ Define reusable functions with letters **A** through **Z**.
 ... ;
 > 3 F .             // 36 (4 * 3²)
 ```
+
+**Prompt:** The `...` prompt indicates capture mode for multi-line function definition.
 
 ### Function Examples
 
@@ -928,7 +978,11 @@ Effect: `n -- `
 ```mint
 > 255 , /N          // Prints: 00FF
 > #DEAD , /N        // Prints: DEAD
+> -1 , /N           // Prints: FFFF (two's complement)
+> -256 , /N         // Prints: FF00 (two's complement)
 ```
+
+**Note:** Hex output displays numbers as 16-bit unsigned values (0000-FFFF). Negative numbers are shown in two's complement representation.
 
 **Print Newline: /N**
 
@@ -1067,14 +1121,14 @@ mint_debug_YYYYMMDD_HHMMSS.log
 
 ## Complete Command Reference
 
-### Arithmetic (17 commands)
+### Arithmetic (18 commands)
 
 | Command | Stack Effect | Description |
 |---------|--------------|-------------|
 | `+` | `a b -- sum` | Addition |
 | `-` | `a b -- diff` | Subtraction |
 | `*` | `a b -- prod` | Multiplication |
-| `/` | `a b -- quot` | Division |
+| `/` | `a b -- quot` | Division (floating-point) |
 | `**` | `base exp -- result` | Exponentiation |
 | `/sqrt` | `n -- result` | Square root |
 | `/abs` | `n -- result` | Absolute value |
@@ -1321,7 +1375,19 @@ mint_debug_YYYYMMDD_HHMMSS.log
 34
 ```
 
-### Example 9: Prime Number Check
+### Example 9: Using /atan2 for Angle Calculation
+
+```mint
+// Find angle of point (3, 4) from origin
+> 4 3 /atan2 /deg .
+53.1301          // Angle is ~53.13 degrees
+
+// Find angle of point (-1, 1) from origin  
+> 1 -1 /atan2 /deg .
+135              // Angle in second quadrant
+```
+
+### Example 10: Prime Number Check
 
 ```mint
 // Check if 17 is prime
@@ -1342,7 +1408,7 @@ mint_debug_YYYYMMDD_HHMMSS.log
 Prime
 ```
 
-### Example 10: Temperature Converter
+### Example 11: Temperature Converter
 
 ```mint
 // Celsius to Fahrenheit converter
@@ -1394,6 +1460,7 @@ MINT will show errors for:
 - Array out of bounds
 - Invalid domain (sqrt of negative, etc.)
 - Undefined functions
+- Complex number results
 
 ### Performance Tips
 
@@ -1401,6 +1468,7 @@ MINT will show errors for:
 2. Clear stack with `/CS` when needed
 3. Use variables to avoid stack juggling
 4. Comment your code with `//`
+5. Enable debug mode only when troubleshooting
 
 ---
 
@@ -1411,7 +1479,7 @@ MINT will show errors for:
 Remember RPN order:
 ```mint
 > 10 5 - .          // Correct: 10 - 5 = 5
-> 5 10 - .          // Wrong: 5 - 10 = -5
+> 5 10 - .          // Wrong order: 5 - 10 = -5
 ```
 
 ### Variable Storage
@@ -1420,6 +1488,7 @@ Variable must come BEFORE `!`:
 ```mint
 > 42 x !            // Correct
 > x 42 !            // Wrong - stores 42's value to location 42
+> 42 ! x            // ERROR - ! requires variable before it
 ```
 
 ### Loop Counters
@@ -1437,16 +1506,39 @@ Trig functions use radians:
 > 90 /rad /sin .    // Correct - sin(90°) = 1
 ```
 
+### Array Indexing
+
+Arrays use 0-based indexing:
+```mint
+> [ 10 20 30 ] arr !
+> arr 0 ? .         // 10 (first element)
+> arr 1 ? .         // 20 (second element)
+```
+
+### Division Type
+
+Division is floating-point, not integer:
+```mint
+> 10 3 / .          // 3.33333 (not 3)
+> 10 3 / /floor .   // 3 (use /floor for integer)
+```
+
 ---
 
 ## Quick Reference Card
 
 ```
+=== MINT-Octave Quick Reference ===
+
 NUMBERS:  123  3.14  -42  1e6  #FF
 STACK:    ' " $ % /D /CS
 MATH:     + - * / ** /sqrt /abs /ln /log /exp
+ROUND:    /floor /ceil /round /trunc /mod
+MINMAX:   /min /max /sign
 TRIG:     /sin /cos /tan /asin /acos /atan /atan2
 HYPER:    /sinh /cosh /tanh /asinh /acosh /atanh
+CONST:    /pi /e
+CONVERT:  /deg /rad
 COMPARE:  > < =
 BITWISE:  & | ^ ~ { }
 VARS:     a-z !
@@ -1456,8 +1548,25 @@ COND:     cond ( then ) /E ( else )
 BOOL:     /T /F
 FUNC:     :A ... ;  list
 I/O:      . , /N /C /K /KS `text`
-SYSTEM:   /c /r /pi /e
+SYSTEM:   /c /r
 MISC:     // help debug bye
+
+BOOLEAN VALUES:
+  True:  -1    False: 0
+
+STACK EFFECTS:
+  n n -- n    Two inputs, one output
+  n --        One input, no output
+  -- n        No input, one output
+  
+SPECIAL NOTES:
+  • Division is floating-point (use /floor for integer)
+  • Trig functions use radians (use /rad to convert)
+  • Arrays are 0-indexed
+  • Loop counters (/i, /j) are 0-based
+  • Hex output shows 16-bit values with two's complement
+  • Variable must precede ! operator
+  • Negative loop count runs once (or unlimited with /W)
 ```
 
 ---
@@ -1466,31 +1575,125 @@ MISC:     // help debug bye
 
 This Octave implementation differs from original MINT:
 
-1. **64-bit floating-point** instead of 16-bit integers
-2. **Expanded trigonometry** (15 trig functions + conversions)
-3. **Advanced math** (sqrt, abs, ln, log, exp, rounding, etc.)
-4. **Debug mode** with file logging
-5. **Multi-line function** definitions
-6. **Extended I/O** (string literals with backticks)
-7. **Array support** for floats, not just integers
-8. **Scientific notation** (1.23e+36)
+### Enhancements
 
-Not implemented:
-- Byte mode (`\`)
-- I/O ports (`/O`, `/I`)
-- Some system variables (`/h`, `/k`, `/s`, `/z`)
-- Machine code execution (`/X`)
-- Anonymous functions (`:@`)
-- Memory allocation (`/A`)
+1. **64-bit floating-point** instead of 16-bit integers
+   - Range: ±1.8e308 (vs. -32768 to 32767)
+   - Precision: 15-16 significant digits
+   - Scientific notation: 1.23e+36
+
+2. **Expanded trigonometry** (17 functions)
+   - Basic: sin, cos, tan
+   - Inverse: asin, acos, atan, atan2
+   - Hyperbolic: sinh, cosh, tanh
+   - Inverse hyperbolic: asinh, acosh, atanh
+   - Conversions: /rad, /deg
+   - Constants: /pi, /e
+
+3. **Advanced math** (18 arithmetic functions)
+   - Power: **
+   - Roots: /sqrt
+   - Logarithms: /ln, /log
+   - Exponential: /exp
+   - Rounding: /floor, /ceil, /round, /trunc
+   - Other: /abs, /mod, /min, /max, /sign
+
+4. **Debug mode** with file logging
+   - Toggle on/off with `debug` command
+   - Logs to timestamped file
+   - Shows stack state, variable changes, function calls
+
+5. **Multi-line function** definitions
+   - Uses `...` continuation prompt
+   - Capture mode for complex functions
+
+6. **Extended I/O**
+   - String literals with backticks: \`text\`
+   - Read string: /KS
+
+7. **Array support** for floating-point numbers
+   - 4096 heap locations
+   - Mixed integers and floats
+
+8. **True floating-point division**
+   - Not integer division
+   - Use /floor for integer results
+
+### Not Implemented
+
+- **Byte mode** (`\`, `\!`, `\[`, `\?`)
+- **I/O ports** (`/O`, `/I`)
+- **Some system variables** (`/h`, `/k`, `/s`, `/z`, `/V`)
+- **Machine code execution** (`/X`, `/G`)
+- **Anonymous functions** (`:@`)
+- **Memory allocation** (`/A`)
+- **Print prompt** (`/P`)
 
 ---
 
-## Credits
+## Credits and License
 
-MINT-Octave v2.5 (2025)  
+**MINT-Octave v2.5 (2025)**  
 Based on MINT by Ken Boak  
 Implemented in GNU Octave
+
+This implementation extends the original MINT language with modern floating-point arithmetic, comprehensive mathematical functions, and enhanced debugging capabilities while maintaining the simplicity and elegance of the stack-based paradigm.
+
+---
+
+## Appendix: ASCII Reference
+
+Common ASCII codes for use with `/C` and `/K`:
+
+```
+32  Space    48-57  0-9      65-90  A-Z      97-122 a-z
+10  \n       33  !       58  :       91  [       123  {
+13  \r       34  "       59  ;       92  \       124  |
+9   \t       35  #       60  <       93  ]       125  }
+          36  $       61  =       94  ^       126  ~
+          37  %       62  >       95  _
+          38  &       63  ?       96  `
+          39  '       64  @
+```
+
+---
+
+## Appendix: Error Messages
+
+### Common Errors
+
+**STACK UNDERFLOW**
+- Cause: Trying to pop from empty stack
+- Solution: Ensure enough values on stack before operations
+
+**DIVISION BY ZERO**
+- Cause: Dividing by zero or using /mod with zero divisor
+- Solution: Check divisor before operation
+
+**Array index out of bounds**
+- Cause: Accessing array element outside valid range
+- Solution: Check array size with /S before access
+
+**Domain errors**
+- `/sqrt`: Negative input
+- `/ln`, `/log`: Zero or negative input
+- `/asin`, `/acos`: Input outside [-1, 1]
+- `/acosh`: Input < 1
+- `/atanh`: Input outside (-1, 1)
+- `**`: Negative base with fractional exponent
+
+**Unknown word**
+- Cause: Using undefined function or misspelled command
+- Solution: Check spelling, use `list` to see defined functions
+
+**! requires a variable before it**
+- Cause: Using ! without variable immediately before
+- Solution: Use pattern `value variable !`
 
 ---
 
 **End of Manual**
+
+---
+
+*This manual covers all 73 implemented commands in MINT-Octave v2.5. For questions or issues, enable debug mode to trace execution step-by-step.*
