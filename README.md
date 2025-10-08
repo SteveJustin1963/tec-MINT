@@ -1,29 +1,6 @@
  
 
-
-```
-Ye Olde Computer (complete with levers & gears)
- in the background two hills away, "OI dats naught ay cumputa".
-  The big nose next to him says "shudup you, I cant hear wad hiz saying..
-
-         __________________________
-        |  ______________________  |
-        | | :M `MINT CODE, OI!`; | |
-        | |______________________| | 
-        |__________________________| 
-                ||      ||
-                ||      ||
-     [O]      __||______||__
-     /|\--   /              \
-     / \    |                |
-
-  I the MINT-esque knight
-   in a ridiculous helmet,
-    quill in hand, proudly declaring:...
-      um, um,...oi!...lines please..   
-  
-
-```
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/404baeeb-6ae2-4975-b781-face3bb329e7" />
 
 
 The structuring or acknowledgment of the individuals involved in the development of the MINT interpreter follows no discernible hierarchy or prioritization of recognition, implying that their contributions are regarded in a manner devoid of any preordained or systematic reverence. This lack of sequentiality reflects an egalitarian or arbitrary approach, wherein no specific developer is elevated above another in terms of the order of respect or recognition for their work.
