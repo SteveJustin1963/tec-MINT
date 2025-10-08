@@ -155,25 +155,14 @@ The range depends on the allocation of bits for the sign, exponent, and mantissa
 - https://en.wikipedia.org/wiki/IEEE_754
 
 
-# aug 2025
-- playing with 7 seg display
+# playing with 7 seg display
+- aug 2025
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/code/8-LED-light-chaser.md
 - https://github.com/tec1group/MINT-cookbook/tree/main/misc/4-digit-counter
 - crashes all the time!
 
  
 # implementing mint in octave from scratch
-- sept 29 2025
-- https://github.com/SteveJustin1963/tec-MINT/blob/main/mint_octave.m
-- https://github.com/SteveJustin1963/tec-MINT/blob/main/mint_tests.mint
-
-- 
-  
-# implementing mint in gnu forth
-- oct 1 2025
-- 
-
-
-
-
+- 29 sept 2025, make basic m script to run mint commands
+- 9 oct 2025, ver 13, most commands, sci func, 64 bit FP, i/o to files
 
