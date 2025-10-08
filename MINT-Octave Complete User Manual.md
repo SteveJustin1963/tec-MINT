@@ -505,15 +505,17 @@ Returns radians. Domain: [-1, 1]
 1 /asin .
 // 1.5708 (π/2 radians)
 ```
-xxx
+
 **Error:** Input must be in [-1, 1]
 
 **Arccosine: /acos**  
 Returns radians. Domain: [-1, 1]
 
 ```mint
-> 0 /acos .         // 1.5708 (π/2 radians)
-> 1 /acos .         // 0
+0 /acos .
+// 1.5708 (π/2 radians)
+1 /acos .
+// 0
 ```
 
 **Error:** Input must be in [-1, 1]
@@ -522,17 +524,22 @@ Returns radians. Domain: [-1, 1]
 Returns radians.
 
 ```mint
-> 1 /atan .         // 0.785398 (π/4 radians)
-> 0 /atan .         // 0
+1 /atan .
+// 0.785398 (π/4 radians)
+0 /atan .
+// 0
 ```
 
 **Two-argument Arctangent: /atan2**  
 Effect: `y x -- radians`
 
 ```mint
-> 1 1 /atan2 /deg . // 45 degrees
-> 1 0 /atan2 /deg . // 90 degrees
-> 1 -1 /atan2 /deg .// 135 degrees
+1 1 /atan2 /deg .
+// 45 degrees
+1 0 /atan2 /deg .
+// 90 degrees
+1 -1 /atan2 /deg .
+// 135 degrees
 ```
 
 **Note:** Stack order is y (first), then x (second), matching mathematical convention atan2(y, x)
@@ -542,22 +549,28 @@ Effect: `y x -- radians`
 **Hyperbolic Sine: /sinh**
 
 ```mint
-> 0 /sinh .         // 0
-> 1 /sinh .         // 1.1752
+0 /sinh .
+// 0
+1 /sinh .
+// 1.1752
 ```
 
 **Hyperbolic Cosine: /cosh**
 
 ```mint
-> 0 /cosh .         // 1
-> 1 /cosh .         // 1.54308
+0 /cosh .
+// 1
+1 /cosh .
+// 1.54308
 ```
 
 **Hyperbolic Tangent: /tanh**
 
 ```mint
-> 0 /tanh .         // 0
-> 1 /tanh .         // 0.761594
+0 /tanh .
+// 0
+1 /tanh .
+// 0.761594
 ```
 
 ### Inverse Hyperbolic Functions
@@ -565,15 +578,18 @@ Effect: `y x -- radians`
 **Inverse Hyperbolic Sine: /asinh**
 
 ```mint
-> 1 /asinh .        // 0.881374
+1 /asinh .
+// 0.881374
 ```
 
 **Inverse Hyperbolic Cosine: /acosh**  
 Domain: x ≥ 1
 
 ```mint
-> 1 /acosh .        // 0
-> 2 /acosh .        // 1.31696
+1 /acosh .
+// 0
+2 /acosh .
+// 1.31696
 ```
 
 **Error:** Input must be ≥ 1
@@ -582,7 +598,8 @@ Domain: x ≥ 1
 Domain: -1 < x < 1
 
 ```mint
-> 0.5 /atanh .      // 0.549306
+0.5 /atanh .
+// 0.549306
 ```
 
 **Error:** Input must be strictly between -1 and 1
@@ -592,16 +609,21 @@ Domain: -1 < x < 1
 **Degrees to Radians: /rad**
 
 ```mint
-> 180 /rad .        // 3.14159 (π)
-> 90 /rad .         // 1.5708 (π/2)
-> 45 /rad .         // 0.785398 (π/4)
+180 /rad .
+// 3.14159 (π)
+90 /rad .
+// 1.5708 (π/2)
+45 /rad .
+// 0.785398 (π/4)
 ```
 
 **Radians to Degrees: /deg**
 
 ```mint
-> /pi /deg .        // 180
-> /pi 2 / /deg .    // 90
+/pi /deg .
+// 180
+/pi 2 / /deg .
+// 90
 ```
 
 ### Constants
@@ -609,25 +631,31 @@ Domain: -1 < x < 1
 **/pi** - Push π (3.14159265...)
 
 ```mint
-> /pi .             // 3.14159
-> /pi 2 * .         // 6.28319 (2π)
+/pi .
+// 3.14159
+/pi 2 * .
+// 6.28319 (2π)
 ```
 
 **/e** - Push e (2.71828...)
 
 ```mint
-> /e .              // 2.71828
-> /e /ln .          // 1
+/e .
+// 2.71828
+/e /ln .
+// 1
 ```
 
 ### Example: Calculate Angle
 
 ```mint
 // Calculate sin(45°)
-> 45 /rad /sin .    // 0.707107
+45 /rad /sin .
+// 0.707107
 
 // Calculate angle from opposite and adjacent sides
-> 3 4 /atan2 /deg . // 36.8699 degrees
+3 4 /atan2 /deg .
+// 36.8699 degrees
 ```
 
 ---
@@ -644,24 +672,35 @@ Boolean values in MINT:
 Effect: `a b -- bool`
 
 ```mint
-> 10 5 > .          // -1 (true)
-> 3 7 > .           // 0 (false)
+10 5 > .
+// -1 (true)
+
+3 7 > .
+// 0 (false)
+
 ```
 
 **Less Than: <**  
 Effect: `a b -- bool`
 
 ```mint
-> 5 10 < .          // -1 (true)
-> 7 3 < .           // 0 (false)
+5 10 < .
+// -1 (true)
+
+7 3 < .
+// 0 (false)
+
 ```
 
 **Equal: =**  
 Effect: `a b -- bool`
 
 ```mint
-> 5 5 = .           // -1 (true)
-> 5 6 = .           // 0 (false)
+5 5 = .
+// -1 (true)
+
+5 6 = .
+// 0 (false)
 ```
 
 ### Bitwise Operations
@@ -672,45 +711,56 @@ All bitwise operations are masked to 16 bits (0-65535).
 Effect: `a b -- result`
 
 ```mint
-> #FF #0F & , /N    // 000F
+#FF #0F & , /N
+// 000F
 ```
 
 **Bitwise OR: |**  
 Effect: `a b -- result`
 
 ```mint
-> #F0 #0F | , /N    // 00FF
+#F0 #0F | , /N
+// 00FF
 ```
 
 **Bitwise XOR: ^**  
 Effect: `a b -- result`
 
 ```mint
-> #FF #AA ^ , /N    // 0055
+#FF #AA ^ , /N
+// 0055
 ```
 
 **Bitwise NOT: ~**  
 Effect: `a -- result`
 
 ```mint
-> #00FF ~ , /N      // FF00
-> 0 ~ , /N          // FFFF
+#00FF ~ , /N
+// FF00
+0 ~ , /N
+// FFFF
 ```
 
 **Shift Left: {**  
 Effect: `n -- result`
 
 ```mint
-> 1 { .             // 2
-> 5 { .             // 10
+1 { .
+// 2
+
+5 { .
+// 10
 ```
 
 **Shift Right: }**  
 Effect: `n -- result`
 
 ```mint
-> 8 } .             // 4
-> 5 } .             // 2
+8 } .
+// 4
+
+5 } .
+// 2
 ```
 
 ---
@@ -724,15 +774,21 @@ MINT provides 26 variables named **a** through **z**.
 Syntax: `value variable !`
 
 ```mint
-> 42 x !            // Store 42 in variable x
-> x .               // Retrieve and print: 42
+42 x !
+// Store 42 in variable x
+
+x .
+// Retrieve and print: 42
 ```
 
 **Important:** The variable must come immediately before the `!` operator. The following will cause an error:
 
 ```mint
-> 42 ! x            // ERROR: ! requires a variable before it
-> x 42 !            // WRONG: stores to address 42, not variable x
+42 ! x
+// ERROR: ! requires a variable before it
+
+x 42 !
+// WRONG: stores to address 42, not variable x
 ```
 
 ### Using Variables
@@ -740,25 +796,38 @@ Syntax: `value variable !`
 Simply type the variable name to push its value:
 
 ```mint
-> 10 a !            // a = 10
-> 20 b !            // b = 20
-> a b + .           // 30
+10 a !
+// a = 10
+
+20 b !
+// b = 20
+
+a b + .
+// 30
 ```
 
 ### Examples
 
 ```mint
 // Calculate circle area: A = πr²
-> 5 r !             // radius = 5
-> /pi r r * * .     // 78.5398
+5 r !
+// radius = 5
+/pi r r * * .
+// 78.5398
 
 // Temperature conversion: F = C * 9/5 + 32
-> 25 c !            // Celsius = 25
-> c 9 * 5 / 32 + .  // 77 Fahrenheit
+25 c !
+// Celsius = 25
+
+c 9 * 5 / 32 + .
+// 77 Fahrenheit
 
 // Quadratic formula component
-> 3 a ! 4 b ! 2 c ! // Coefficients
-> b b * 4 a * c * - /sqrt . // √(b²-4ac)
+3 a ! 4 b ! 2 c !
+// Coefficients
+
+b b * 4 a * c * - /sqrt .
+// √(b²-4ac)
 ```
 
 ---
@@ -774,7 +843,7 @@ Arrays are stored in heap memory and can contain 64-bit floating-point numbers.
 Syntax: `[ element1 element2 ... ]`
 
 ```mint
-> [ 10 20 30 40 50 ] arr !
+[ 10 20 30 40 50 ] arr !
 ```
 
 This creates an array and stores its address in variable `arr`.
@@ -787,9 +856,14 @@ This creates an array and stores its address in variable `arr`.
 Effect: `array_addr index -- value`
 
 ```mint
-> arr 0 ? .         // 10 (first element)
-> arr 2 ? .         // 30 (third element)
-> arr 4 ? .         // 50 (fifth element)
+arr 0 ? .
+// 10 (first element)
+
+arr 2 ? .
+// 30 (third element)
+
+arr 4 ? .
+// 50 (fifth element)
 ```
 
 **Note:** Arrays use 0-based indexing
@@ -798,8 +872,11 @@ Effect: `array_addr index -- value`
 Effect: `value array_addr index -- `
 
 ```mint
-> 99 arr 2 ?!       // Set arr[2] = 99
-> arr 2 ? .         // 99
+99 arr 2 ?!
+// Set arr[2] = 99
+
+arr 2 ? .
+// 99
 ```
 
 ### Array Size
@@ -808,28 +885,36 @@ Effect: `value array_addr index -- `
 Effect: `array_addr -- size`
 
 ```mint
-> arr /S .          // 5
+arr /S .
+// 5
 ```
 
 ### Array Examples
 
 ```mint
 // Sum array elements
-> [ 1 2 3 4 5 ] arr !
-> 0 sum !           // Initialize sum
-> arr /S ( arr /i ? sum + sum ! ) // Loop through array
-> sum .             // 15
+[ 1 2 3 4 5 ] arr !
+0 sum !
+// Initialize sum
+arr /S ( arr /i ? sum + sum ! )
+// Loop through array
+sum .
+// 15
 
 // Find maximum in array
-> [ 23 17 42 8 31 ] data !
-> data 0 ? max !    // Initialize with first element
-> data /S ( data /i ? max > ( data /i ? max ! ) ) // Update max
-> max .             // 42
+[ 23 17 42 8 31 ] data !
+data 0 ? max !
+// Initialize with first element
+data /S ( data /i ? max > ( data /i ? max ! ) )
+// Update max
+max .
+// 42
 
 // Array with variables
-> 10 a ! 20 b ! 30 c !
-> [ a b c ] vals !
-> vals 1 ? .        // 20
+10 a ! 20 b ! 30 c !
+[ a b c ] vals !
+vals 1 ? .
+// 20
 ```
 
 ---
@@ -850,7 +935,7 @@ Executes `body` `count` times.
 
 ```mint
 // Print numbers 0-4
-> 5 ( /i . /N )
+5 ( /i . /N )
 0
 1
 2
@@ -858,12 +943,13 @@ Executes `body` `count` times.
 4
 
 // Calculate factorial of 5
-> 1 result !
-> 5 ( /i 1 + result * result ! )
-> result .          // 120
+1 result !
+5 ( /i 1 + result * result ! )
+result .
+// 120
 
 // Print squares
-> 10 ( /i " * . /N )
+10 ( /i " * . /N )
 0
 1
 4
@@ -881,13 +967,14 @@ Executes `body` `count` times.
 **/i** - Inner loop counter (0-based)
 
 ```mint
-> 3 ( /i . /N )     // Prints: 0, 1, 2
+3 ( /i . /N )
+// Prints: 0, 1, 2
 ```
 
 **/j** - Outer loop counter (for nested loops)
 
 ```mint
-> 3 ( 3 ( /i /j + . /N ) )
+3 ( 3 ( /i /j + . /N ) )
 // Prints: 0,1,2, 1,2,3, 2,3,4
 ```
 
@@ -897,8 +984,8 @@ Executes `body` `count` times.
 
 ```mint
 // Count down from 10
-> 10 counter !
-> /U (
+10 counter !
+/U (
     counter .
     counter 1 - counter !
     counter /W
@@ -911,12 +998,14 @@ The combination of `/U` with `/W` creates a while-loop pattern. `/U` pushes -1 t
 
 ```mint
 // Infinite loop with condition
-> 0 i !
-> /U (
+0 i !
+/U (
     i .
     i 1 + i !
-    i 5 > /W      // Break when i > 5
+    i 5 > /W
   )
+// Break when i > 5
+
 ```
 
 **Note:** A negative loop count without `/W` runs exactly once (treating it as a boolean "true").
@@ -933,16 +1022,16 @@ condition ( then_body ) /E ( else_body )
 
 ```mint
 // Simple if-then-else
-> 10 x !
-> x 5 > ( `x is large` ) /E ( `x is small` )
+10 x !
+x 5 > ( `x is large` ) /E ( `x is small` )
 
 // Check even or odd
-> 7 n !
-> n 2 /mod 0 = ( `even` ) /E ( `odd` )
+7 n !
+n 2 /mod 0 = ( `even` ) /E ( `odd` )
 
 // Absolute value
-> -42 n !
-> n 0 < ( n -1 * ) /E ( n ) .
+-42 n !
+n 0 < ( n -1 * ) /E ( n ) .
 ```
 
 ### Boolean Constants
@@ -951,9 +1040,12 @@ condition ( then_body ) /E ( else_body )
 **/F** - False (0)
 
 ```mint
-> /T .              // -1
-> /F .              // 0
-> 5 3 > /T = .      // -1 (true)
+/T .
+// -1
+/F .
+// 0
+5 3 > /T = .
+// -1 (true)
 ```
 
 ---
@@ -967,8 +1059,10 @@ Define reusable functions with letters **A** through **Z**.
 **Syntax:** `:Name body ;`
 
 ```mint
-> :D " * ;          // D = square function
-> 5 D .             // 25
+:D " * ;
+// D = square function
+5 D .
+// 25
 ```
 
 **Note:** The semicolon `;` is only meaningful for ending function definitions. Standalone semicolons outside function definitions are ignored.
@@ -976,11 +1070,14 @@ Define reusable functions with letters **A** through **Z**.
 ### Multi-Line Functions
 
 ```mint
-> :F
-... " *             // x²
-... 4 *             // 4x²
+:F
+... " *
+// x²
+... 4 *
+// 4x²
 ... ;
-> 3 F .             // 36 (4 * 3²)
+3 F .
+// 36 (4 * 3²)
 ```
 
 **Prompt:** The `...` prompt indicates capture mode for multi-line function definition.
@@ -989,25 +1086,28 @@ Define reusable functions with letters **A** through **Z**.
 
 **Square function:**
 ```mint
-> :S " * ;
-> 7 S .             // 49
+:S " * ;
+7 S .
+// 49
 ```
 
 **Cube function:**
 ```mint
-> :C " " * * ;
-> 4 C .             // 64
+:C " " * * ;
+4 C .
+// 64
 ```
 
 **Factorial:**
 ```mint
-> :F 1 result ! $ 1 + ( /i 1 + result * result ! ) result ;
-> 5 F .             // 120
+:F 1 result ! $ 1 + ( /i 1 + result * result ! ) result ;
+5 F .
+// 120
 ```
 
 **Fibonacci:**
 ```mint
-> :FIB
+:FIB
 ... 1 a ! 1 b !
 ... 2 - (
 ...   a b + c !
@@ -1016,25 +1116,28 @@ Define reusable functions with letters **A** through **Z**.
 ... )
 ... b
 ... ;
-> 10 FIB .          // 55 (10th Fibonacci number)
+10 FIB .
+// 55 (10th Fibonacci number)
 ```
 
 **Hypotenuse:**
 ```mint
-> :H " * $ " * + /sqrt ;
-> 3 4 H .           // 5 (√(3²+4²))
+:H " * $ " * + /sqrt ;
+3 4 H .
+// 5 (√(3²+4²))
 ```
 
 **Average:**
 ```mint
-> :AVG + 2 / ;
-> 10 20 AVG .       // 15
+:AVG + 2 / ;
+10 20 AVG .
+// 15
 ```
 
 ### List All Functions
 
 ```mint
-> list
+list
 ```
 
 Shows all defined functions with their bodies.
@@ -1049,17 +1152,22 @@ Shows all defined functions with their bodies.
 Effect: `n -- `
 
 ```mint
-> 42 .              // Prints: 42
+42 .
+// Prints: 42
 ```
 
 **Print Hexadecimal: ,**  
 Effect: `n -- `
 
 ```mint
-> 255 , /N          // Prints: 00FF
-> #DEAD , /N        // Prints: DEAD
-> -1 , /N           // Prints: FFFF (two's complement)
-> -256 , /N         // Prints: FF00 (two's complement)
+255 , /N
+// Prints: 00FF
+#DEAD , /N
+// Prints: DEAD
+-1 , /N
+// Prints: FFFF (two's complement)
+-256 , /N
+// Prints: FF00 (two's complement)
 ```
 
 **Note:** Hex output displays numbers as 16-bit unsigned values (0000-FFFF). Negative numbers are shown in two's complement representation.
@@ -1067,26 +1175,30 @@ Effect: `n -- `
 **Print Newline: /N**
 
 ```mint
-> 1 . 2 . 3 .       // Prints: 1 2 3 (on one line)
-> 1 . /N 2 . /N     // Prints: 1 \n 2 (on separate lines)
+1 . 2 . 3 .
+// Prints: 1 2 3 (on one line)
+1 . /N 2 . /N
+// Prints: 1 \n 2 (on separate lines)
 ```
 
 **Print Character: /C**  
 Effect: `ascii -- `
 
 ```mint
-> 65 /C             // Prints: A
-> 72 /C 105 /C      // Prints: Hi
+65 /C
+// Prints: A
+72 /C 105 /C
+// Prints: Hi
 ```
 
 **Print String: `text`**
 
 ```mint
-> `Hello, World!` /N
-Hello, World!
+`Hello, World!` /N
+// Hello, World!
 
-> `Result: ` 42 . /N
-Result: 42
+`Result: ` 42 . /N
+// Result: 42
 ```
 
 ### Input Operations
@@ -1097,7 +1209,8 @@ Effect: `-- ascii`
 Reads one character and pushes its ASCII code.
 
 ```mint
-> /K .              // Type 'A' → prints: 65
+/K .
+// Type 'A' → prints: 65
 ```
 
 **Read String: /KS**  
@@ -1106,9 +1219,12 @@ Effect: `-- char1 char2 ... charN count`
 Reads a string and pushes ASCII codes plus count.
 
 ```mint
-> /KS               // Type "Hi"
-> .                 // 2 (count)
-> /C /C             // Prints: iH (reverse order due to stack)
+/KS
+// Type "Hi"
+.
+// 2 (count)
+/C /C
+// Prints: iH (reverse order due to stack)
 ```
 
 ---
@@ -1120,7 +1236,8 @@ Reads a string and pushes ASCII codes plus count.
 Set by arithmetic operations (currently always 0 for 64-bit floats).
 
 ```mint
-> 5 3 + /c .        // 0
+5 3 + /c .
+// 0
 ```
 
 ### /r (Remainder/Overflow)
@@ -1128,7 +1245,8 @@ Set by arithmetic operations (currently always 0 for 64-bit floats).
 Set by division and multiplication (currently always 0 for floats).
 
 ```mint
-> 10 3 / /r .       // 0
+10 3 / /r .
+// 0
 ```
 
 ### /i (Loop Counter)
@@ -1136,7 +1254,8 @@ Set by division and multiplication (currently always 0 for floats).
 Current inner loop iteration (0-based).
 
 ```mint
-> 5 ( /i . /N )     // 0, 1, 2, 3, 4
+5 ( /i . /N )
+// 0, 1, 2, 3, 4
 ```
 
 ### /j (Outer Loop Counter)
@@ -1144,7 +1263,7 @@ Current inner loop iteration (0-based).
 Outer loop counter for nested loops.
 
 ```mint
-> 2 ( 3 ( /i /j + . /N ) )
+2 ( 3 ( /i /j + . /N ) )
 ```
 
 ---
@@ -1160,7 +1279,7 @@ Enable debug mode? (y/n): y
 
 Or toggle during session:
 ```mint
-> debug
+debug
 ```
 
 ### Debug Output Shows
@@ -1183,7 +1302,10 @@ mint_debug_YYYYMMDD_HHMMSS.log
 ### Example Debug Output
 
 ```mint
-> 5 3 + .
+5 3 + .
+
+
+//
 
 [DEBUG] Processing token: '5'
 [DEBUG] NUMBER: 5
@@ -1348,19 +1470,24 @@ mint_debug_YYYYMMDD_HHMMSS.log
 
 ```mint
 // Calculate: (5 + 3) × (10 - 2)
-> 5 3 + 10 2 - * .
-64
+5 3 + 10 2 - * .
+// 64
 ```
 
 ### Example 2: Variables and Formulas
 
 ```mint
 // Distance formula: d = √((x₂-x₁)² + (y₂-y₁)²)
-> 0 x1 ! 0 y1 !     // Point 1: (0,0)
-> 3 x2 ! 4 y2 !     // Point 2: (3,4)
-> x2 x1 - " *       // (x₂-x₁)²
-> y2 y1 - " * +     // + (y₂-y₁)²
-> /sqrt .           // 5
+0 x1 ! 0 y1 !
+// Point 1: (0,0)
+3 x2 ! 4 y2 !
+// Point 2: (3,4)
+x2 x1 - " *
+// (x₂-x₁)²
+y2 y1 - " * +
+// + (y₂-y₁)²
+/sqrt .
+// 5
 ```
 
 ### Example 3: Trigonometry
@@ -1368,62 +1495,72 @@ mint_debug_YYYYMMDD_HHMMSS.log
 ```mint
 // Calculate height of building from angle and distance
 // h = distance × tan(angle)
-> 100 distance !    // 100m from building
-> 30 angle !        // 30° angle of elevation
-> distance angle /rad /tan * .
-57.735              // Building is ~58m tall
+100 distance !
+// 100m from building
+30 angle !
+// 30° angle of elevation
+distance angle /rad /tan * .
+// 57.735
+// Building is ~58m tall
 ```
 
 ### Example 4: Arrays
 
 ```mint
 // Calculate average of array
-> [ 10 20 30 40 50 ] data !
-> 0 sum !
-> data /S count !
-> count ( data /i ? sum + sum ! )
-> sum count / .
-30
+[ 10 20 30 40 50 ] data !
+0 sum !
+data /S count !
+count ( data /i ? sum + sum ! )
+sum count / .
+// 30
 ```
 
 ### Example 5: Loops and Conditionals
 
 ```mint
 // Print even numbers from 0-10
-> 11 (
+11 (
     /i 2 /mod 0 = (
       /i . /N
     )
   )
-0
-2
-4
-6
-8
-10
+
+//0
+//2
+//4
+//6
+//8
+//10
 ```
 
 ### Example 6: Function Definition
 
 ```mint
 // Define and use a circle area function
-> :CIRCLE_AREA /pi $ " * * ;
-> 5 CIRCLE_AREA .   // Area with radius 5
-78.5398
-> 10 CIRCLE_AREA .  // Area with radius 10
-314.159
+:CIRCLE_AREA /pi $ " * * ;
+
+5 CIRCLE_AREA .
+// Area with radius 5  = 78.5398
+
+10 CIRCLE_AREA .
+// Area with radius 10  = 314.159
 ```
 
 ### Example 7: Nested Loops
 
 ```mint
 // Multiplication table
-> 5 ( 
+5 ( 
     5 (
-      /j 1 + /i 1 + * . 32 /C  // Print product and space
+      /j 1 + /i 1 + * . 32 /C
+// Print product and space
     )
-    /N                          // New line
+    /N
+// New line
   )
+
+//
 1 2 3 4 5 
 2 4 6 8 10 
 3 6 9 12 15 
@@ -1435,14 +1572,17 @@ mint_debug_YYYYMMDD_HHMMSS.log
 
 ```mint
 // Print first 10 Fibonacci numbers
-> 0 a ! 1 b !
-> a . /N b . /N
-> 8 (
+0 a ! 1 b !
+a . /N b . /N
+8 (
     a b + c !
     b a !
     c b !
     c . /N
   )
+
+
+//
 0
 1
 1
@@ -1459,43 +1599,49 @@ mint_debug_YYYYMMDD_HHMMSS.log
 
 ```mint
 // Find angle of point (3, 4) from origin
-> 4 3 /atan2 /deg .
-53.1301          // Angle is ~53.13 degrees
+ 4 3 /atan2 /deg .
+
+// 53.1301          // Angle is ~53.13 degrees
 
 // Find angle of point (-1, 1) from origin  
-> 1 -1 /atan2 /deg .
-135              // Angle in second quadrant
+1 -1 /atan2 /deg .
+
+// 135              // Angle in second quadrant
 ```
 
 ### Example 10: Prime Number Check
 
 ```mint
 // Check if 17 is prime
-> :IS_PRIME
-... " /sqrt /floor limit !
-... /T is_prime !
-... 2 (
-...   /i 2 + divisor !
-...   $ divisor /mod 0 = (
-...     /F is_prime !
-...   )
-...   divisor limit > /W
-... )
-... '
-... is_prime
-... ;
-> 17 IS_PRIME ( `Prime` ) /E ( `Not prime` )
-Prime
+:IS_PRIME
+   " /sqrt /floor limit !
+    /T is_prime !
+    2 (
+      /i 2 + divisor !
+      $ divisor /mod 0 = (
+        /F is_prime !
+      )
+      divisor limit > /W
+    )
+    '
+    is_prime    ;
+
+
+17 IS_PRIME ( `Prime` ) /E ( `Not prime` )
+// Prime
+
 ```
 
 ### Example 11: Temperature Converter
 
 ```mint
 // Celsius to Fahrenheit converter
-> :C2F 9 * 5 / 32 + ;
-> :F2C 32 - 5 * 9 / ;
-> 100 C2F .         // 212 (boiling point)
-> 32 F2C .          // 0 (freezing point)
+:C2F 9 * 5 / 32 + ;
+:F2C 32 - 5 * 9 / ;
+100 C2F .
+// 212 (boiling point)
+32 F2C .
+// 0 (freezing point)
 ```
 
 ---
@@ -1506,8 +1652,9 @@ Prime
 
 Enable debug mode to see stack changes:
 ```mint
-> debug
-> 5 3 + 2 *
+debug
+5 3 + 2 *
+//
 [DEBUG] STACK: [5]
 [DEBUG] STACK: [5, 3]
 [DEBUG] STACK: [8]
@@ -1519,17 +1666,20 @@ Enable debug mode to see stack changes:
 
 **Duplicate and use:**
 ```mint
-> 5 " * .           // Square: x × x
+5 " * .
+// Square: x × x
 ```
 
 **Keep copy for later:**
 ```mint
-> 10 " 5 + $ .      // Add 5, then print original
+10 " 5 + $ .
+// Add 5, then print original
 ```
 
 **Three-way comparison:**
 ```mint
-> 5 " 3 > $ 7 < & . // Check if 3 < 5 < 7
+5 " 3 > $ 7 < & .
+// Check if 3 < 5 < 7
 ```
 
 ### Error Handling
@@ -1558,49 +1708,61 @@ MINT will show errors for:
 
 Remember RPN order:
 ```mint
-> 10 5 - .          // Correct: 10 - 5 = 5
-> 5 10 - .          // Wrong order: 5 - 10 = -5
+10 5 - .
+// Correct: 10 - 5 = 5
+5 10 - .
+// Wrong order: 5 - 10 = -5
 ```
 
 ### Variable Storage
 
 Variable must come BEFORE `!`:
 ```mint
-> 42 x !            // Correct
-> x 42 !            // Wrong - stores 42's value to location 42
-> 42 ! x            // ERROR - ! requires variable before it
+42 x !
+// Correct
+x 42 !
+// Wrong - stores 42's value to location 42
+42 ! x
+// ERROR - ! requires variable before it
 ```
 
 ### Loop Counters
 
 Loop counters are 0-based:
 ```mint
-> 3 ( /i . )        // Prints: 0, 1, 2 (not 1, 2, 3)
+3 ( /i . )
+// Prints: 0, 1, 2 (not 1, 2, 3)
 ```
 
 ### Angle Units
 
 Trig functions use radians:
 ```mint
-> 90 /sin .         // Wrong - sin(90 radians)
-> 90 /rad /sin .    // Correct - sin(90°) = 1
+90 /sin .
+// Wrong - sin(90 radians)
+90 /rad /sin .
+// Correct - sin(90°) = 1
 ```
 
 ### Array Indexing
 
 Arrays use 0-based indexing:
 ```mint
-> [ 10 20 30 ] arr !
-> arr 0 ? .         // 10 (first element)
-> arr 1 ? .         // 20 (second element)
+[ 10 20 30 ] arr !
+arr 0 ? .
+// 10 (first element)
+arr 1 ? .
+// 20 (second element)
 ```
 
 ### Division Type
 
 Division is floating-point, not integer:
 ```mint
-> 10 3 / .          // 3.33333 (not 3)
-> 10 3 / /floor .   // 3 (use /floor for integer)
+10 3 / .
+// 3.33333 (not 3)
+10 3 / /floor .
+// 3 (use /floor for integer)
 ```
 
 ---
