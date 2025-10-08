@@ -1,8 +1,8 @@
 ## ----------------------------------------------------------------------
 ## MINT/Forth-like Minimal Interpreter in Octave with DEBUG MODE
-## Version 2.5 - Multi-line function definition support (ARRAY FIX)
+## Version 2.6 - Multi-char variables FULLY FIXED
 ## ----------------------------------------------------------------------
-function mint_octave_10()
+function mint_octave_12()
   clear global;
   global state;
 
@@ -11,22 +11,21 @@ function mint_octave_10()
 
   ## Interpreter state
   state.stack = [];
-  state.vars = zeros(1,26);
+  state.vars = containers.Map();  ## FIXED: Changed from array to Map for multi-char support
   state.heap = zeros(1,4096);
   state.heap_ptr = 1;
   state.dict = containers.Map();
   state.colon_defs = containers.Map();
-  state.last_var = -1;  ## Track last variable for storage
-  state.loop_i = 0;  ## Inner loop counter
-  state.loop_j = 0;  ## Outer loop counter
-  state.break_loop = false;  ## Break flag for /W
-  state.sys_c = 0;  ## Carry flag
-  state.sys_r = 0;  ## Remainder/overflow flag
-  state.debug = false;  ## DEBUG MODE FLAG
-  state.debug_file = -1;  ## Debug file handle (-1 means no file)
+  state.last_var = "";  ## FIXED: Changed from -1 to empty string
+  state.loop_i = 0;
+  state.loop_j = 0;
+  state.break_loop = false;
+  state.sys_c = 0;
+  state.sys_r = 0;
+  state.debug = false;
+  state.debug_file = -1;
 
-
-  ## NEW: Capture mode for multi-line function definitions
+  ## Capture mode for multi-line function definitions
   state.capture_mode = false;
   state.capture_buffer = "";
   state.capture_name = "";
@@ -38,46 +37,42 @@ function mint_octave_10()
   history = {};
   hist_ptr = 1;
 
-  printf("MINT-Octave REPL v2.5 (2025-10-01). Type 'bye' to quit.\n");
+  printf("MINT-Octave REPL v2.6 (2025-10-08). Type 'bye' to quit.\n");
 
   ## Ask user if they want debug mode
-debug_choice = input("Enable debug mode? (y/n): ", "s");
-if strcmpi(debug_choice, "y") || strcmpi(debug_choice, "yes")
-  state.debug = true;
+  debug_choice = input("Enable debug mode? (y/n): ", "s");
+  if strcmpi(debug_choice, "y") || strcmpi(debug_choice, "yes")
+    state.debug = true;
 
-  ## Open debug log file
-  debug_filename = sprintf("mint_debug_%s.log", datestr(now, "yyyymmdd_HHMMSS"));
-  state.debug_file = fopen(debug_filename, "w");
+    ## Open debug log file
+    debug_filename = sprintf("mint_debug_%s.log", datestr(now, "yyyymmdd_HHMMSS"));
+    state.debug_file = fopen(debug_filename, "w");
 
-  if state.debug_file == -1
-    printf("WARNING: Could not open debug file '%s'\n", debug_filename);
+    if state.debug_file == -1
+      printf("WARNING: Could not open debug file '%s'\n", debug_filename);
+    else
+      printf("\n*** DEBUG MODE ENABLED ***\n");
+      printf("Debug output will be written to: %s\n", debug_filename);
+    endif
+
+    printf("Debug output will show:\n");
+    printf("  - Token processing\n");
+    printf("  - Stack state\n");
+    printf("  - Variable changes\n");
+    printf("  - Function calls\n");
+    printf("  - Loop iterations\n");
+    printf("  - Capture mode status\n\n");
   else
-    printf("\n*** DEBUG MODE ENABLED ***\n");
-    printf("Debug output will be written to: %s\n", debug_filename);
+    state.debug = false;
+    printf("\n*** DEBUG MODE DISABLED ***\n\n");
   endif
 
-  printf("Debug output will show:\n");
-  printf("  - Token processing\n");
-  printf("  - Stack state\n");
-  printf("  - Variable changes\n");
-  printf("  - Function calls\n");
-  printf("  - Loop iterations\n");
-  printf("  - Capture mode status\n\n");
-else
-  state.debug = false;
-  printf("\n*** DEBUG MODE DISABLED ***\n\n");
-endif
-
-
-  ## --------------------------
   ## Main REPL Loop with Capture Mode Support
-  ## --------------------------
   while true
-    ## Show different prompt based on mode
     if state.capture_mode
-      printf("... ");  ## Continuation prompt in capture mode
+      printf("... ");
     else
-      printf("> ");    ## Normal prompt
+      printf("> ");
     endif
     fflush(stdout);
 
@@ -87,44 +82,34 @@ endif
       continue;
     endif
 
-    ## Handle quit command (only in immediate mode)
-if strcmpi(line, "bye") && !state.capture_mode
-  ## Close debug file if open
-  if state.debug && state.debug_file != -1
-    fclose(state.debug_file);
-    printf("Debug log saved.\n");
-  endif
-  break;
-endif
+    if strcmpi(line, "bye") && !state.capture_mode
+      if state.debug && state.debug_file != -1
+        fclose(state.debug_file);
+        printf("Debug log saved.\n");
+      endif
+      break;
+    endif
 
-
-    ## Store line in history
     history{end+1} = line;
     hist_ptr = numel(history)+1;
 
-    ## --------------------------
     ## Check if entering capture mode
-    ## --------------------------
     if !state.capture_mode
       trimmed = strtrim(line);
-      ## Look for :A through :Z at start of line
       if length(trimmed) >= 2 && trimmed(1) == ':' && trimmed(2) >= 'A' && trimmed(2) <= 'Z'
-        ## Entering capture mode
         state.capture_mode = true;
         state.capture_name = trimmed(2);
         state.capture_buffer = line;
 
         if state.debug
-  debug_print(sprintf("[DEBUG] >>> ENTERING CAPTURE MODE for function '%s'\n", state.capture_name));
-endif
+          debug_print(sprintf("[DEBUG] >>> ENTERING CAPTURE MODE for function '%s'\n", state.capture_name));
+        endif
 
-        ## Check if semicolon is on same line (single-line function)
         if any(strfind(line, ';'))
-          ## Complete function on one line
           state.capture_mode = false;
           try
             if state.debug
-             debug_print(sprintf("[DEBUG] SINGLE-LINE FUNCTION: %s\n", state.capture_buffer));
+              debug_print(sprintf("[DEBUG] SINGLE-LINE FUNCTION: %s\n", state.capture_buffer));
             endif
             interpret_line(state.capture_buffer);
             if state.debug
@@ -150,9 +135,7 @@ endif
       endif
     endif
 
-    ## --------------------------
     ## If in capture mode, accumulate lines
-    ## --------------------------
     if state.capture_mode
       state.capture_buffer = [state.capture_buffer, " ", line];
 
@@ -160,7 +143,6 @@ endif
         debug_print("[DEBUG] CAPTURE: accumulating line into buffer\n");
       endif
 
-      ## Check for semicolon to end capture
       if any(strfind(line, ';'))
         state.capture_mode = false;
 
@@ -169,7 +151,6 @@ endif
           debug_print(sprintf("[DEBUG] COMPLETE BUFFER: %s\n", state.capture_buffer));
         endif
 
-        ## Now interpret the complete function definition
         try
           interpret_line(state.capture_buffer);
           if state.debug
@@ -197,9 +178,7 @@ endif
       continue;
     endif
 
-    ## --------------------------
     ## Normal immediate mode execution
-    ## --------------------------
     try
       if state.debug
         debug_print(sprintf("\n=== EXECUTING LINE: %s ===\n", line));
@@ -225,7 +204,6 @@ endif
   endwhile
 endfunction
 
-
 ## --------------------------
 ## Built-in Dictionary Setup
 ## --------------------------
@@ -239,24 +217,17 @@ function add_builtin_words()
   state.dict("/") = @(s) math_div(s);
   state.dict("**") = @(s) math_power(s);
 
-  ## === NEW: Trigonometric functions ===
-  ## Basic trig (radians)
+  ## Trigonometric functions
   state.dict("/sin") = @(s) trig_sin(s);
   state.dict("/cos") = @(s) trig_cos(s);
   state.dict("/tan") = @(s) trig_tan(s);
-
-  ## Inverse trig (radians)
   state.dict("/asin") = @(s) trig_asin(s);
   state.dict("/acos") = @(s) trig_acos(s);
   state.dict("/atan") = @(s) trig_atan(s);
   state.dict("/atan2") = @(s) trig_atan2(s);
-
-  ## Hyperbolic trig
   state.dict("/sinh") = @(s) trig_sinh(s);
   state.dict("/cosh") = @(s) trig_cosh(s);
   state.dict("/tanh") = @(s) trig_tanh(s);
-
-  ## Inverse hyperbolic trig
   state.dict("/asinh") = @(s) trig_asinh(s);
   state.dict("/acosh") = @(s) trig_acosh(s);
   state.dict("/atanh") = @(s) trig_atanh(s);
@@ -264,8 +235,8 @@ function add_builtin_words()
   ## Trig constants and conversions
   state.dict("/pi") = @(s) push(s, pi);
   state.dict("/e") = @(s) push(s, exp(1));
-  state.dict("/deg") = @(s) rad_to_deg(s);  # /deg converts TO degrees
-  state.dict("/rad") = @(s) deg_to_rad(s);  # /rad converts TO radians
+  state.dict("/deg") = @(s) rad_to_deg(s);
+  state.dict("/rad") = @(s) deg_to_rad(s);
 
   ## Additional math functions
   state.dict("/sqrt") = @(s) math_sqrt(s);
@@ -312,22 +283,22 @@ function add_builtin_words()
   state.dict("!") = @(s) store_var(s);
 
   ## Loop constants and control
-  state.dict("/F") = @(s) push(s, 0);      ## False constant
-  state.dict("/T") = @(s) push(s, -1);     ## True constant
-  state.dict("/U") = @(s) push(s, -1);     ## Unlimited loop constant
-  state.dict("/W") = @(s) loop_while(s);   ## While - break if false
-  state.dict("/i") = @(s) get_loop_i(s);   ## Inner loop counter
-  state.dict("/j") = @(s) get_loop_j(s);   ## Outer loop counter
+  state.dict("/F") = @(s) push(s, 0);
+  state.dict("/T") = @(s) push(s, -1);
+  state.dict("/U") = @(s) push(s, -1);
+  state.dict("/W") = @(s) loop_while(s);
+  state.dict("/i") = @(s) get_loop_i(s);
+  state.dict("/j") = @(s) get_loop_j(s);
 
   ## System variables
-  state.dict("/c") = @(s) get_sys_c(s);    ## Carry flag
-  state.dict("/r") = @(s) get_sys_r(s);    ## Remainder/overflow flag
+  state.dict("/c") = @(s) get_sys_c(s);
+  state.dict("/r") = @(s) get_sys_r(s);
 
   ## I/O operations
-  state.dict("/C") = @(s) print_char(s);   ## Print character
-  state.dict("/N") = @(s) print_newline(s); ## Print newline
-  state.dict("/K") = @(s) read_char(s);    ## Read character
-  state.dict("/KS") = @(s) read_string(s);  ## Read string (extension)
+  state.dict("/C") = @(s) print_char(s);
+  state.dict("/N") = @(s) print_newline(s);
+  state.dict("/K") = @(s) read_char(s);
+  state.dict("/KS") = @(s) read_string(s);
 
   ## Print ops
   state.dict(".") = @(s) print_num(s);
@@ -344,18 +315,6 @@ function add_builtin_words()
   state.dict("debug") = @(s) toggle_debug(s);
 endfunction
 
-
-## --------------------------
-## Integer Division Helper
-## --------------------------
-function r = idiv_mint(a, b)
-  if b == 0
-    error("DIVISION BY ZERO");
-  endif
-  r = floor(a / b);  ## Integer division
-endfunction
-
-
 ## --------------------------
 ## Math Functions (set /c and /r flags)
 ## --------------------------
@@ -367,8 +326,8 @@ function s = math_add(s)
   [s,b]=pop(s); [s,a]=pop(s);
   result = a + b;
   s=push(s, result);
-  state.sys_c = 0;  ## Clear carry (no carry with 64-bit floats)
-  state.sys_r = 0;  ## Clear remainder
+  state.sys_c = 0;
+  state.sys_r = 0;
   if state.debug
     debug_after_op("+", sprintf("%g + %g = %g", a, b, result), s);
   endif
@@ -382,8 +341,8 @@ function s = math_sub(s)
   [s,b]=pop(s); [s,a]=pop(s);
   result = a - b;
   s=push(s, result);
-  state.sys_c = 0;  ## Clear carry
-  state.sys_r = 0;  ## Clear remainder
+  state.sys_c = 0;
+  state.sys_r = 0;
   if state.debug
     debug_after_op("-", sprintf("%g - %g = %g", a, b, result), s);
   endif
@@ -397,8 +356,8 @@ function s = math_mul(s)
   [s,b]=pop(s); [s,a]=pop(s);
   result = a * b;
   s=push(s, result);
-  state.sys_c = 0;  ## Clear carry
-  state.sys_r = 0;  ## Clear overflow (no overflow with 64-bit floats)
+  state.sys_c = 0;
+  state.sys_r = 0;
   if state.debug
     debug_after_op("*", sprintf("%g * %g = %g", a, b, result), s);
   endif
@@ -413,10 +372,10 @@ function s = math_div(s)
   if b == 0
     error("DIVISION BY ZERO");
   endif
-  result = a / b;  ## Floating-point division (64-bit)
+  result = a / b;
   s=push(s, result);
   state.sys_c = 0;
-  state.sys_r = 0;  ## No remainder for floating-point division
+  state.sys_r = 0;
   if state.debug
     debug_after_op("/", sprintf("%g / %g = %g", a, b, result), s);
   endif
@@ -434,7 +393,7 @@ function s = math_power(s)
     error("Cannot raise negative number (%g) to fractional power (%g) - would produce complex result", a, b);
   endif
 
-  result = a ^ b;  ## Octave's power operator
+  result = a ^ b;
 
   ## Safety check: ensure result is real
   if ~isreal(result)
@@ -442,8 +401,8 @@ function s = math_power(s)
   endif
 
   s=push(s, result);
-  state.sys_c = 0;  ## Clear carry
-  state.sys_r = 0;  ## Clear remainder
+  state.sys_c = 0;
+  state.sys_r = 0;
   if state.debug
     debug_after_op("**", sprintf("%g ** %g = %g", a, b, result), s);
   endif
@@ -568,13 +527,12 @@ function s = math_trunc(s)
     debug_before_op("/trunc", s);
   endif
   [s, val] = pop(s);
-  result = fix(val);  ## fix() truncates toward zero in Octave
+  result = fix(val);
   s = push(s, result);
   if state.debug
     debug_after_op("/trunc", sprintf("trunc(%g) = %g", val, result), s);
   endif
 endfunction
-
 
 ## --------------------------
 ## Trigonometric Functions
@@ -649,7 +607,7 @@ function s = trig_acos(s)
   result = acos(val);
   s = push(s, result);
   if state.debug
-    debug_after_op("/acos", sprintf("asin(%g) = %g", val, result), s);
+    debug_after_op("/acos", sprintf("acos(%g) = %g", val, result), s);
   endif
 endfunction
 
@@ -671,9 +629,9 @@ function s = trig_atan2(s)
   if state.debug
     debug_before_op("/atan2", s);
   endif
-  [s, x] = pop(s);  ## x coordinate
-  [s, y] = pop(s);  ## y coordinate
-  result = atan2(y, x);  ## atan2(y, x) in Octave
+  [s, x] = pop(s);
+  [s, y] = pop(s);
+  result = atan2(y, x);
   s = push(s, result);
   if state.debug
     debug_after_op("/atan2", sprintf("atan2(%g, %g) = %g", y, x, result), s);
@@ -832,7 +790,7 @@ function s = math_ln(s)
   if val <= 0
     error("ln domain error: cannot take natural log of non-positive number %g", val);
   endif
-  result = log(val);  ## Natural log in Octave
+  result = log(val);
   s = push(s, result);
   if state.debug
     debug_after_op("/ln", sprintf("ln(%g) = %g", val, result), s);
@@ -855,10 +813,6 @@ function s = math_log10(s)
   endif
 endfunction
 
-## ============================================================================
-## END OF TRIGONOMETRIC FUNCTIONS INSERTION
-## ============================================================================
-
 ## --------------------------
 ## Comparison Functions
 ## --------------------------
@@ -869,9 +823,9 @@ function s = compare_gt(s)
   endif
   [s,b]=pop(s); [s,a]=pop(s);
   if a > b
-    s=push(s,-1);  ## True in MINT is -1
+    s=push(s,-1);
   else
-    s=push(s,0);   ## False in MINT is 0
+    s=push(s,0);
   endif
   if state.debug
     debug_after_op(">", sprintf("%g > %g = %s", a, b, iif(a>b, "TRUE", "FALSE")), s);
@@ -885,9 +839,9 @@ function s = compare_lt(s)
   endif
   [s,b]=pop(s); [s,a]=pop(s);
   if a < b
-    s=push(s,-1);  ## True in MINT is -1
+    s=push(s,-1);
   else
-    s=push(s,0);   ## False in MINT is 0
+    s=push(s,0);
   endif
   if state.debug
     debug_after_op("<", sprintf("%g < %g = %s", a, b, iif(a<b, "TRUE", "FALSE")), s);
@@ -901,9 +855,9 @@ function s = compare_eq(s)
   endif
   [s,b]=pop(s); [s,a]=pop(s);
   if a == b
-    s=push(s,-1);  ## True in MINT is -1
+    s=push(s,-1);
   else
-    s=push(s,0);   ## False in MINT is 0
+    s=push(s,0);
   endif
   if state.debug
     debug_after_op("=", sprintf("%g = %g = %s", a, b, iif(a==b, "TRUE", "FALSE")), s);
@@ -919,7 +873,6 @@ function s = bitwise_and(s)
     debug_before_op("&", s);
   endif
   [s,b]=pop(s); [s,a]=pop(s);
-  ## Mask to 16 bits
   result = bitand(bitand(int64(a), 65535), bitand(int64(b), 65535));
   s=push(s, result);
   if state.debug
@@ -933,7 +886,6 @@ function s = bitwise_or(s)
     debug_before_op("|", s);
   endif
   [s,b]=pop(s); [s,a]=pop(s);
-  ## Mask to 16 bits
   a_16 = bitand(int64(a), 65535);
   b_16 = bitand(int64(b), 65535);
   result = bitor(a_16, b_16);
@@ -949,7 +901,6 @@ function s = bitwise_xor(s)
     debug_before_op("^", s);
   endif
   [s,b]=pop(s); [s,a]=pop(s);
-  ## Mask to 16 bits
   a_16 = bitand(int64(a), 65535);
   b_16 = bitand(int64(b), 65535);
   result = bitxor(a_16, b_16);
@@ -965,9 +916,7 @@ function s = bitwise_not(s)
     debug_before_op("~", s);
   endif
   [s,a]=pop(s);
-  ## MINT is 16-bit, so mask input to 16 bits first
   a_16bit = bitand(int64(a), int64(65535));
-  ## XOR with 0xFFFF (all 16 bits set) to flip all bits
   result = bitxor(a_16bit, int64(65535));
   s=push(s, result);
   if state.debug
@@ -981,7 +930,6 @@ function s = shift_left(s)
     debug_before_op("{", s);
   endif
   [s,a]=pop(s);
-  ## Mask to 16 bits before and after shift
   a_16 = bitand(int64(a), 65535);
   result = bitand(bitshift(a_16, 1), 65535);
   s=push(s, result);
@@ -996,7 +944,6 @@ function s = shift_right(s)
     debug_before_op("}", s);
   endif
   [s,a]=pop(s);
-  ## Mask to 16 bits before shift (logical shift, not arithmetic)
   a_16 = bitand(int64(a), 65535);
   result = bitshift(a_16, -1);
   s=push(s, result);
@@ -1006,20 +953,26 @@ function s = shift_right(s)
 endfunction
 
 ## --------------------------
-## Variable Functions
+## Variable Functions - FIXED for multi-char support
 ## --------------------------
 function s = store_var(s)
   global state;
-  if state.last_var < 1
+  if isempty(state.last_var)
     error("! requires a variable before it (e.g., 10 x !)");
   endif
-  [s, val] = pop(s);  ## Pop value from stack
-  var_name = char('a' + state.last_var - 1);
-  if state.debug
-    debug_print(sprintf("[DEBUG] STORE: %s = %g (was %g)\n", var_name, val, state.vars(state.last_var)));
+  [s, val] = pop(s);
+  
+  old_val = 0;
+  if isKey(state.vars, state.last_var)
+    old_val = state.vars(state.last_var);
   endif
-  state.vars(state.last_var) = val;  ## Store in variable
-  state.last_var = -1;  ## Reset
+  
+  if state.debug
+    debug_print(sprintf("[DEBUG] STORE: %s = %g (was %g)\n", state.last_var, val, old_val));
+  endif
+  
+  state.vars(state.last_var) = val;
+  state.last_var = "";
 endfunction
 
 ## --------------------------
@@ -1031,7 +984,7 @@ function s = loop_while(s)
   if state.debug
     debug_print(sprintf("[DEBUG] /W: condition=%g, break=%s\n", condition, iif(condition==0, "YES", "NO")));
   endif
-  if condition == 0  ## If false (0), break loop
+  if condition == 0
     state.break_loop = true;
   endif
 endfunction
@@ -1091,11 +1044,9 @@ endfunction
 
 function s = read_string(s)
   str = input("", "s");
-  ## Push each character's ASCII code onto stack, left to right
   for i = 1:length(str)
     s = push(s, double(str(i)));
   endfor
-  ## Push length as final value so user knows how many chars
   s = push(s, length(str));
 endfunction
 
@@ -1104,10 +1055,9 @@ endfunction
 ## --------------------------
 function s = get_array_item(s)
   global state;
-  [s, idx] = pop(s);  ## Pop index
-  [s, addr] = pop(s);  ## Pop array address
+  [s, idx] = pop(s);
+  [s, addr] = pop(s);
 
-  ## Array format in heap: [size, elem1, elem2, ...]
   size = state.heap(addr);
   if idx < 0 || idx >= size
     error("Array index out of bounds: %d (size=%d)", idx, size);
@@ -1122,11 +1072,10 @@ endfunction
 
 function s = set_array_item(s)
   global state;
-  [s, idx] = pop(s);  ## Pop index
-  [s, addr] = pop(s);  ## Pop array address
-  [s, val] = pop(s);  ## Pop value to store
+  [s, idx] = pop(s);
+  [s, addr] = pop(s);
+  [s, val] = pop(s);
 
-  ## Array format in heap: [size, elem1, elem2, ...]
   size = state.heap(addr);
   if idx < 0 || idx >= size
     error("Array index out of bounds: %d (size=%d)", idx, size);
@@ -1140,9 +1089,8 @@ endfunction
 
 function s = array_size(s)
   global state;
-  [s, addr] = pop(s);  ## Pop array address
+  [s, addr] = pop(s);
 
-  ## Array format in heap: [size, elem1, elem2, ...]
   size = state.heap(addr);
   if state.debug
     debug_print(sprintf("[DEBUG] ARRAY SIZE: addr=%g -> size=%g\n", addr, size));
@@ -1151,20 +1099,30 @@ function s = array_size(s)
 endfunction
 
 ## --------------------------
+## Helper function - ADDED for multi-char variable support
+## --------------------------
+function result = is_var_name(tok)
+  result = false;
+  len = length(tok);
+  if len >= 1 && len <= 3
+    result = all(tok >= 'a' & tok <= 'z');
+  endif
+endfunction
+
+## --------------------------
 ## Interpreter Functions
 ## --------------------------
 function interpret_line(line)
   global state;
 
-  ## NEW: Tokenize with backtick strings preserved as special tokens
   tokens = tokenize_with_strings(line);
 
   if state.debug
     debug_print("[DEBUG] TOKENS: ");
-  for i = 1:length(tokens)
-    debug_print(sprintf("'%s' ", tokens{i}));
-  endfor
-  debug_print("\n");
+    for i = 1:length(tokens)
+      debug_print(sprintf("'%s' ", tokens{i}));
+    endfor
+    debug_print("\n");
   endif
 
   compile_mode = false;
@@ -1178,11 +1136,10 @@ function interpret_line(line)
       debug_print(sprintf("[DEBUG] Processing token #%d: '%s'\n", i, tok));
     endif
 
-    ## Check if token starts with : (function definition)
     if length(tok) > 1 && tok(1) == ':'
       compile_mode = true;
       current_def = {};
-      current_def{1} = tok(2:end);  ## Extract function name (e.g., "F" from ":F")
+      current_def{1} = tok(2:end);
       if state.debug
         debug_print(sprintf("[DEBUG] FUNCTION DEF START: %s\n", current_def{1}));
       endif
@@ -1190,7 +1147,6 @@ function interpret_line(line)
       continue;
     elseif strcmp(tok, ";")
       if !compile_mode
-        ## Ignore standalone semicolons outside of function definitions
         if state.debug
           debug_print("[DEBUG] WARNING: Ignoring standalone ';' outside function definition\n");
         endif
@@ -1210,24 +1166,22 @@ function interpret_line(line)
       current_def{end+1} = tok;
       i++;
     else
-      ## Check for array creation [ ... ]
       if strcmp(tok, "[")
-        ## Collect array elements until ]
         array_elements = [];
         i++;
         while i <= length(tokens) && !strcmp(tokens{i}, "]")
           elem_tok = tokens{i};
-          ## Parse the element
-          if length(elem_tok) == 1 && elem_tok >= 'a' && elem_tok <= 'z'
-            ## Variable reference
-            idx = double(elem_tok) - double('a') + 1;
-            array_elements(end+1) = state.vars(idx);
+          ## FIXED: Check for multi-char variables
+          if is_var_name(elem_tok)
+            if isKey(state.vars, elem_tok)
+              array_elements(end+1) = state.vars(elem_tok);
+            else
+              array_elements(end+1) = 0;
+            endif
           elseif length(elem_tok) > 1 && elem_tok(1) == '#'
-            ## Hex number
             hex_str = elem_tok(2:end);
             array_elements(end+1) = hex2dec(hex_str);
           elseif !isnan(str2double(elem_tok))
-            ## Decimal number
             array_elements(end+1) = str2double(elem_tok);
           else
             error("Invalid array element: %s", elem_tok);
@@ -1239,7 +1193,6 @@ function interpret_line(line)
           error("Unclosed array - missing ]");
         endif
 
-        ## Create array in heap: [size, elem1, elem2, ...]
         arr_size = length(array_elements);
         heap_addr = state.heap_ptr;
         state.heap(heap_addr) = arr_size;
@@ -1249,20 +1202,16 @@ function interpret_line(line)
         state.heap_ptr = heap_addr + arr_size + 1;
 
         if state.debug
-  debug_print(sprintf("[DEBUG] ARRAY CREATE: addr=%g, size=%g, elements=[", heap_addr, arr_size));
-  for j = 1:arr_size
-    debug_print(sprintf("%g ", array_elements(j)));
-  endfor
-  debug_print("]\n");
+          debug_print(sprintf("[DEBUG] ARRAY CREATE: addr=%g, size=%g, elements=[", heap_addr, arr_size));
+          for j = 1:arr_size
+            debug_print(sprintf("%g ", array_elements(j)));
+          endfor
+          debug_print("]\n");
         endif
 
-        ## Push array address onto stack
         state.stack = push(state.stack, heap_addr);
         i++;
-      ## Check for loop syntax: number followed by (
       elseif strcmp(tok, "(")
-        ## Check if this is a conditional (if-then-else) or a loop
-        ## Look ahead for /E to determine
         has_else = false;
         depth = 0;
         for check_idx = i:length(tokens)
@@ -1271,7 +1220,6 @@ function interpret_line(line)
           elseif strcmp(tokens{check_idx}, ")")
             depth--;
             if depth == 0
-              ## Found matching close paren, check next token
               if check_idx < length(tokens) && strcmp(tokens{check_idx+1}, "/E")
                 has_else = true;
               endif
@@ -1281,18 +1229,14 @@ function interpret_line(line)
         endfor
 
         if has_else
-          ## This is an if-then-else conditional
           if state.debug
             debug_print("[DEBUG] CONDITIONAL: if-then-else detected\n");
           endif
           [then_body, then_end] = extract_loop_body(tokens, i);
-          ## Pattern is: ) /E (
-          ## then_end points to ), so /E is at then_end+1, ( is at then_end+2
           [else_body, else_end] = extract_loop_body(tokens, then_end+2);
           execute_conditional(then_body, else_body);
           i = else_end + 1;
         else
-          ## This is a regular loop
           if state.debug
             debug_print("[DEBUG] LOOP: regular loop detected\n");
           endif
@@ -1300,13 +1244,11 @@ function interpret_line(line)
           execute_loop(loop_body);
           i = end_idx + 1;
         endif
-      ## Check if this is a variable followed by ! (store operation)
-      elseif length(tok) == 1 && tok >= 'a' && tok <= 'z' && i < length(tokens) && strcmp(tokens{i+1}, "!")
-        ## This is a store operation - just set the variable index
-        idx = double(tok) - double('a') + 1;
-        state.last_var = idx;
+      ## FIXED: Check for variable followed by !
+      elseif is_var_name(tok) && i < length(tokens) && strcmp(tokens{i+1}, "!")
+        state.last_var = tok;
         if state.debug
-          debug_print(sprintf("[DEBUG] STORE PREP: variable '%s' (index %d) ready for !\n", tok, idx));
+          debug_print(sprintf("[DEBUG] STORE PREP: variable '%s' ready for !\n", tok));
         endif
         i++;
       else
@@ -1318,30 +1260,24 @@ function interpret_line(line)
 endfunction
 
 ## NEW FUNCTION: Tokenize preserving backtick strings and handling comments
-## FIXED: Split consecutive special characters into individual tokens
 function tokens = tokenize_with_strings(line)
   tokens = {};
   i = 1;
   current_token = "";
 
-  ## Define single-character operators that should always be separate tokens
-  single_char_ops = '{};[]()''\"$%!.,~&|^<>=+*/';  ## Removed - from here
+  single_char_ops = '{};[]()''\"$%!.,~&|^<>=+*/';
 
   while i <= length(line)
     ch = line(i);
 
-    ## Check for comment marker //
     if i <= length(line)-1 && strcmp(line(i:i+1), '//')
-      ## Save any accumulated token
       if !isempty(current_token)
         tokens{end+1} = strtrim(current_token);
       endif
       break;
     endif
 
-    ## NEW: Check for negative number (- followed immediately by digit)
     if ch == '-' && i < length(line) && isstrprop(line(i+1), 'digit')
-      ## This is a negative number, accumulate it
       if !isempty(current_token)
         tokens{end+1} = strtrim(current_token);
         current_token = "";
@@ -1351,11 +1287,9 @@ function tokens = tokenize_with_strings(line)
       continue;
     endif
 
-    ## Check for multi-char operators starting with /
     if ch == '/' && i < length(line)
       next_ch = line(i+1);
 
-      ## Check for six-character operators first
       if i <= length(line)-5
         six_char = line(i:i+5);
         if any(strcmp(six_char, {'/atan2', '/asinh', '/acosh', '/atanh', '/floor', '/round', '/trunc'}))
@@ -1369,7 +1303,6 @@ function tokens = tokenize_with_strings(line)
         endif
       endif
 
-      ## Check for five-character operators
       if i <= length(line)-4
         five_char = line(i:i+4);
         if any(strcmp(five_char, {'/sinh', '/cosh', '/tanh', '/asin', '/acos', '/atan', '/sqrt', '/ceil', '/sign'}))
@@ -1383,7 +1316,6 @@ function tokens = tokenize_with_strings(line)
         endif
       endif
 
-      ## Check for four-character operators
       if i <= length(line)-3
         four_char = line(i:i+3);
         if any(strcmp(four_char, {'/sin', '/cos', '/tan', '/abs', '/exp', '/log', '/deg', '/rad', '/mod', '/min', '/max'}))
@@ -1397,7 +1329,6 @@ function tokens = tokenize_with_strings(line)
         endif
       endif
 
-      ## Check for three-character operators
       if i <= length(line)-2
         three_char = line(i:i+2);
         if any(strcmp(three_char, {'/CS', '/pi', '/ln'}))
@@ -1411,7 +1342,6 @@ function tokens = tokenize_with_strings(line)
         endif
       endif
 
-      ## Then check for two-character operators (single letter after /)
       if any(next_ch == 'NWEFTUijcrhszkVCKDSAIOPGXe')
         if !isempty(current_token)
           tokens{end+1} = strtrim(current_token);
@@ -1445,7 +1375,6 @@ function tokens = tokenize_with_strings(line)
       endif
       i++;
     elseif ch == '-'
-      ## Minus sign not followed by digit - treat as operator
       if !isempty(current_token)
         tokens{end+1} = strtrim(current_token);
         current_token = "";
@@ -1453,7 +1382,6 @@ function tokens = tokenize_with_strings(line)
       tokens{end+1} = ch;
       i++;
     elseif ch == '*' && i < length(line) && line(i+1) == '*'
-      ## Power operator ** - MUST come before single char ops check
       if !isempty(current_token)
         tokens{end+1} = strtrim(current_token);
         current_token = "";
@@ -1461,7 +1389,6 @@ function tokens = tokenize_with_strings(line)
       tokens{end+1} = '**';
       i = i + 2;
     elseif ch == '.' && i < length(line) && isstrprop(line(i+1), 'digit')
-      ## Decimal point followed by digit - part of a number
       current_token = [current_token, ch];
       i++;
     elseif any(ch == single_char_ops)
@@ -1508,18 +1435,13 @@ endfunction
 function execute_loop(body)
   global state;
 
-  ## Pop loop count from stack
   [state.stack, count] = pop(state.stack);
 
   if state.debug
     debug_print(sprintf("[DEBUG] LOOP START: count=%g, stack_depth=%d\n", count, length(state.stack)));
   endif
 
-  ## Handle negative numbers and unlimited loops
-  ## -1 from /T or comparisons means "run once" (truthy)
-  ## /U with /W creates unlimited loop pattern
   if count < 0
-    ## Check if body contains /W (while break) for unlimited loop
     has_while = false;
     for i = 1:length(body)
       if strcmp(body{i}, "/W")
@@ -1529,47 +1451,39 @@ function execute_loop(body)
     endfor
 
     if has_while
-      count = 999999;  ## Unlimited loop with /W break
-      if state.debug
-        printf("[DEBUG] LOOP: boolean true, run once\n");
-      endif
+      count = 999999;
     else
-      count = 1;  ## Boolean true (-1) means run once
+      count = 1;
       if state.debug
-        printf("[DEBUG] LOOP: boolean true, run once\n");
+        debug_print("[DEBUG] LOOP: boolean true, run once\n");
       endif
     endif
   endif
 
-  ## Save current loop counters for nested loops
   saved_i = state.loop_i;
   saved_j = state.loop_j;
 
-  ## Current inner loop becomes outer loop for any nested loops
   state.loop_j = state.loop_i;
 
-  ## Execute loop
   for loop_idx = 0:(count-1)
     state.loop_i = loop_idx;
     state.break_loop = false;
 
     if state.debug
       debug_print(sprintf("[DEBUG] LOOP ITERATION: i=%d, j=%d\n", state.loop_i, state.loop_j));
-  debug_show_stack();
+      debug_show_stack();
     endif
 
-    ## Process body tokens (which may contain nested loops)
     execute_token_sequence(body);
 
     if state.break_loop
       if state.debug
         debug_print(sprintf("[DEBUG] LOOP BREAK: exiting at iteration %d\n", loop_idx));
       endif
-      break;  ## Break out of loop
+      break;
     endif
   endfor
 
-  ## Restore loop counters
   state.loop_i = saved_i;
   state.loop_j = saved_j;
 
@@ -1582,7 +1496,6 @@ endfunction
 function execute_conditional(then_body, else_body)
   global state;
 
-  ## Pop condition from stack
   if isempty(state.stack)
     error("Conditional requires a condition on stack");
   endif
@@ -1592,10 +1505,9 @@ function execute_conditional(then_body, else_body)
     debug_print(sprintf("[DEBUG] CONDITIONAL: condition=%g, taking %s branch\n", condition, iif(condition!=0, "THEN", "ELSE")));
   endif
 
-  ## Execute then or else block based on condition
-  if condition != 0  ## True (non-zero)
+  if condition != 0
     execute_token_sequence(then_body);
-  else  ## False (zero)
+  else
     execute_token_sequence(else_body);
   endif
 endfunction
@@ -1612,24 +1524,22 @@ function execute_token_sequence(tokens)
       debug_print(sprintf("[DEBUG] SEQ token #%d: '%s'\n", i, tok));
     endif
 
-    ## Check for array creation [ ... ]
     if strcmp(tok, "[")
-      ## Collect array elements until ]
       array_elements = [];
       i++;
       while i <= length(tokens) && !strcmp(tokens{i}, "]")
         elem_tok = tokens{i};
-        ## Parse the element
-        if length(elem_tok) == 1 && elem_tok >= 'a' && elem_tok <= 'z'
-          ## Variable reference
-          idx = double(elem_tok) - double('a') + 1;
-          array_elements(end+1) = state.vars(idx);
+        ## FIXED: Check for multi-char variables
+        if is_var_name(elem_tok)
+          if isKey(state.vars, elem_tok)
+            array_elements(end+1) = state.vars(elem_tok);
+          else
+            array_elements(end+1) = 0;
+          endif
         elseif length(elem_tok) > 1 && elem_tok(1) == '#'
-          ## Hex number
           hex_str = elem_tok(2:end);
           array_elements(end+1) = hex2dec(hex_str);
         elseif !isnan(str2double(elem_tok))
-          ## Decimal number
           array_elements(end+1) = str2double(elem_tok);
         else
           error("Invalid array element: %s", elem_tok);
@@ -1641,7 +1551,6 @@ function execute_token_sequence(tokens)
         error("Unclosed array - missing ]");
       endif
 
-      ## Create array in heap: [size, elem1, elem2, ...]
       arr_size = length(array_elements);
       heap_addr = state.heap_ptr;
       state.heap(heap_addr) = arr_size;
@@ -1650,12 +1559,9 @@ function execute_token_sequence(tokens)
       endfor
       state.heap_ptr = heap_addr + arr_size + 1;
 
-      ## Push array address onto stack
       state.stack = push(state.stack, heap_addr);
       i++;
     elseif strcmp(tok, "(")
-      ## Check if this is a conditional (if-then-else) or a loop
-      ## Look ahead for /E to determine
       has_else = false;
       depth = 0;
       for check_idx = i:length(tokens)
@@ -1664,7 +1570,6 @@ function execute_token_sequence(tokens)
         elseif strcmp(tokens{check_idx}, ")")
           depth--;
           if depth == 0
-            ## Found matching close paren, check next token
             if check_idx < length(tokens) && strcmp(tokens{check_idx+1}, "/E")
               has_else = true;
             endif
@@ -1674,32 +1579,29 @@ function execute_token_sequence(tokens)
       endfor
 
       if has_else
-        ## This is an if-then-else conditional
         [then_body, then_end] = extract_loop_body(tokens, i);
-        ## Pattern is: ) /E (
-        ## then_end points to ), so /E is at then_end+1, ( is at then_end+2
         [else_body, else_end] = extract_loop_body(tokens, then_end+2);
         execute_conditional(then_body, else_body);
         i = else_end + 1;
       else
-        ## This is a regular loop
         [loop_body, end_idx] = extract_loop_body(tokens, i);
         execute_loop(loop_body);
         i = end_idx + 1;
       endif
-    ## Check if this is a variable followed by ! (store operation)
-    elseif length(tok) == 1 && tok >= 'a' && tok <= 'z' && i < length(tokens) && strcmp(tokens{i+1}, "!")
-      ## This is a store operation - just set the variable index
-      idx = double(tok) - double('a') + 1;
-      state.last_var = idx;
+    ## FIXED: Check for variable followed by !
+    elseif is_var_name(tok) && i < length(tokens) && strcmp(tokens{i+1}, "!")
+      state.last_var = tok;
+      if state.debug
+        debug_print(sprintf("[DEBUG] STORE PREP: variable '%s' ready for !\n", tok));
+      endif
       i++;
-      continue;  ## Skip executing this token
+      continue;
     else
       execute_token(tok);
       i++;
 
       if state.break_loop
-        return;  ## Propagate break upwards
+        return;
       endif
     endif
   endwhile
@@ -1708,9 +1610,7 @@ endfunction
 function execute_token(tok)
   global state;
 
-  ## NEW: Handle backtick strings
   if length(tok) >= 2 && tok(1) == '`' && tok(end) == '`'
-    ## Extract and print the string content
     str_content = tok(2:end-1);
     if state.debug
       debug_print(sprintf("[DEBUG] STRING: printing '%s'\n", str_content));
@@ -1719,7 +1619,6 @@ function execute_token(tok)
     return;
   endif
 
-  ## Handle array creation [...]
   if length(tok) >= 1 && tok(1) == '['
     error("Array syntax error: use spaces like [ 1 2 3 ]");
   endif
@@ -1735,16 +1634,19 @@ function execute_token(tok)
       debug_print(sprintf("[DEBUG] BUILTIN: %s\n", tok));
     endif
     state.stack = state.dict(tok)(state.stack);
-  elseif length(tok) == 1 && tok >= 'a' && tok <= 'z'
-    ## Single lowercase letter variable (a-z)
-    idx = double(tok) - double('a') + 1;  ## Convert 'a'->1, 'b'->2, etc.
-    state.last_var = idx;  ## Remember which variable for potential storage
-    if state.debug
-      debug_print(sprintf("[DEBUG] VARIABLE PUSH: %s = %g\n", tok, state.vars(idx)));
+  ## FIXED: Check for multi-char variable names
+  ## NOTE: We do NOT set last_var here - that's only done when preparing to store
+  elseif is_var_name(tok)
+    if isKey(state.vars, tok)
+      val = state.vars(tok);
+    else
+      val = 0;
     endif
-    state.stack = push(state.stack, state.vars(idx));
+    if state.debug
+      debug_print(sprintf("[DEBUG] VARIABLE READ: %s = %g\n", tok, val));
+    endif
+    state.stack = push(state.stack, val);
   elseif length(tok) > 1 && tok(1) == '#'
-    ## Hexadecimal number (e.g., #FF, #1F3A)
     hex_str = tok(2:end);
     num = hex2dec(hex_str);
     if state.debug
@@ -1752,7 +1654,6 @@ function execute_token(tok)
     endif
     state.stack = push(state.stack, num);
   elseif !isnan(str2double(tok))
-    ## Support 64-bit floating point numbers
     num = str2double(tok);
     if state.debug
       debug_print(sprintf("[DEBUG] NUMBER: %g\n", num));
@@ -1776,11 +1677,6 @@ function [s,val] = pop(s)
   endif
   val = s(end);
   s(end)=[];
-endfunction
-
-function s = binop(s,op)
-  [s,b]=pop(s); [s,a]=pop(s);
-  s=push(s,op(a,b));
 endfunction
 
 function s = drop(s)
@@ -1843,7 +1739,7 @@ function s = clear_stack(s)
   if state.debug
     debug_print(sprintf("[DEBUG] /CS: clearing stack (had %d items)\n", length(s)));
   endif
-  s = [];  ## Clear the entire stack
+  s = [];
 endfunction
 
 ## --------------------------
@@ -1851,17 +1747,15 @@ endfunction
 ## --------------------------
 function s = print_num(s)
   [s,a]=pop(s);
-  disp(a);  ## Use disp() to respect format long setting
+  disp(a);
 endfunction
 
 function s = print_hex(s)
   [s,a]=pop(s);
-  ## Convert to unsigned 16-bit for proper hex display
   if a < 0
-    ## Two's complement: convert negative to positive 16-bit equivalent
     a_unsigned = bitand(int64(a), int64(65535));
   else
-    a_unsigned = mod(int64(a), 65536);  ## Wrap to 16-bit range
+    a_unsigned = mod(int64(a), 65536);
   endif
   printf("%04X ", a_unsigned);
 endfunction
@@ -1882,7 +1776,6 @@ function s = list_functions(s)
       fname = func_names{i};
       fbody = state.colon_defs(fname);
 
-      ## Reconstruct the function definition
       printf("  :%s ", fname);
       for j = 1:length(fbody)
         printf("%s ", fbody{j});
@@ -1900,7 +1793,6 @@ function s = toggle_debug(s)
   state.debug = !state.debug;
 
   if state.debug
-    ## Open debug log file
     debug_filename = sprintf("mint_debug_%s.log", datestr(now, "yyyymmdd_HHMMSS"));
     state.debug_file = fopen(debug_filename, "w");
 
@@ -1911,7 +1803,6 @@ function s = toggle_debug(s)
       printf("Debug output will be written to: %s\n", debug_filename);
     endif
   else
-    ## Close debug file if open
     if state.debug_file != -1
       fclose(state.debug_file);
       printf("Debug log saved.\n");
@@ -1922,7 +1813,7 @@ function s = toggle_debug(s)
 endfunction
 
 ## --------------------------
-## Help Function
+## Help Function - COMPLETE VERSION
 ## --------------------------
 function s = show_help(s)
   printf("\n");
@@ -1934,7 +1825,7 @@ function s = show_help(s)
   printf("  Decimal:      123, -456, 3.14159, 1.23e+36  (64-bit floating point)\n");
   printf("  Hexadecimal:  #FF, #1F3A, #FFFF  (prefix with #, displayed as 0000-FFFF)\n");
   printf("  Display:      format long (15-16 significant digits for scientific work)\n");
-  printf("  Range:        ±1.8e308 (much larger than original MINT's 16-bit limit)\n");
+  printf("  Range:        Â±1.8e308 (much larger than original MINT's 16-bit limit)\n");
   printf("  Arrays:       Support both integers and floating point numbers\n");
   printf("  Note:         This Octave version uses 64-bit floats, not 16-bit integers\n\n");
 
@@ -2046,18 +1937,15 @@ endfunction
 ## DEBUG FUNCTIONS - Can be toggled on/off at startup or with 'debug'
 ## ========================================================================
 
-## Helper function to write debug output to both screen and file
 function debug_print(msg)
   global state;
-  printf("%s", msg);  ## Always print to screen
+  printf("%s", msg);
 
-  ## Also write to file if debug mode is on and file is open
   if state.debug && state.debug_file != -1
     fprintf(state.debug_file, "%s", msg);
-    fflush(state.debug_file);  ## Ensure immediate write
+    fflush(state.debug_file);
   endif
 endfunction
-
 
 function debug_before_op(op, stack)
   debug_print(sprintf("[DEBUG] BEFORE %s: stack=", op));
@@ -2093,23 +1981,11 @@ endfunction
 function debug_show_vars()
   global state;
   debug_print("[DEBUG] VARIABLES:\n");
-  for i = 1:26
-    if state.vars(i) != 0
-      debug_print(sprintf("  %c = %g\n", char('a' + i - 1), state.vars(i)));
-    endif
+  var_names = keys(state.vars);
+  for i = 1:length(var_names)
+    vname = var_names{i};
+    debug_print(sprintf("  %s = %g\n", vname, state.vars(vname)));
   endfor
-endfunction
-
-function debug_show_heap()
-  global state;
-  debug_print(sprintf("[DEBUG] HEAP: ptr=%d, used=%d bytes\n", state.heap_ptr, state.heap_ptr-1));
-  if state.heap_ptr > 1
-    debug_print("  First 20 heap entries: ");
-    for i = 1:min(20, state.heap_ptr-1)
-      debug_print(sprintf("%g ", state.heap(i)));
-    endfor
-    debug_print("\n");
-  endif
 endfunction
 
 function debug_show_final_state()
