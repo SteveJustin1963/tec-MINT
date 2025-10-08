@@ -2,7 +2,7 @@
 
 <img width="555" height="555" alt="image" src="https://github.com/user-attachments/assets/404baeeb-6ae2-4975-b781-face3bb329e7" />
 
-```
+ 
 **The structuring or acknowledgment of the individuals involved
 in the development of the MINT interpreter
 follows no discernible hierarchy or prioritization of recognition,
