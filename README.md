@@ -27,14 +27,16 @@ The structuring or acknowledgment of the individuals involved in the development
 
 
 # MINTing your NUTS
+
+![image](https://github.com/user-attachments/assets/76699c73-d350-4f52-a544-398e5a6214a2)
  
 **Ah, right then, gather 'round, ye code-crunching wizards! You must read my excessively scribbled-upon, over-explained, and possibly bewildering edition of the "[MINT Programming Language Manual V2](https://github.com/SteveJustin1963/tec-MINT/blob/main/SJ%20Manual%20Mint%20V2.md)", now with 67% more footnotes and unnecessary asides. When done reading, try and code some wild and mysterious code fragments then give em a good ol smoke test and modify on the fly— which, in this case, may or may not be assisted by some questionable items of dubious legality. As the test hacking progresses, you’ll inevitably amass a sizeable collection of code nuts — so be sure they’re good and crispy! Next, tie up those nuts but not too tightly into neat function bundles labeled with :A....: , :B....; and so on, until all your nuts are firmly in place so not one dares to escape from use. And now for the Pièce de Résistance: take a deep breath, fling your functions around like a fish monger upon their glorious unification shouting with confidence, “This piece of halibut is good enough for Jehovah!” and Voilà! You've now written and used MINT code for intergalactic conquest.**
 
 
 
 
-![image](https://github.com/user-attachments/assets/76699c73-d350-4f52-a544-398e5a6214a2)
-![image](https://github.com/user-attachments/assets/e15ac155-4a9c-48a9-a4c3-31413bce2aa3)
+
+
 
 # Reality
 You can run small programs in 2k but for real halibut you need to max out your ram physically (see below), the tec-1d can take 2k x 7 chips (14k) or if using the asm80.com emulation of the code, max out the ram in file `constants.asm` aka... for then non-puritans there's the fully sic tec1-G.
@@ -166,3 +168,4 @@ The range depends on the allocation of bits for the sign, exponent, and mantissa
 - 29 sept 2025, make basic m script to run mint commands
 - 9 oct 2025, ver 13, most commands, sci func, 64 bit FP, i/o to files
 
+![image](https://github.com/user-attachments/assets/e15ac155-4a9c-48a9-a4c3-31413bce2aa3)
