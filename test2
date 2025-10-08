@@ -185,7 +185,7 @@ ZZZ 200 T
 F3 65 T
 
 `=== PARSING TEST: STACK OPS WITH VARS ===` /N
-100 val! val " 200 T
+100 val! val " + 200 T
 10 a! 20 b! a b $ 10 T
 
 `=== ALL PARSING TESTS COMPLETE ===` /N
