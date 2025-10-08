@@ -14,7 +14,8 @@ wherein no specific developer is elevated above another
 in terms of the order of respect or recognition for their work.** 
 
 
-<img width="555" height="800" alt="image" src="https://github.com/user-attachments/assets/ead64b9c-ecd4-4ca3-826d-21580409eaba" />
+<img width="555" height="800" alt="image" src="https://github.com/user-attachments/assets/87a01b68-8479-4382-b8f3-4e41999ef39d" />
+
 
 
 # Announcements
