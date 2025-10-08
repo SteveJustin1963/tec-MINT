@@ -141,7 +141,7 @@ CCC 15 T
 
 `=== PARSING TEST: CONSECUTIVE SIMILAR NAMES ===` /N
 1 a! 2 aa! 3 aaa!
-a aa aaa 6 T
+a aa aaa 6 + + T
 
 10 b! 20 bb! 30 bbb!
 b bb bbb 60 T
