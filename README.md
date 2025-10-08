@@ -2,6 +2,7 @@
 
 <img width="555" height="555" alt="image" src="https://github.com/user-attachments/assets/404baeeb-6ae2-4975-b781-face3bb329e7" />
 
+
  
 **The structuring or acknowledgment of the individuals involved
 in the development of the MINT interpreter
@@ -11,6 +12,7 @@ devoid of any preordained or systematic reverence.
 This lack of sequentiality reflects an egalitarian or arbitrary approach,
 wherein no specific developer is elevated above another
 in terms of the order of respect or recognition for their work.** 
+
 
 <img width="555" height="800" alt="image" src="https://github.com/user-attachments/assets/ead64b9c-ecd4-4ca3-826d-21580409eaba" />
 
