@@ -1,0 +1,192 @@
+:T e! a! a e = ( `PASS` ) /E ( `FAIL ` a . ` expected ` e . ) /N ;
+
+`=== PARSING TEST: 1-CHAR VARIABLES ===` /N
+1 a! a 1 T
+2 b! b 2 T
+26 z! z 26 T
+
+`=== PARSING TEST: 2-CHAR VARIABLES ===` /N
+10 aa! aa 10 T
+11 ab! ab 11 T
+12 az! az 12 T
+13 ba! ba 13 T
+14 zz! zz 14 T
+
+`=== PARSING TEST: 3-CHAR VARIABLES ===` /N
+20 aaa! aaa 20 T
+21 aab! aab 21 T
+22 abc! abc 22 T
+23 xyz! xyz 23 T
+24 zzz! zzz 24 T
+
+`=== PARSING TEST: MIXED LENGTH VARS IN EXPRESSION ===` /N
+5 x! 10 yy! 15 zzz! x yy zzz + + 30 T
+
+`=== PARSING TEST: SIMILAR VARIABLE NAMES ===` /N
+1 a! 2 aa! 3 aaa! a aa aaa + + 6 T
+10 x! 20 xx! 30 xxx! x xx xxx + + 60 T
+7 z! 8 zz! 9 zzz! z zz zzz + + 24 T
+
+`=== PARSING TEST: 1-CHAR FUNCTIONS ===` /N
+:A 100 ;
+A 100 T
+
+:Z 200 ;
+Z 200 T
+
+`=== PARSING TEST: 2-CHAR FUNCTIONS ===` /N
+:AA 10 20 + ;
+AA 30 T
+
+:AB 5 3 - ;
+AB 2 T
+
+:ZZ 7 8 * ;
+ZZ 56 T
+
+`=== PARSING TEST: 3-CHAR FUNCTIONS ===` /N
+:AAA 100 200 + ;
+AAA 300 T
+
+:ABC 10 5 / ;
+ABC 2 T
+
+:XYZ 9 2 ** ;
+XYZ 81 T
+
+:ZZZ 50 10 - ;
+ZZZ 40 T
+
+`=== PARSING TEST: SIMILAR FUNCTION NAMES ===` /N
+:A 1 ;
+:AA 2 ;
+:AAA 3 ;
+A AA AAA + + 6 T
+
+:Z 10 ;
+:ZZ 20 ;
+:ZZZ 30 ;
+Z ZZ ZZZ + + 60 T
+
+`=== PARSING TEST: FUNCTIONS WITH PARAMETERS ===` /N
+:ADD x y + ;
+5 x! 10 y! ADD 15 T
+
+:MUL aa bb * ;
+3 aa! 7 bb! MUL 21 T
+
+:SUB xxx yyy - ;
+50 xxx! 12 yyy! SUB 38 T
+
+`=== PARSING TEST: NESTED FUNCTION CALLS ===` /N
+:F1 10 ;
+:F2 F1 20 + ;
+:F3 F2 30 + ;
+F3 60 T
+
+:G1 5 ;
+:GG G1 G1 + ;
+:GGG GG GG + ;
+GGG 20 T
+
+`=== PARSING TEST: ARRAYS WITH 1-CHAR VARS ===` /N
+1 a! 2 b! 3 c!
+[a b c] r! r 0 ? r 1 ? r 2 ? + + 6 T
+
+`=== PARSING TEST: ARRAYS WITH 2-CHAR VARS ===` /N
+10 aa! 20 bb! 30 cc!
+[aa bb cc] rr! rr 0 ? rr 1 ? rr 2 ? + + 60 T
+
+`=== PARSING TEST: ARRAYS WITH 3-CHAR VARS ===` /N
+100 aaa! 200 bbb! 300 ccc!
+[aaa bbb ccc] rrr! rrr 0 ? rrr 1 ? rrr 2 ? + + 600 T
+
+`=== PARSING TEST: MIXED LENGTH IN ARRAYS ===` /N
+1 a! 2 bb! 3 ccc!
+[a bb ccc] m! m 0 ? m 1 ? m 2 ? + + 6 T
+
+`=== PARSING TEST: VARS IN LOOPS 1-CHAR ===` /N
+0 s! 5 ( s /i + s! ) s 10 T
+
+`=== PARSING TEST: VARS IN LOOPS 2-CHAR ===` /N
+0 ss! 5 ( ss /i + ss! ) ss 10 T
+
+`=== PARSING TEST: VARS IN LOOPS 3-CHAR ===` /N
+0 sss! 5 ( sss /i + sss! ) sss 10 T
+
+`=== PARSING TEST: VARS IN CONDITIONALS ===` /N
+10 x! x 5 > ( 1 ) /E ( 0 ) 1 T
+20 yy! yy 25 < ( 1 ) /E ( 0 ) 1 T
+30 zzz! zzz 30 = ( 1 ) /E ( 0 ) 1 T
+
+`=== PARSING TEST: FUNCTION WITH LOOPS ===` /N
+:SUM n! 0 t! n ( t /i + t! ) t ;
+10 SUM 45 T
+
+:SM2 nn! 0 tt! nn ( tt /i + tt! ) tt ;
+10 SM2 45 T
+
+:SM3 nnn! 0 ttt! nnn ( ttt /i + ttt! ) ttt ;
+10 SM3 45 T
+
+`=== PARSING TEST: EDGE CASE - VAR THEN FUNC ===` /N
+10 a! :A a 5 + ;
+A 15 T
+
+20 bb! :BB bb 10 * ;
+BB 200 T
+
+30 ccc! :CCC ccc 2 / ;
+CCC 15 T
+
+`=== PARSING TEST: CONSECUTIVE SIMILAR NAMES ===` /N
+1 a! 2 aa! 3 aaa!
+a aa aaa 6 T
+
+10 b! 20 bb! 30 bbb!
+b bb bbb 60 T
+
+:X 1 ;
+:XX 2 ;
+:XXX 3 ;
+X XX XXX 6 T
+
+`=== PARSING TEST: ALL LENGTHS IN ONE EXPRESSION ===` /N
+1 a! 2 bb! 3 ccc!
+:A 10 ;
+:BB 20 ;
+:CCC 30 ;
+a bb ccc A BB CCC + + + + + 66 T
+
+`=== PARSING TEST: VARIABLE REUSE ===` /N
+100 tmp! tmp 100 T
+200 tmp! tmp 200 T
+300 tmp! tmp 300 T
+
+`=== PARSING TEST: FUNCTION REDEFINE ===` /N
+:TMP 100 ;
+TMP 100 T
+:TMP 200 ;
+TMP 200 T
+
+`=== PARSING TEST: BOUNDARY NAMES ===` /N
+1 aaa! aaa 1 T
+2 zzz! zzz 2 T
+:AAA 100 ;
+AAA 100 T
+:ZZZ 200 ;
+ZZZ 200 T
+
+`=== PARSING TEST: COMPLEX NESTED ===` /N
+:F1 x y + ;
+:F2 x y * ;
+:F3 F1 F2 + ;
+10 x! 5 y!
+F3 65 T
+
+`=== PARSING TEST: STACK OPS WITH VARS ===` /N
+100 val! val " 200 T
+10 a! 20 b! a b $ 10 T
+
+`=== ALL PARSING TESTS COMPLETE ===` /N
+
