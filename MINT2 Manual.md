@@ -1,4 +1,4 @@
-  
+- MINT 2 runs on a TEC-1 Z80 SBC in 2k rom and 2k ram ( or more)  
 - if a program, function or command has any type of logical or syntax error, it will corrupt MINTS ability to accept further code even if is correct or correct input
 - all input MUST be prefect and error free for the code to run error free unless there is a bug in the code. but correct code can still fail due to limits.
 - MINT is a minimalist character-based interpreter but one which aims at fast performance, readability and ease of use. 
@@ -2351,6 +2351,7 @@ g s d p D
 - So when you run a mint from ROM in the tec-1 and you interrupt it with an INT or a NMI, mint will not crash it will execute the function Z.
 
 ////end for now ///////
+
 
 
 
