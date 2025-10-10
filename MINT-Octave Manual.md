@@ -1,4 +1,4 @@
-# MINT-Octave Complete User Manual
+# MINT-Octave Manual
 ## Version 2.5 (2025-10-01)
 
 ---
