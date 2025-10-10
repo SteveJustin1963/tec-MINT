@@ -9,20 +9,21 @@ import time
 SERIAL_PORT = "/dev/ttyUSB0"
 BAUD_RATE = 4800
 STOP_FLAG = False
-
-# Delay between characters (seconds)
-CHAR_DELAY = 0.07  
+CHAR_DELAY = 0.07  # delay between transmitted chars
 
 def serial_reader(ser):
-    """Continuously read serial and print all available bytes as fast as they arrive."""
+    """Read serial data efficiently without maxing CPU."""
     global STOP_FLAG
     while not STOP_FLAG:
         try:
-            n = ser.in_waiting
-            if n:
-                data = ser.read(n)
+            # blocking read, returns after 0.1 s if no data
+            data = ser.read(128)
+            if data:
                 sys.stdout.write(data.decode(errors="replace"))
                 sys.stdout.flush()
+            else:
+                # light sleep to yield CPU
+                time.sleep(0.01)
         except serial.SerialException:
             break
 
@@ -35,14 +36,14 @@ def main():
             bytesize=serial.EIGHTBITS,
             parity=serial.PARITY_NONE,
             stopbits=serial.STOPBITS_ONE,
-            timeout=0.01,
+            timeout=0.1,          # <— make read() block for up to 100 ms
         )
     except serial.SerialException as e:
         print(f"Error opening {SERIAL_PORT}: {e}")
         sys.exit(1)
 
-    print(f"Connected to {SERIAL_PORT} at {BAUD_RATE} 8N1.")
-    print(f"Press Ctrl +C to quit. Sending is throttled to {CHAR_DELAY:.2f}s delay per char.\n")
+    print(f"Connected to {SERIAL_PORT} at {BAUD_RATE} baud (8N1).")
+    print(f"Press Ctrl +C to quit. Sending throttled to {CHAR_DELAY:.2f}s per char.\n")
 
     reader = threading.Thread(target=serial_reader, args=(ser,), daemon=True)
     reader.start()
@@ -59,7 +60,6 @@ def main():
             ser.write(ch)
             ser.flush()
             time.sleep(CHAR_DELAY)
-
     except KeyboardInterrupt:
         print("\nInterrupted. Closing port...")
         STOP_FLAG = True
