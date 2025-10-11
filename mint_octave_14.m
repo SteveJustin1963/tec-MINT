@@ -1545,17 +1545,28 @@ function tokens = tokenize_with_strings(line)
       endif
       tokens{end+1} = ch;
       i++;
-    elseif ch == '*' && i < length(line) && line(i+1) == '*'
+      
+elseif ch == '*' && i < length(line) && line(i+1) == '*'
       if !isempty(current_token)
         tokens{end+1} = strtrim(current_token);
         current_token = "";
       endif
       tokens{end+1} = '**';
       i = i + 2;
+    elseif ch == '?' && i < length(line) && line(i+1) == '!'
+      ## LOOKAHEAD FIX: Treat ?! as single array-write operator
+      if !isempty(current_token)
+        tokens{end+1} = strtrim(current_token);
+        current_token = "";
+      endif
+      tokens{end+1} = '?!';
+      i = i + 2;
     elseif ch == '.' && i < length(line) && isstrprop(line(i+1), 'digit')
       current_token = [current_token, ch];
       i++;
     elseif any(ch == single_char_ops)
+    
+    
       if !isempty(current_token)
         tokens{end+1} = strtrim(current_token);
         current_token = "";
