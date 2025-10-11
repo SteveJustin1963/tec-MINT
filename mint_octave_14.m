@@ -165,13 +165,24 @@ function mint_octave_12()
       endif
     endif
 
-    ## If in capture mode, accumulate lines
+## If in capture mode, accumulate lines
     if state.capture_mode
-      state.capture_buffer = [state.capture_buffer, " ", line];
+      ## Strip inline comments from this line before adding to buffer
+      comment_pos = strfind(line, '//');
+      if !isempty(comment_pos)
+        line = line(1:comment_pos(1)-1);  ## Keep only part before //
+      endif
+      line = strtrim(line);  ## Remove trailing whitespace
+      
+      ## Only add non-empty lines
+      if !isempty(line)
+        state.capture_buffer = [state.capture_buffer, " ", line];
+      endif
 
       if state.debug
         debug_print("[DEBUG] CAPTURE: accumulating line into buffer\n");
       endif
+      
 
       ## Check for semicolon to end capture
       if any(strfind(line, ';'))
