@@ -174,7 +174,7 @@ The range depends on the allocation of bits for the sign, exponent, and mantissa
 # implementing mint in octave from scratch
 - 29sept 2025, make basic m script to run mint commands
 - 9oct most commands, sci func, 64 bit FP, i/o to files
-- 13oct ver16, integer modes
+- 13oct ver15, integer modes, flags added
 - 
 
 ![image](https://github.com/user-attachments/assets/e15ac155-4a9c-48a9-a4c3-31413bce2aa3)
