@@ -19,13 +19,17 @@ function mint_octave_15()
   state.colon_defs = containers.Map();
   state.last_var = "";  ## FIXED: Changed from -1 to empty string
   state.loop_i = 0;
-  state.loop_j = 0;
+state.loop_j = 0;
   state.break_loop = false;
-  state.sys_c = 0;
-  state.sys_r = 0;
+  state.sys_c = 0;  ## Carry flag (unsigned overflow)
+  state.sys_v = 0;  ## Overflow flag (signed overflow)
+  state.sys_z = 0;  ## Zero flag
+  state.sys_n = 0;  ## Negative flag
+  state.sys_r = 0;  ## Remainder from division
   state.debug = false;
   state.debug_file = -1;
-  state.int_mode = true;  ## NEW: TRUE = integer mode (MINT 2), FALSE = floating-point mode
+  state.int_mode = true;  ## TRUE = integer mode, FALSE = floating-point mode
+  state.int_bits = 16;    ## Integer bit width: 8, 16, 32, or 64
 
   ## Capture mode for multi-line function definitions
   state.capture_mode = false;
@@ -345,8 +349,11 @@ function add_builtin_words()
   state.dict("/i") = @(s) get_loop_i(s);
   state.dict("/j") = @(s) get_loop_j(s);
 
-  ## System variables
+## System variables
   state.dict("/c") = @(s) get_sys_c(s);
+  state.dict("/v") = @(s) get_sys_v(s);
+  state.dict("/z") = @(s) get_sys_z(s);
+  state.dict("/n") = @(s) get_sys_n(s);
   state.dict("/r") = @(s) get_sys_r(s);
 
   ## I/O operations
@@ -375,6 +382,12 @@ function add_builtin_words()
   state.dict("int") = @(s) set_int_mode(s);
   state.dict("fp") = @(s) set_fp_mode(s);
   state.dict("mode") = @(s) show_mode(s);
+  
+  ## Integer bit-width modes
+  state.dict("int8") = @(s) set_int8_mode(s);
+  state.dict("int16") = @(s) set_int16_mode(s);
+  state.dict("int32") = @(s) set_int32_mode(s);
+  state.dict("int64") = @(s) set_int64_mode(s);
 endfunction
 
 ## --------------------------
@@ -386,12 +399,22 @@ function s = math_add(s)
     debug_before_op("+", s);
   endif
   [s,b]=pop(s); [s,a]=pop(s);
-  result = a + b;
-  s=push(s, result);
-  state.sys_c = 0;
+  original_result = a + b;
+  
+  ## Apply integer overflow if in integer mode
+  if state.int_mode
+    final_result = apply_int_overflow(original_result, state.int_bits);
+  else
+    final_result = original_result;
+  endif
+  
+  ## Set processor flags
+  set_flags(original_result, final_result, a, b, '+');
   state.sys_r = 0;
+  
+  s=push(s, final_result);
   if state.debug
-    debug_after_op("+", sprintf("%g + %g = %g", a, b, result), s);
+    debug_after_op("+", sprintf("%g + %g = %g (c=%d v=%d z=%d n=%d)", a, b, final_result, state.sys_c, state.sys_v, state.sys_z, state.sys_n), s);
   endif
 endfunction
 
@@ -401,12 +424,22 @@ function s = math_sub(s)
     debug_before_op("-", s);
   endif
   [s,b]=pop(s); [s,a]=pop(s);
-  result = a - b;
-  s=push(s, result);
-  state.sys_c = 0;
+  original_result = a - b;
+  
+  ## Apply integer overflow if in integer mode
+  if state.int_mode
+    final_result = apply_int_overflow(original_result, state.int_bits);
+  else
+    final_result = original_result;
+  endif
+  
+  ## Set processor flags
+  set_flags(original_result, final_result, a, b, '-');
   state.sys_r = 0;
+  
+  s=push(s, final_result);
   if state.debug
-    debug_after_op("-", sprintf("%g - %g = %g", a, b, result), s);
+    debug_after_op("-", sprintf("%g - %g = %g (c=%d v=%d z=%d n=%d)", a, b, final_result, state.sys_c, state.sys_v, state.sys_z, state.sys_n), s);
   endif
 endfunction
 
@@ -416,12 +449,22 @@ function s = math_mul(s)
     debug_before_op("*", s);
   endif
   [s,b]=pop(s); [s,a]=pop(s);
-  result = a * b;
-  s=push(s, result);
-  state.sys_c = 0;
+  original_result = a * b;
+  
+  ## Apply integer overflow if in integer mode
+  if state.int_mode
+    final_result = apply_int_overflow(original_result, state.int_bits);
+  else
+    final_result = original_result;
+  endif
+  
+  ## Set processor flags
+  set_flags(original_result, final_result, a, b, '*');
   state.sys_r = 0;
+  
+  s=push(s, final_result);
   if state.debug
-    debug_after_op("*", sprintf("%g * %g = %g", a, b, result), s);
+    debug_after_op("*", sprintf("%g * %g = %g (c=%d v=%d z=%d n=%d)", a, b, final_result, state.sys_c, state.sys_v, state.sys_z, state.sys_n), s);
   endif
 endfunction
 
@@ -1091,6 +1134,30 @@ function s = get_sys_c(s)
   s = push(s, state.sys_c);
 endfunction
 
+function s = get_sys_v(s)
+  global state;
+  if state.debug
+    debug_print(sprintf("[DEBUG] /v: pushing overflow=%g\n", state.sys_v));
+  endif
+  s = push(s, state.sys_v);
+endfunction
+
+function s = get_sys_z(s)
+  global state;
+  if state.debug
+    debug_print(sprintf("[DEBUG] /z: pushing zero=%g\n", state.sys_z));
+  endif
+  s = push(s, state.sys_z);
+endfunction
+
+function s = get_sys_n(s)
+  global state;
+  if state.debug
+    debug_print(sprintf("[DEBUG] /n: pushing negative=%g\n", state.sys_n));
+  endif
+  s = push(s, state.sys_n);
+endfunction
+
 function s = get_sys_r(s)
   global state;
   if state.debug
@@ -1528,7 +1595,7 @@ function tokens = tokenize_with_strings(line)
         endif
       endif
 
-      if any(next_ch == 'NWEFTUijcrhszkVCKDSAIOPGXe')
+      if any(next_ch == 'NWEFTUijcrhszkVCKDSAIOPGXevn')
         if !isempty(current_token)
           tokens{end+1} = strtrim(current_token);
           current_token = "";
@@ -1943,8 +2010,21 @@ endfunction
 ## Print Functions
 ## --------------------------
 function s = print_num(s)
+  global state;
   [s,a]=pop(s);
-  printf("%g ", a);
+  
+  if state.int_mode
+    ## INTEGER MODE: Print as integer if it's a whole number
+    if floor(a) == a
+      printf("%d ", int64(a));
+    else
+      printf("%g ", a);
+    endif
+  else
+    ## FLOATING-POINT MODE: Use scientific notation
+    printf("%g ", a);
+  endif
+  
   fflush(stdout);
 endfunction
 
@@ -2155,27 +2235,35 @@ function s = show_help(s)
   printf("BYTE      |   \\!   | STORE byte to memory                      | b a --       | TODO\n");
   printf("BYTE      |   \\[   | begin byte array definition               | --           | TODO\n");
   printf("BYTE      |   \\?   | get byte array item                       | a n -- b     | TODO\n");
-  printf("SYSVAR    | *  /c  | carry variable                            | -- n         | DONE\n");
+  printf("SYSVAR    | *  /c  | carry flag (unsigned overflow)            | -- n         | DONE\n");
+  printf("SYSVAR    | *  /v  | overflow flag (signed overflow)           | -- n         | DONE\n");
+  printf("SYSVAR    | *  /z  | zero flag (result is zero)                | -- n         | DONE\n");
+  printf("SYSVAR    | *  /n  | negative flag (result is negative)        | -- n         | DONE\n");
   printf("SYSVAR    |   /h   | heap pointer variable                     | -- a         | TODO\n");
   printf("SYSVAR    | *  /i  | loop variable                             | -- n         | DONE\n");
   printf("SYSVAR    | *  /j  | outer loop variable                       | -- n         | DONE\n");
   printf("SYSVAR    |   /k   | offset into text input buffer             | -- a         | TODO\n");
-  printf("SYSVAR    | *  /r  | remainder/overflow of last div/mul        | -- n         | DONE\n");
+  printf("SYSVAR    | *  /r  | remainder from division                   | -- n         | DONE\n");
   printf("SYSVAR    |   /s   | address of start of stack                 | -- a         | TODO\n");
   printf("SYSVAR    |   /z   | name of last defined function             | -- c         | TODO\n");
   printf("MISC      | *  //  | comment (skips to end of line)            | --           | DONE\n");
   printf("MISC      | *  /N  | print CRLF                                | --           | DONE\n");
   printf("MISC      |   /P   | print prompt                              | --           | TODO\n");
   printf("MISC      | * debug| toggle on/off to screen and file          | --           | DONE\n");
-  printf("MODE      | * int  | enable integer mode (MINT 2)              | --           | DONE\n");
+  printf("MODE      | * int  | enable integer mode (current bit width)   | --           | DONE\n");
   printf("MODE      | * fp   | enable floating-point mode                | --           | DONE\n");
-  printf("MODE      | * mode | show current mode                         | --           | DONE\n");
+  printf("MODE      | * mode | show current mode and bit width           | --           | DONE\n");
+  printf("MODE      | * int8 | 8-bit integer mode (-128 to 127)          | --           | DONE\n");
+  printf("MODE      | * int16| 16-bit integer (MINT 2/TEC-1 compatible)  | --           | DONE\n");
+  printf("MODE      | * int32| 32-bit integer mode                       | --           | DONE\n");
+  printf("MODE      | * int64| 64-bit integer mode                       | --           | DONE\n");
   printf("===================================================================================================\n");
-  printf("Type 'bye' to quit\n");
+  printf("Type 'bye' to quit, 'help' for command list\n");
   printf("Type 'debug' to toggle debug mode\n");
   printf("Type 'list' to show all defined functions\n");
-  printf("Type 'int' for integer mode (MINT 2), 'fp' for floating-point mode\n");
-  printf("Type 'mode' for show current mode\n"); printf("===================================================================================================\n\n");
+  printf("Type 'mode' to show current mode\n");
+  printf("Integer modes: int8, int16 (default), int32, int64\n");
+  printf("===================================================================================================\n\n");
 endfunction
 
 ## ========================================================================
@@ -2238,7 +2326,8 @@ function debug_show_final_state()
   debug_print("\n[DEBUG] === FINAL STATE ===\n");
   debug_show_stack();
   debug_show_vars();
-  debug_print(sprintf("[DEBUG] SYSTEM: /c=%g, /r=%g, /i=%g, /j=%g\n", state.sys_c, state.sys_r, state.loop_i, state.loop_j));
+  debug_print(sprintf("[DEBUG] FLAGS: /c=%g, /v=%g, /z=%g, /n=%g, /r=%g\n", state.sys_c, state.sys_v, state.sys_z, state.sys_n, state.sys_r));
+  debug_print(sprintf("[DEBUG] LOOPS: /i=%g, /j=%g\n", state.loop_i, state.loop_j));
   debug_print("[DEBUG] ====================\n");
 endfunction
 
@@ -2251,14 +2340,118 @@ function r = iif(condition, true_val, false_val)
 endfunction
 
 ## --------------------------
+## Integer Overflow Helper
+## --------------------------
+
+
+function result = apply_int_overflow(value, bits)
+  if bits == 8
+    ## 8-bit signed: -128 to 127
+    modulus = 256;
+    max_val = 127;
+  elseif bits == 16
+    ## 16-bit signed: -32768 to 32767
+    modulus = 65536;
+    max_val = 32767;
+  elseif bits == 32
+    ## 32-bit signed: -2147483648 to 2147483647
+    modulus = 4294967296;
+    max_val = 2147483647;
+  else  ## 64-bit
+    ## 64-bit: no overflow in Octave's float range
+    result = value;
+    return;
+  endif
+  
+  ## Apply modulo and adjust for signed range
+  result = mod(floor(value), modulus);
+  if result > max_val
+    result = result - modulus;
+  endif
+endfunction
+
+## --------------------------
+## Set Processor Flags
+## --------------------------
+function set_flags(original_result, final_result, a, b, operation)
+  global state;
+  
+  if !state.int_mode
+    ## In FP mode, clear all flags
+    state.sys_c = 0;
+    state.sys_v = 0;
+    state.sys_z = 0;
+    state.sys_n = 0;
+    return;
+  endif
+  
+  ## Get bit range limits
+  if state.int_bits == 8
+    min_signed = -128;
+    max_signed = 127;
+    max_unsigned = 255;
+  elseif state.int_bits == 16
+    min_signed = -32768;
+    max_signed = 32767;
+    max_unsigned = 65535;
+  elseif state.int_bits == 32
+    min_signed = -2147483648;
+    max_signed = 2147483647;
+    max_unsigned = 4294967295;
+  else  ## 64-bit
+    ## No overflow in 64-bit
+    state.sys_c = 0;
+    state.sys_v = 0;
+    state.sys_z = (final_result == 0);
+    state.sys_n = (final_result < 0);
+    return;
+  endif
+  
+  ## CARRY FLAG (/c) - Unsigned overflow
+  if strcmp(operation, '+')
+    state.sys_c = (original_result < 0 || original_result > max_unsigned);
+  elseif strcmp(operation, '-')
+    state.sys_c = (original_result < 0);
+  elseif strcmp(operation, '*')
+    state.sys_c = (original_result < 0 || original_result > max_unsigned);
+  else
+    state.sys_c = 0;
+  endif
+  
+  ## OVERFLOW FLAG (/v) - Signed overflow
+  if strcmp(operation, '+')
+    ## Overflow if: same signs produce opposite sign
+    same_sign = (a >= 0 && b >= 0) || (a < 0 && b < 0);
+    result_sign_matches = (a >= 0 && final_result >= 0) || (a < 0 && final_result < 0);
+    state.sys_v = (same_sign && !result_sign_matches);
+  elseif strcmp(operation, '-')
+    ## Overflow if: different signs and result has wrong sign
+    diff_sign = (a >= 0 && b < 0) || (a < 0 && b >= 0);
+    result_sign_wrong = (a >= 0 && final_result < 0) || (a < 0 && final_result >= 0);
+    state.sys_v = (diff_sign && result_sign_wrong);
+  elseif strcmp(operation, '*')
+    ## Overflow if result outside signed range
+    state.sys_v = (original_result < min_signed || original_result > max_signed);
+  else
+    state.sys_v = 0;
+  endif
+  
+  ## ZERO FLAG (/z) - Result is zero
+  state.sys_z = (final_result == 0);
+  
+  ## NEGATIVE FLAG (/n) - Result is negative
+  state.sys_n = (final_result < 0);
+endfunction
+
+## --------------------------
 ## Mode Control Functions
 ## --------------------------
 function s = set_int_mode(s)
   global state;
   state.int_mode = true;
   printf("\n*** INTEGER MODE ENABLED ***\n");
-  printf("Division uses integer math: 17/5 = 3 (quotient), /r = 2 (remainder)\n");
-  printf("Compatible with MINT 2 on TEC-1 hardware\n\n");
+  printf("Current bit width: %d-bit\n", state.int_bits);
+  printf("Use int8, int16, int32, or int64 to change bit width\n\n");
 endfunction
 
 function s = set_fp_mode(s)
@@ -2273,13 +2466,62 @@ function s = show_mode(s)
   global state;
   printf("\n");
   if state.int_mode
-    printf("Current mode: INTEGER (MINT 2 compatible)\n");
+    printf("Current mode: INTEGER (%d-bit)\n", state.int_bits);
+    if state.int_bits == 8
+      printf("  Range: -128 to 127\n");
+    elseif state.int_bits == 16
+      printf("  Range: -32,768 to 32,767 (MINT 2 / TEC-1 compatible)\n");
+    elseif state.int_bits == 32
+      printf("  Range: -2,147,483,648 to 2,147,483,647\n");
+    else
+      printf("  Range: ±9,223,372,036,854,775,807\n");
+    endif
     printf("  - Division returns integer quotient + remainder in /r\n");
-    printf("  - All math operations use integer logic\n");
+    printf("  - Arithmetic operations overflow at bit boundary\n");
   else
     printf("Current mode: FLOATING-POINT (64-bit scientific)\n");
     printf("  - Division returns decimal result\n");
     printf("  - All math operations use floating-point\n");
   endif
   printf("\n");
+endfunction
+
+## --------------------------
+## Integer Bit-Width Mode Functions
+## --------------------------
+function s = set_int8_mode(s)
+  global state;
+  state.int_mode = true;
+  state.int_bits = 8;
+  printf("\n*** 8-BIT INTEGER MODE ***\n");
+  printf("Range: -128 to 127\n");
+  printf("Arithmetic will overflow at 8-bit boundaries\n\n");
+endfunction
+
+function s = set_int16_mode(s)
+  global state;
+  state.int_mode = true;
+  state.int_bits = 16;
+  printf("\n*** 16-BIT INTEGER MODE ***\n");
+  printf("Range: -32,768 to 32,767\n");
+  printf("Compatible with MINT 2 on TEC-1 hardware\n");
+  printf("Arithmetic will overflow at 16-bit boundaries\n\n");
+endfunction
+
+function s = set_int32_mode(s)
+  global state;
+  state.int_mode = true;
+  state.int_bits = 32;
+  printf("\n*** 32-BIT INTEGER MODE ***\n");
+  printf("Range: -2,147,483,648 to 2,147,483,647\n");
+  printf("Arithmetic will overflow at 32-bit boundaries\n\n");
+endfunction
+
+function s = set_int64_mode(s)
+  global state;
+  state.int_mode = true;
+  state.int_bits = 64;
+  printf("\n*** 64-BIT INTEGER MODE ***\n");
+  printf("Range: ±9,223,372,036,854,775,807\n");
+  printf("Maximum precision without overflow\n\n");
 endfunction
