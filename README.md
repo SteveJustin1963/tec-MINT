@@ -2,7 +2,7 @@
 
 
 
-<img width="355" height="600" alt="image" src="https://github.com/user-attachments/assets/87a01b68-8479-4382-b8f3-4e41999ef39d" />
+<img width="365" height="610" alt="image" src="https://github.com/user-attachments/assets/87a01b68-8479-4382-b8f3-4e41999ef39d" />
  
 **The structuring or acknowledgment of the individuals involved
 in the development of the MINT interpreter
@@ -18,7 +18,7 @@ in terms of the order of respect or recognition for their work.**
 
 
 
-<img width="355" height="355" alt="image" src="https://github.com/user-attachments/assets/404baeeb-6ae2-4975-b781-face3bb329e7" />
+<img width="555" height="555" alt="image" src="https://github.com/user-attachments/assets/404baeeb-6ae2-4975-b781-face3bb329e7" />
 
 
 # Announcements
