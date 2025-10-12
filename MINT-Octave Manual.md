@@ -1706,6 +1706,9 @@ mint_debug_YYYYMMDD_HHMMSS.log
 | `help` | Show help |
 | `debug` | Toggle debug mode |
 | `bye` | Exit MINT |
+| * int  | enable integer mode (MINT 2)  | 
+| * fp   | enable floating-point mode    | 
+| * mode | show current mode             |  
 
 ---
 
