@@ -1,5 +1,5 @@
 # MINT-Octave Complete User Manual
-## Version 2.6 (2025-10-12)
+## Version 2.7 (2025-10-13)
 
 ---
 
@@ -21,16 +21,17 @@
 14. [Multi-Line Input](#multi-line-input)
 15. [Input/Output](#inputoutput)
 16. [System Variables](#system-variables)
-17. [Debug Mode](#debug-mode)
-18. [Complete Command Reference](#complete-command-reference)
-19. [Examples](#examples)
-20. [Tips and Tricks](#tips-and-tricks)
-21. [Common Pitfalls](#common-pitfalls)
-22. [Quick Reference Card](#quick-reference-card)
-23. [Differences from Original MINT](#differences-from-original-mint)
-24. [Credits and License](#credits-and-license)
-25. [Appendix: ASCII Reference](#appendix-ascii-reference)
-26. [Appendix: Error Messages](#appendix-error-messages)
+17. [Processor Flags](#processor-flags)
+18. [Debug Mode](#debug-mode)
+19. [Complete Command Reference](#complete-command-reference)
+20. [Examples](#examples)
+21. [Tips and Tricks](#tips-and-tricks)
+22. [Common Pitfalls](#common-pitfalls)
+23. [Quick Reference Card](#quick-reference-card)
+24. [Differences from Original MINT](#differences-from-original-mint)
+25. [Credits and License](#credits-and-license)
+26. [Appendix: ASCII Reference](#appendix-ascii-reference)
+27. [Appendix: Error Messages](#appendix-error-messages)
 
 ---
 
@@ -41,6 +42,8 @@ MINT-Octave is a stack-based programming language interpreter inspired by Forth 
 **Key Features:**
 - Stack-based computation (RPN)
 - 64-bit floating-point arithmetic
+- Integer modes (8, 16, 32, 64-bit) for hardware compatibility
+- Processor flags (/c, /v, /z, /n) for overflow detection
 - 26 variables (a-z)
 - User-defined functions (A-Z)
 - Temporary execution blocks (:_)
@@ -59,7 +62,7 @@ MINT-Octave is a stack-based programming language interpreter inspired by Forth 
 
 1. Load the program in Octave:
    ```octave
-   mint_octave_12
+   mint_octave_15
    ```
 
 2. Choose debug mode when prompted:
@@ -129,7 +132,7 @@ Documentation uses this notation:
 
 ### Decimal Numbers
 
-MINT-Octave uses **64-bit floating-point** numbers:
+MINT-Octave uses **64-bit floating-point** numbers by default, with optional integer modes:
 
 ```mint
 42 .
@@ -151,6 +154,27 @@ MINT-Octave uses **64-bit floating-point** numbers:
 **Range:** ±1.8e308 (much larger than original MINT's 16-bit limit)
 
 **Precision:** 15-16 significant digits (format long)
+
+### Integer Modes
+
+MINT-Octave supports multiple integer modes for hardware compatibility:
+
+```mint
+int8      // 8-bit signed: -128 to 127
+int16     // 16-bit signed: -32,768 to 32,767 (MINT 2/TEC-1 compatible)
+int32     // 32-bit signed: -2.1 billion to 2.1 billion
+int64     // 64-bit signed: ±9.2 quintillion
+fp        // Floating-point mode (default)
+mode      // Show current mode
+```
+
+**Example:**
+```mint
+int8
+127 1 + .    // -128 (8-bit overflow)
+fp
+127 1 + .    // 128 (no overflow)
+```
 
 ### Hexadecimal Numbers
 
@@ -268,12 +292,18 @@ Effect: `n m -- result`
 84 2 / .
 // 42 
 10 3 / .
-// 3.33333 
-7 2 / .
-// 3.5 
+// 3.33333 (floating-point mode)
+
+int16
+10 3 / .
+// 3 (integer mode)
+/r .
+// 1 (remainder)
 ```
 
-**Important:** Unlike original MINT, this performs true floating-point division, not integer division. Use `/floor` after division if you need integer results.
+**Important:** Division behavior depends on mode:
+- **Floating-point mode (fp):** True division with decimals
+- **Integer modes (int8/16/32/64):** Integer division with remainder in `/r`
 
 **Power: ****  
 Effect: `base exponent -- result`
@@ -1371,7 +1401,7 @@ Once you press Enter, that line is added to the buffer. You cannot edit it. If y
 - `)` on separate lines caused errors
 - Multi-line only worked if you avoided pressing Enter mid-structure
 
-**Now (Version 2.6):**
+**Now (Version 2.7):**
 - Enter capture mode immediately with `:`
 - Type across multiple lines naturally
 - End with `;` whenever you're done
@@ -1478,20 +1508,58 @@ Reads a string and pushes ASCII codes plus count.
 
 ### /c (Carry Flag)
 
-Set by arithmetic operations (currently always 0 for 64-bit floats).
+Set by arithmetic operations to indicate unsigned overflow.
 
 ```mint
-5 3 + /c .
-// 0 
+int8
+200 100 + .    // 44 (wrapped)
+/c .           // 1 (carry occurred)
 ```
 
-### /r (Remainder/Overflow)
+See [Processor Flags](#processor-flags) for complete details.
 
-Set by division and multiplication (currently always 0 for floats).
+### /v (Overflow Flag)
+
+Set by arithmetic operations to indicate signed overflow.
 
 ```mint
-10 3 / /r .
-// 0 
+int8
+127 1 + .      // -128 (overflow)
+/v .           // 1 (signed overflow occurred)
+```
+
+See [Processor Flags](#processor-flags) for complete details.
+
+### /z (Zero Flag)
+
+Set when result of an operation is zero.
+
+```mint
+10 10 - .      // 0
+/z .           // 1 (result is zero)
+```
+
+See [Processor Flags](#processor-flags) for complete details.
+
+### /n (Negative Flag)
+
+Set when result of an operation is negative.
+
+```mint
+10 20 - .      // -10
+/n .           // 1 (result is negative)
+```
+
+See [Processor Flags](#processor-flags) for complete details.
+
+### /r (Remainder)
+
+Set by integer division operations.
+
+```mint
+int16
+10 3 / .       // 3
+/r .           // 1 (remainder)
 ```
 
 ### /i (Loop Counter)
@@ -1512,6 +1580,202 @@ Outer loop counter for nested loops.
 // 0 1 2 
 // 1 2 3 
 ```
+
+---
+
+## Processor Flags
+
+### Overview
+
+MINT-Octave implements four processor flags that track the results of arithmetic operations:
+- `/c` - Carry flag (unsigned overflow)
+- `/v` - Overflow flag (signed overflow)  
+- `/z` - Zero flag (result is zero)
+- `/n` - Negative flag (result is negative)
+
+These flags are automatically set after addition, subtraction, and multiplication operations in integer modes.
+
+### Flag Descriptions
+
+#### `/c` - Carry Flag (Unsigned Overflow)
+Set to `1` when an unsigned arithmetic operation overflows or underflows.
+
+**Examples (int8 mode):**
+```mint
+int8
+200 100 + .    // Result: 44 (wrapped)
+/c .           // Shows: 1 (carry occurred)
+
+100 50 + .     // Result: 150 (no wrap)
+/c .           // Shows: 0 (no carry)
+```
+
+#### `/v` - Overflow Flag (Signed Overflow)
+Set to `1` when a signed arithmetic operation produces an invalid result (e.g., positive + positive = negative).
+
+**Examples (int8 mode):**
+```mint
+int8
+127 1 + .      // Result: -128 (overflow!)
+/v .           // Shows: 1 (signed overflow)
+
+50 30 + .      // Result: 80
+/v .           // Shows: 0 (no overflow)
+```
+
+**Important:** `/c` and `/v` detect different types of overflow:
+- Use `/c` for unsigned arithmetic (0 to 255 in 8-bit)
+- Use `/v` for signed arithmetic (-128 to 127 in 8-bit)
+
+#### `/z` - Zero Flag
+Set to `1` when the result of an operation is zero.
+
+**Examples:**
+```mint
+int16
+10 10 - .      // Result: 0
+/z .           // Shows: 1 (zero)
+
+10 5 - .       // Result: 5
+/z .           // Shows: 0 (not zero)
+```
+
+#### `/n` - Negative Flag
+Set to `1` when the result of an operation is negative.
+
+**Examples:**
+```mint
+int16
+10 20 - .      // Result: -10
+/n .           // Shows: 1 (negative)
+
+20 10 - .      // Result: 10
+/n .           // Shows: 0 (positive)
+```
+
+### Flag Behavior by Mode
+
+#### Integer Modes (int8, int16, int32, int64)
+All four flags are active and updated after each arithmetic operation:
+- **Addition (+)**: Sets all flags based on result
+- **Subtraction (-)**: Sets all flags based on result
+- **Multiplication (*)**: Sets all flags based on result
+- **Division (/)**: Flags NOT updated (only `/r` remainder is set)
+
+#### Floating-Point Mode (fp)
+All flags are cleared (set to 0) in floating-point mode, as overflow behavior is different.
+
+```mint
+fp
+127 1 + .      // 128
+/c . /v . /z . /n .    // 0 0 0 0 (all cleared)
+```
+
+### Compatibility with Real MINT 2 Hardware
+
+**IMPORTANT:** MINT-Octave includes enhanced flag support not present in original MINT 2 hardware.
+
+| Flag | MINT-Octave | Real MINT 2 (TEC-1) |
+|------|-------------|---------------------|
+| `/c` | ✅ Fully implemented | ✅ Implemented |
+| `/v` | ✅ Fully implemented | ❌ Not implemented (returns 0) |
+| `/z` | ✅ Fully implemented | ❌ Not implemented (undefined) |
+| `/n` | ✅ Fully implemented | ❌ Not implemented (returns 0) |
+
+**Why the difference?**
+- Real MINT 2 on TEC-1 hardware only implements the carry flag (`/c`)
+- MINT-Octave adds modern CPU-like flags for enhanced debugging and learning
+- Programs using only `/c` will work identically on both platforms
+- Programs using `/v`, `/z`, or `/n` are simulator-only features
+
+### Practical Usage Examples
+
+#### Example 1: Detecting Overflow
+```mint
+int8
+127 1 + .           // -128
+/v .                // 1 (overflow detected)
+( `Overflow!` /N )  // Conditional message
+/E
+( `OK` /N )
+```
+
+#### Example 2: Multi-Precision Addition
+```mint
+int16
+50000 20000 + .     // Result with possible carry
+/c .                // Check if carry occurred
+```
+
+#### Example 3: Loop Until Zero
+```mint
+10 ( 
+  " . /N           // Print current value
+  1 -              // Decrement
+  " /z /W          // Break if zero
+)
+```
+
+#### Example 4: Sign Detection
+```mint
+:ABS               // Absolute value function
+  " /n             // Check if negative
+  ( -1 * )         // If negative, multiply by -1
+  /E               // Else
+  ( )              // Do nothing
+;
+
+-42 ABS .          // 42
+```
+
+### Technical Details
+
+#### Flag Setting Logic
+
+**Carry Flag (/c):**
+- **Addition**: Set if unsigned result > max_unsigned
+- **Subtraction**: Set if result < 0 (borrow occurred)  
+- **Multiplication**: Set if unsigned result > max_unsigned
+
+**Overflow Flag (/v):**
+- **Addition**: Set if same signs produce opposite sign
+- **Subtraction**: Set if different signs produce wrong sign
+- **Multiplication**: Set if result outside signed range
+
+**Zero Flag (/z):**
+- Set if final result == 0
+
+**Negative Flag (/n):**
+- Set if final result < 0
+
+#### Bit-Width Specific Ranges
+
+| Mode | Signed Range | Unsigned Range |
+|------|--------------|----------------|
+| int8 | -128 to 127 | 0 to 255 |
+| int16 | -32,768 to 32,767 | 0 to 65,535 |
+| int32 | -2.1B to 2.1B | 0 to 4.3B |
+| int64 | ±9.2 quintillion | 0 to 18.4 quintillion |
+
+### Best Practices
+
+1. **Check flags immediately** after arithmetic operations
+2. **Use `/v` for signed** arithmetic overflow detection
+3. **Use `/c` for unsigned** arithmetic and multi-precision math
+4. **Use `/z` for loop termination** and zero-detection
+5. **Use `/n` for sign checking** instead of comparisons with zero
+6. **Remember:** Flags are only updated by `+`, `-`, `*` operations
+
+### Migration from Real MINT 2
+
+If porting code FROM real MINT 2 hardware TO MINT-Octave:
+- ✅ Code using `/c` will work identically
+- ✅ You can add `/v`, `/z`, `/n` for enhanced functionality
+
+If porting code FROM MINT-Octave TO real MINT 2 hardware:
+- ⚠️ Remove all uses of `/v`, `/z`, `/n` 
+- ⚠️ Replace with manual comparisons where needed
+- ✅ Keep all uses of `/c` (fully compatible)
 
 ---
 
@@ -1538,6 +1802,7 @@ debug
 - Loop iterations
 - Array operations
 - Capture mode status
+- Processor flags (/c, /v, /z, /n)
 
 ### Debug Log File
 
@@ -1549,18 +1814,20 @@ mint_debug_YYYYMMDD_HHMMSS.log
 ### Example Debug Output
 
 ```mint
-5 3 + .
+int8
+127 1 + .
 
-[DEBUG] Processing token: '5'
-[DEBUG] NUMBER: 5
-[DEBUG] STACK: [5]
-[DEBUG] Processing token: '3'
-[DEBUG] NUMBER: 3
-[DEBUG] STACK: [5, 3]
+[DEBUG] Processing token: '127'
+[DEBUG] NUMBER: 127
+[DEBUG] STACK: [127]
+[DEBUG] Processing token: '1'
+[DEBUG] NUMBER: 1
+[DEBUG] STACK: [127, 1]
 [DEBUG] Processing token: '+'
-[DEBUG] BEFORE +: stack=[5, 3]
-[DEBUG] AFTER +: 5 + 3 = 8, stack=[8]
-8 
+[DEBUG] BEFORE +: stack=[127, 1]
+[DEBUG] AFTER +: 127 + 1 = -128 (c=0 v=1 z=0 n=1), stack=[-128]
+[DEBUG] FLAGS: /c=0, /v=1, /z=0, /n=1, /r=0
+-128 
 ```
 
 ---
@@ -1574,7 +1841,7 @@ mint_debug_YYYYMMDD_HHMMSS.log
 | `+` | `a b -- sum` | Addition |
 | `-` | `a b -- diff` | Subtraction |
 | `*` | `a b -- prod` | Multiplication |
-| `/` | `a b -- quot` | Division (floating-point) |
+| `/` | `a b -- quot` | Division (mode-dependent) |
 | `**` | `base exp -- result` | Exponentiation |
 | `/sqrt` | `n -- result` | Square root |
 | `/abs` | `n -- result` | Absolute value |
@@ -1677,12 +1944,15 @@ mint_debug_YYYYMMDD_HHMMSS.log
 | `:_ ... ;` | Define temporary block (auto-deleted) |
 | `list` | List all functions |
 
-### System Variables (4 commands)
+### System Variables & Flags (7 commands)
 
 | Command | Stack Effect | Description |
 |---------|--------------|-------------|
-| `/c` | `-- flag` | Carry flag |
-| `/r` | `-- flag` | Remainder/overflow |
+| `/c` | `-- flag` | Carry flag (unsigned overflow) |
+| `/v` | `-- flag` | Overflow flag (signed overflow) |
+| `/z` | `-- flag` | Zero flag (result is zero) |
+| `/n` | `-- flag` | Negative flag (result is negative) |
+| `/r` | `-- value` | Remainder from division |
 | `/i` | `-- counter` | Inner loop counter |
 | `/j` | `-- counter` | Outer loop counter |
 
@@ -1698,6 +1968,17 @@ mint_debug_YYYYMMDD_HHMMSS.log
 | `/KS` | `-- chars... count` | Read string |
 | \`text\` | ` -- ` | Print literal string |
 
+### Mode Control (5 commands)
+
+| Command | Description |
+|---------|-------------|
+| `int8` | 8-bit integer mode (-128 to 127) |
+| `int16` | 16-bit integer mode (MINT 2 compatible) |
+| `int32` | 32-bit integer mode |
+| `int64` | 64-bit integer mode |
+| `fp` | Floating-point mode (default) |
+| `mode` | Show current mode |
+
 ### Miscellaneous (4 commands)
 
 | Command | Description |
@@ -1706,9 +1987,6 @@ mint_debug_YYYYMMDD_HHMMSS.log
 | `help` | Show help |
 | `debug` | Toggle debug mode |
 | `bye` | Exit MINT |
-| * int  | enable integer mode (MINT 2)  | 
-| * fp   | enable floating-point mode    | 
-| * mode | show current mode             |  
 
 ---
 
@@ -1856,6 +2134,23 @@ FIB
 // 0 
 ```
 
+### Example 11: Using Processor Flags
+
+```mint
+int8
+127 1 + .              // -128 (overflow)
+/v .                   // 1 (signed overflow detected)
+
+200 100 + .            // 44 (wrapped)
+/c .                   // 1 (unsigned carry detected)
+
+10 10 - .              // 0
+/z .                   // 1 (zero flag set)
+
+-42 /abs .             // 42
+/n .                   // 0 (not negative)
+```
+
 ---
 
 ## Tips and Tricks
@@ -1915,6 +2210,21 @@ If it works, save as a real function:
 ... ;
 ```
 
+### Using Processor Flags
+
+**Check for overflow:**
+```mint
+int16
+30000 5000 + .         // -30536 (overflow!)
+/v ( `Overflow detected!` /N )
+```
+
+**Zero detection in loops:**
+```mint
+10 ( " 1 - " /z /W " . 32 /C )
+// Count down, break at zero
+```
+
 ### Error Handling
 
 MINT will show errors for:
@@ -1933,6 +2243,7 @@ MINT will show errors for:
 4. Comment your code with `//`
 5. Enable debug mode only when troubleshooting
 6. Use `:_` for testing before creating permanent functions
+7. Use appropriate integer mode for hardware compatibility
 
 ---
 
@@ -1991,12 +2302,17 @@ arr 1 ? .
 
 ### Division Type
 
-Division is floating-point, not integer:
+Division behavior depends on mode:
 ```mint
+fp
 10 3 / .
-// 3.33333 (not 3)
-10 3 / /floor .
-// 3 (use /floor for integer)
+// 3.33333 (floating-point)
+
+int16
+10 3 / .
+// 3 (integer division)
+/r .
+// 1 (remainder)
 ```
 
 ### Multi-Line Input
@@ -2021,6 +2337,19 @@ ERROR: Unknown word: )
 
 **Solution:** Always use function definitions (`:A`-`:Z` or `:_`) for multi-line code.
 
+### Processor Flags
+
+Flags only work in integer modes:
+```mint
+fp
+127 1 + .
+/v .           // 0 (flags disabled in fp mode)
+
+int8
+127 1 + .
+/v .           // 1 (overflow detected)
+```
+
 ---
 
 ## Quick Reference Card
@@ -2029,6 +2358,7 @@ ERROR: Unknown word: )
 === MINT-Octave Quick Reference ===
 
 NUMBERS:  123  3.14  -42  1e6  #FF
+MODES:    int8 int16 int32 int64 fp mode
 STACK:    ' " $ % /D /CS
 MATH:     + - * / ** /sqrt /abs /ln /log /exp
 ROUND:    /floor /ceil /round /trunc /mod
@@ -2046,11 +2376,18 @@ COND:     cond ( then ) /E ( else )
 BOOL:     /T /F
 FUNC:     :A ... ;  :_ ... ;  list
 I/O:      . , /N /C /K /KS `text`
-SYSTEM:   /c /r
+FLAGS:    /c /v /z /n /r
 MISC:     // help debug bye
 
 BOOLEAN VALUES:
   True:  -1    False: 0
+
+PROCESSOR FLAGS (int modes only):
+  /c  Carry (unsigned overflow)
+  /v  Overflow (signed overflow)
+  /z  Zero (result is zero)
+  /n  Negative (result is negative)
+  /r  Remainder (from division)
 
 STACK EFFECTS:
   n n -- n    Two inputs, one output
@@ -2058,7 +2395,7 @@ STACK EFFECTS:
   -- n        No input, one output
   
 SPECIAL NOTES:
-  • Division is floating-point (use /floor for integer)
+  • Division: fp=decimal, int=quotient+remainder
   • Trig functions use radians (use /rad to convert)
   • Arrays are 0-indexed
   • Loop counters (/i, /j) are 0-based
@@ -2067,6 +2404,7 @@ SPECIAL NOTES:
   • Multi-line code requires :A-:Z or :_ (not immediate mode)
   • :_ = temporary block (runs once, auto-deleted)
   • Comments with // are stripped from saved functions
+  • Flags /v /z /n only in MINT-Octave (not real MINT 2)
 ```
 
 ---
@@ -2082,7 +2420,21 @@ This Octave implementation differs from original MINT:
    - Precision: 15-16 significant digits
    - Scientific notation: 1.23e+36
 
-2. **Expanded trigonometry** (17 functions)
+2. **Integer modes** for hardware compatibility
+   - int8: 8-bit signed (-128 to 127)
+   - int16: 16-bit signed (MINT 2/TEC-1 compatible)
+   - int32: 32-bit signed
+   - int64: 64-bit signed
+   - Proper overflow/wraparound behavior
+
+3. **Enhanced processor flags** (simulator-only)
+   - `/c` - Carry flag (present in real MINT 2)
+   - `/v` - Overflow flag (simulator enhancement)
+   - `/z` - Zero flag (simulator enhancement)
+   - `/n` - Negative flag (simulator enhancement)
+   - Note: Only `/c` exists on real TEC-1 hardware
+
+4. **Expanded trigonometry** (17 functions)
    - Basic: sin, cos, tan
    - Inverse: asin, acos, atan, atan2
    - Hyperbolic: sinh, cosh, tanh
@@ -2090,7 +2442,7 @@ This Octave implementation differs from original MINT:
    - Conversions: /rad, /deg
    - Constants: /pi, /e
 
-3. **Advanced math** (18 arithmetic functions)
+5. **Advanced math** (18 arithmetic functions)
    - Power: **
    - Roots: /sqrt
    - Logarithms: /ln, /log
@@ -2098,32 +2450,32 @@ This Octave implementation differs from original MINT:
    - Rounding: /floor, /ceil, /round, /trunc
    - Other: /abs, /mod, /min, /max, /sign
 
-4. **Debug mode** with file logging
+6. **Debug mode** with file logging
    - Toggle on/off with `debug` command
    - Logs to timestamped file
-   - Shows stack state, variable changes, function calls
+   - Shows stack state, variable changes, function calls, flags
 
-5. **Multi-line function definitions**
+7. **Multi-line function definitions**
    - Uses `...` continuation prompt
    - Capture mode for complex functions
    - Inline comments with `//` (auto-stripped)
 
-6. **Temporary blocks** (`:_`)
+8. **Temporary blocks** (`:_`)
    - Execute multi-line code without saving
    - Perfect for testing and experimentation
    - Automatically deleted after execution
 
-7. **Extended I/O**
+9. **Extended I/O**
    - String literals with backticks: \`text\`
    - Read string: /KS
 
-8. **Array support** for floating-point numbers
-   - 4096 heap locations
-   - Mixed integers and floats
+10. **Array support** for floating-point numbers
+    - 4096 heap locations
+    - Mixed integers and floats
 
-9. **True floating-point division**
-   - Not integer division
-   - Use /floor for integer results
+11. **Mode-dependent division**
+    - Floating-point: decimal results
+    - Integer: quotient + remainder
 
 ### Not Implemented
 
@@ -2139,18 +2491,24 @@ This Octave implementation differs from original MINT:
 
 ## Credits and License
 
-**MINT-Octave v2.6 (2025)**  
+**MINT-Octave v2.7 (2025)**  
 Based on MINT by Ken Boak  
 Implemented in GNU Octave
 
-**New Features in v2.6:**
+**New Features in v2.7:**
+- Integer modes (int8, int16, int32, int64) with proper overflow
+- Processor flags (/c, /v, /z, /n) for overflow detection
+- Enhanced compatibility with MINT 2/TEC-1 hardware
+- Documentation of flag differences between simulator and hardware
+
+**Previous Features (v2.6):**
 - Multi-line function capture mode
 - Temporary execution blocks (`:_`)
 - Inline comment support (`//`)
 - Enhanced list output
 - Fixed print number formatting
 
-This implementation extends the original MINT language with modern floating-point arithmetic, comprehensive mathematical functions, and enhanced debugging capabilities while maintaining the simplicity and elegance of the stack-based paradigm.
+This implementation extends the original MINT language with modern floating-point arithmetic, hardware-compatible integer modes, comprehensive mathematical functions, and enhanced debugging capabilities while maintaining the simplicity and elegance of the stack-based paradigm.
 
 ---
 
@@ -2213,4 +2571,4 @@ Common ASCII codes for use with `/C` and `/K`:
 
 ---
 
-*This manual covers all 73 implemented commands in MINT-Octave v2.6. For questions or issues, enable debug mode to trace execution step-by-step.*
+*This manual covers all implemented commands in MINT-Octave v2.7, including enhanced processor flags for overflow detection. For questions or issues, enable debug mode to trace execution step-by-step.*
