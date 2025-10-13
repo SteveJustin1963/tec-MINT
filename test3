@@ -1,0 +1,564 @@
+fp
+0 0 + .
+1 1 + .
+-1 -1 + .
+1000000 2000000 + .
+-5000 3000 + .
+0.5 0.5 + .
+0.0001 0.0001 + .
+10 0 - .
+0 10 - .
+-5 -5 - .
+100 100 - .
+0 0 * .
+1 0 * .
+0 1 * .
+5 5 * .
+-3 4 * .
+-3 -4 * .
+1000 1000 * .
+100 5 / .
+1 2 / .
+-10 2 / .
+10 -2 / .
+-10 -2 / .
+0.5 0.25 / .
+2 0 ** .
+2 1 ** .
+2 2 ** .
+2 8 ** .
+3 3 ** .
+0 5 ** .
+1 1000 ** .
+-1 2 ** .
+-1 3 ** .
+5 0.5 ** .
+27 0.333333 ** .
+0 /sqrt .
+1 /sqrt .
+4 /sqrt .
+100 /sqrt .
+0.25 /sqrt .
+0 /abs .
+5 /abs .
+-5 /abs .
+-1000 /abs .
+1 /ln .
+2.71828 /ln .
+10 /ln .
+0.5 /ln .
+1 /log .
+10 /log .
+100 /log .
+1000 /log .
+0.1 /log .
+0 /exp .
+1 /exp .
+2 /exp .
+-1 /exp .
+5 /exp .
+0 /floor .
+3.1 /floor .
+3.9 /floor .
+-2.1 /floor .
+-2.9 /floor .
+0 /ceil .
+3.1 /ceil .
+3.9 /ceil .
+-2.1 /ceil .
+-2.9 /ceil .
+0.4 /round .
+0.5 /round .
+0.6 /round .
+-0.4 /round .
+-0.5 /round .
+-0.6 /round .
+3.5 /round .
+10 3 /mod .
+17 5 /mod .
+100 7 /mod .
+5 5 /mod .
+3 10 /mod .
+5 5 /min .
+5 10 /min .
+10 5 /min .
+-5 -10 /min .
+0 -1 /min .
+5 5 /max .
+5 10 /max .
+10 5 /max .
+-5 -10 /max .
+0 1 /max .
+0 /sign .
+5 /sign .
+-5 /sign .
+1000 /sign .
+-0.0001 /sign .
+0 /trunc .
+3.7 /trunc .
+-3.7 /trunc .
+5.999 /trunc .
+-5.999 /trunc .
+0 /sin .
+/pi /sin .
+/pi 2 / /sin .
+/pi 6 / /sin .
+0 /cos .
+/pi /cos .
+/pi 2 / /cos .
+/pi 3 / /cos .
+0 /tan .
+/pi 4 / /tan .
+/pi 3 / /tan .
+0 /asin .
+1 /asin .
+-1 /asin .
+0.5 /asin .
+0 /acos .
+1 /acos .
+-1 /acos .
+0.5 /acos .
+0 /atan .
+1 /atan .
+-1 /atan .
+1000 /atan .
+0 0 /atan2 .
+1 1 /atan2 .
+1 0 /atan2 .
+0 1 /atan2 .
+-1 1 /atan2 .
+1 -1 /atan2 .
+-1 -1 /atan2 .
+0 /sinh .
+1 /sinh .
+-1 /sinh .
+2 /sinh .
+0 /cosh .
+1 /cosh .
+-1 /cosh .
+2 /cosh .
+0 /tanh .
+1 /tanh .
+-1 /tanh .
+0.5 /tanh .
+0 /asinh .
+1 /asinh .
+-1 /asinh .
+10 /asinh .
+1 /acosh .
+2 /acosh .
+10 /acosh .
+100 /acosh .
+0 /atanh .
+0.5 /atanh .
+-0.5 /atanh .
+0.9 /atanh .
+0 /rad .
+90 /rad .
+180 /rad .
+360 /rad .
+-90 /rad .
+0 /deg .
+/pi /deg .
+/pi 2 / /deg .
+/pi 4 / /deg .
+/pi 2 * /deg .
+/pi .
+/pi 2 * .
+/e .
+/e 2 ** .
+5 5 > .
+5 6 > .
+6 5 > .
+0 0 > .
+-5 -10 > .
+5 5 < .
+6 5 < .
+5 6 < .
+0 0 < .
+-10 -5 < .
+5 5 = .
+5 6 = .
+0 0 = .
+-5 -5 = .
+100 100.0 = .
+#FFFFFFFFFFFFFFFF #FFFFFFFFFFFFFFFF & ,
+#FF00FF00FF00FF00 #00FF00FF00FF00FF & ,
+#AAAAAAAAAAAAAAAA #5555555555555555 & ,
+0 0 & ,
+#FFFFFFFFFFFFFFFF 0 & ,
+#FFFFFFFFFFFFFFFF #FFFFFFFFFFFFFFFF | ,
+#FF00FF00FF00FF00 #00FF00FF00FF00FF | ,
+0 0 | ,
+#AAAAAAAAAAAAAAAA 0 | ,
+#FFFFFFFFFFFFFFFF #FFFFFFFFFFFFFFFF ^ ,
+#FF00FF00FF00FF00 #00FF00FF00FF00FF ^ ,
+#AAAAAAAAAAAAAAAA #5555555555555555 ^ ,
+0 0 ^ ,
+0 ~ ,
+#FFFFFFFFFFFFFFFF ~ ,
+#AAAAAAAAAAAAAAAA ~ ,
+#00000000FFFFFFFF ~ ,
+1 { .
+2 { .
+#8000000000000000 { .
+#FFFFFFFFFFFFFFFF { .
+0 { .
+2 } .
+4 } .
+#FFFFFFFFFFFFFFFF } .
+1 } .
+0 } .
+10 .
+20 .
+30 .
+/CS
+100 .
+100 ' .
+5 " .
+" .
+' .
+10 20 $ .
+$ .
+' ' .
+10 20 30 % .
+' .
+' .
+' .
+1 2 3 4 5 /D .
+' ' ' ' ' ' .
+/D .
+a .
+10 a !
+a .
+a a + .
+100 aa !
+aa .
+200 aaa !
+aaa .
+a aa aaa + + .
+0 x !
+0 y !
+0 z !
+5 x !
+10 y !
+15 z !
+x y z + + .
+x y * .
+z y / .
+[ ] empty !
+empty /S .
+[ 1 ] one !
+one /S .
+one 0 ? .
+[ 1 2 3 4 5 ] nums !
+nums /S .
+nums 0 ? .
+nums 1 ? .
+nums 2 ? .
+nums 3 ? .
+nums 4 ? .
+99 nums 0 ?!
+nums 0 ? .
+-50 nums 4 ?!
+nums 4 ? .
+10 a ! 20 b ! 30 c !
+[ a b c ] vars !
+vars 0 ? .
+vars 1 ? .
+vars 2 ? .
+[ #FF #FFFF #FFFFFF ] hex !
+hex 0 ? .
+hex 1 ? .
+hex 2 ? .
+[ 1 [ 2 3 ] 4 ] nested !
+nested 0 ? .
+nested 1 ? dup !
+dup 0 ? .
+dup 1 ? .
+nested 2 ? .
+0 ( `never` )
+1 ( `once` )
+5 ( /i . 32 /C )
+/N
+10 ( /i /i * . 32 /C )
+/N
+3 ( 3 ( /j /i + . 32 /C ) /N )
+2 ( 4 ( 5 ( /i . 32 /C ) /N ) )
+0 sum !
+10 ( sum /i + sum ! )
+sum .
+0 c !
+/U ( c . 32 /C c 1 + c ! c 10 = /W )
+/N
+1 i !
+/U ( i 2 * i ! i . 32 /C i 1000 > /W )
+/N
+/T ( `true branch` )
+/F ( `false branch` )
+5 5 = ( `equal` ) /E ( `not equal` )
+5 6 = ( `equal` ) /E ( `not equal` )
+10 5 > ( `greater` ) /E ( `not greater` )
+5 10 < ( /T ) /E ( /F )
+0 x !
+5 ( x /i + x ! )
+x .
+:A 10 20 + ;
+A .
+:B " * ;
+5 B .
+:C + ;
+7 8 C .
+:D 3 ( /i . 32 /C ) /N ;
+D
+:E a b * ;
+5 a ! 6 b !
+E .
+:F " " * * ;
+3 F .
+:G a b + c !
+c c * ;
+10 g ! 20 h !
+g h G .
+:H /i /i * ;
+5 ( H . 32 /C )
+/N
+:K ( /i . 32 /C ) ;
+10 K
+/N
+:M 1 = ( `one` ) /E ( `not one` ) ;
+1 M
+2 M
+:N " 0 > ( " /abs ) /E ( 0 ) ;
+-5 N .
+5 N .
+:P 5 ( Q ) ;
+:Q /i . 32 /C ;
+P
+/N
+list
+:_
+`temp block 1`
+10 20 + .
+;
+:_
+3 ( /i . 32 /C )
+/N
+;
+:_
+[ 1 2 3 ] t !
+t 0 ? .
+;
+list
+int16
+0 /c . /v . /z . /n . /r .
+10 20 + .
+/c . /v . /z . /n .
+32767 1 + .
+/c . /v . /z . /n .
+-32768 1 - .
+/c . /v . /z . /n .
+200 200 + .
+/c . /v . /z . /n .
+-200 -200 + .
+/c . /v . /z . /n .
+10 20 - .
+/c . /v . /z . /n .
+-10 -20 - .
+/c . /v . /z . /n .
+0 1 - .
+/c . /v . /z . /n .
+200 200 * .
+/c . /v . /z . /n .
+-200 200 * .
+/c . /v . /z . /n .
+10 10 - .
+/c . /v . /z . /n .
+-5 /abs .
+/z . /n .
+10 3 / .
+/r .
+17 5 / .
+/r .
+100 7 / .
+/r .
+5 i !
+3 j !
+5 ( /i . 32 /C )
+/N
+i .
+j .
+3 ( 4 ( /j . 32 /C /i . 32 /C 32 /C ) /N )
+i .
+j .
+/T .
+/F .
+/U .
+int8
+0 .
+127 .
+-128 .
+127 1 + .
+-128 1 - .
+255 .
+#FF .
+255 1 + .
+#FF 1 + .
+int32
+2147483647 .
+-2147483648 .
+2147483647 1 + .
+-2147483648 1 - .
+int64
+9223372036854775807 .
+-9223372036854775808 .
+fp
+#FF ,
+#FFFF ,
+#FFFFFFFF ,
+#FFFFFFFFFFFFFFFF ,
+int8
+#FF ,
+#FFFF ,
+int16
+#FF ,
+#FFFF ,
+#FFFFFFFF ,
+int32
+#FF ,
+#FFFF ,
+#FFFFFFFF ,
+#FFFFFFFFFFFFFFFF ,
+int64
+#FF ,
+#FFFF ,
+#FFFFFFFF ,
+#FFFFFFFFFFFFFFFF ,
+fp
+#FF #0F & ,
+#FF00FF00FF00FF00 #00FF00FF00FF00FF & ,
+int16
+#FFFF #00FF & ,
+#FFFF #FF00 & ,
+int8
+#FF #0F & ,
+#FF #F0 & ,
+int32
+#FFFFFFFF #0000FFFF & ,
+int64
+#FFFFFFFFFFFFFFFF #00000000FFFFFFFF & ,
+fp
+#F0 #0F | ,
+#AA #55 | ,
+int16
+#FF00 #00FF | ,
+int8
+#F0 #0F | ,
+int32
+#FFFF0000 #0000FFFF | ,
+int64
+#FFFFFFFF00000000 #00000000FFFFFFFF | ,
+fp
+#FF #AA ^ ,
+int16
+#FFFF #AAAA ^ ,
+int8
+#FF #AA ^ ,
+int32
+#FFFFFFFF #AAAAAAAA ^ ,
+int64
+#FFFFFFFFFFFFFFFF #AAAAAAAAAAAAAAAA ^ ,
+fp
+0 ~ ,
+#FFFFFFFFFFFFFFFF ~ ,
+int16
+0 ~ ,
+#FFFF ~ ,
+int8
+0 ~ ,
+#FF ~ ,
+int32
+0 ~ ,
+#FFFFFFFF ~ ,
+int64
+0 ~ ,
+#FFFFFFFFFFFFFFFF ~ ,
+fp
+1 { { { .
+#8000000000000000 { .
+int16
+1 { { { .
+#8000 { .
+int8
+1 { { { .
+#80 { .
+int32
+1 { { { .
+#80000000 { .
+int64
+1 { { { .
+#8000000000000000 { .
+fp
+#8000000000000000 } .
+1024 } } } .
+int16
+#8000 } .
+1024 } } } .
+int8
+#80 } .
+128 } } } .
+int32
+#80000000 } .
+1024 } } } .
+int64
+#8000000000000000 } .
+1024 } } } .
+fp
+mode
+int8
+mode
+int16
+mode
+int32
+mode
+int64
+mode
+fp
+mode
+int
+mode
+fp
+65 /C 66 /C 67 /C
+/N
+72 /C 101 /C 108 /C 108 /C 111 /C
+/N
+`Hello World`
+/N
+`Testing 123`
+/N
+`Symbols: !@#$%^&*()`
+/N
+fp
+1000000000000 .
+0.000000000001 .
+1.23e50 .
+-9.87e-40 .
+int16
+32767 .
+-32768 .
+32768 .
+-32769 .
+int8
+127 .
+-128 .
+128 .
+-129 .
+fp
+/D .
+1 /D .
+1 2 /D .
+1 2 3 /D .
+/CS /D .
+help
+list
+mode
