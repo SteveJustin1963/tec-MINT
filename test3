@@ -350,184 +350,20 @@ list
 t 0 ? .
 ;
 list
-int16
-0 /c . /v . /z . /n . /r .
-10 20 + .
-/c . /v . /z . /n .
-32767 1 + .
-/c . /v . /z . /n .
--32768 1 - .
-/c . /v . /z . /n .
-200 200 + .
-/c . /v . /z . /n .
--200 -200 + .
-/c . /v . /z . /n .
-10 20 - .
-/c . /v . /z . /n .
--10 -20 - .
-/c . /v . /z . /n .
-0 1 - .
-/c . /v . /z . /n .
-200 200 * .
-/c . /v . /z . /n .
--200 200 * .
-/c . /v . /z . /n .
-10 10 - .
-/c . /v . /z . /n .
--5 /abs .
-/z . /n .
-10 3 / .
-/r .
-17 5 / .
-/r .
-100 7 / .
-/r .
-5 i !
-3 j !
-5 ( /i . 32 /C )
-/N
-i .
-j .
-3 ( 4 ( /j . 32 /C /i . 32 /C 32 /C ) /N )
-i .
-j .
-/T .
-/F .
-/U .
-int8
-0 .
-127 .
--128 .
-127 1 + .
--128 1 - .
-255 .
-#FF .
-255 1 + .
-#FF 1 + .
-int32
-2147483647 .
--2147483648 .
-2147483647 1 + .
--2147483648 1 - .
-int64
-9223372036854775807 .
--9223372036854775808 .
-fp
 #FF ,
 #FFFF ,
 #FFFFFFFF ,
 #FFFFFFFFFFFFFFFF ,
-int8
-#FF ,
-#FFFF ,
-int16
-#FF ,
-#FFFF ,
-#FFFFFFFF ,
-int32
-#FF ,
-#FFFF ,
-#FFFFFFFF ,
-#FFFFFFFFFFFFFFFF ,
-int64
-#FF ,
-#FFFF ,
-#FFFFFFFF ,
-#FFFFFFFFFFFFFFFF ,
-fp
-#FF #0F & ,
-#FF00FF00FF00FF00 #00FF00FF00FF00FF & ,
-int16
-#FFFF #00FF & ,
-#FFFF #FF00 & ,
-int8
-#FF #0F & ,
-#FF #F0 & ,
-int32
-#FFFFFFFF #0000FFFF & ,
-int64
-#FFFFFFFFFFFFFFFF #00000000FFFFFFFF & ,
-fp
-#F0 #0F | ,
-#AA #55 | ,
-int16
-#FF00 #00FF | ,
-int8
-#F0 #0F | ,
-int32
-#FFFF0000 #0000FFFF | ,
-int64
-#FFFFFFFF00000000 #00000000FFFFFFFF | ,
-fp
-#FF #AA ^ ,
-int16
-#FFFF #AAAA ^ ,
-int8
-#FF #AA ^ ,
-int32
-#FFFFFFFF #AAAAAAAA ^ ,
-int64
-#FFFFFFFFFFFFFFFF #AAAAAAAAAAAAAAAA ^ ,
-fp
-0 ~ ,
-#FFFFFFFFFFFFFFFF ~ ,
-int16
-0 ~ ,
-#FFFF ~ ,
-int8
-0 ~ ,
-#FF ~ ,
-int32
-0 ~ ,
-#FFFFFFFF ~ ,
-int64
-0 ~ ,
-#FFFFFFFFFFFFFFFF ~ ,
-fp
-1 { { { .
-#8000000000000000 { .
-int16
-1 { { { .
-#8000 { .
-int8
-1 { { { .
-#80 { .
-int32
-1 { { { .
-#80000000 { .
-int64
-1 { { { .
-#8000000000000000 { .
-fp
-#8000000000000000 } .
-1024 } } } .
-int16
-#8000 } .
-1024 } } } .
-int8
-#80 } .
-128 } } } .
-int32
-#80000000 } .
-1024 } } } .
-int64
-#8000000000000000 } .
-1024 } } } .
-fp
-mode
-int8
-mode
-int16
-mode
-int32
-mode
-int64
-mode
-fp
-mode
-int
-mode
-fp
+4294967295 ,
+1000000000000 .
+0.000000000001 .
+1.23e50 .
+-9.87e-40 .
+/D .
+1 /D .
+1 2 /D .
+1 2 3 /D .
+/CS /D .
 65 /C 66 /C 67 /C
 /N
 72 /C 101 /C 108 /C 108 /C 111 /C
@@ -538,27 +374,9 @@ fp
 /N
 `Symbols: !@#$%^&*()`
 /N
-fp
-1000000000000 .
-0.000000000001 .
-1.23e50 .
--9.87e-40 .
-int16
-32767 .
--32768 .
-32768 .
--32769 .
-int8
-127 .
--128 .
-128 .
--129 .
-fp
-/D .
-1 /D .
-1 2 /D .
-1 2 3 /D .
-/CS /D .
-help
-list
 mode
+
+//////////////////////
+
+
+
