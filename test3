@@ -1,3 +1,6 @@
+
+// TEST BLOCK 1: FLOATING-POINT MODE (fp)
+
 fp
 0 0 + .
 1 1 + .
@@ -376,7 +379,232 @@ list
 /N
 mode
 
-//////////////////////
+// TEST BLOCK 2: INTEGER 8-BIT MODE (int8)
+
+int8
+0 .
+127 .
+-128 .
+127 1 + .
+-128 1 - .
+255 .
+#FF .
+255 1 + .
+#FF 1 + .
+0 /c . /v . /z . /n . /r .
+10 20 + .
+/c . /v . /z . /n .
+127 1 + .
+/c . /v . /z . /n .
+-128 1 - .
+/c . /v . /z . /n .
+127 127 + .
+/c . /v . /z . /n .
+-100 -100 + .
+/c . /v . /z . /n .
+10 20 - .
+/c . /v . /z . /n .
+-10 -20 - .
+/c . /v . /z . /n .
+0 1 - .
+/c . /v . /z . /n .
+100 100 * .
+/c . /v . /z . /n .
+-50 3 * .
+/c . /v . /z . /n .
+10 10 - .
+/c . /v . /z . /n .
+-5 /abs .
+/z . /n .
+#FF ,
+#FFFF ,
+255 ,
+#FF #0F & ,
+#FF #F0 & ,
+#F0 #0F | ,
+#FF #AA ^ ,
+0 ~ ,
+#FF ~ ,
+1 { { { .
+#80 { .
+#80 } .
+128 } } } .
+255 1 { ,
+mode
+
+// int8
+0 .
+127 .
+-128 .
+127 1 + .
+-128 1 - .
+255 .
+#FF .
+255 1 + .
+#FF 1 + .
+0 /c . /v . /z . /n . /r .
+10 20 + .
+/c . /v . /z . /n .
+127 1 + .
+/c . /v . /z . /n .
+-128 1 - .
+/c . /v . /z . /n .
+127 127 + .
+/c . /v . /z . /n .
+-100 -100 + .
+/c . /v . /z . /n .
+10 20 - .
+/c . /v . /z . /n .
+-10 -20 - .
+/c . /v . /z . /n .
+0 1 - .
+/c . /v . /z . /n .
+100 100 * .
+/c . /v . /z . /n .
+-50 3 * .
+/c . /v . /z . /n .
+10 10 - .
+/c . /v . /z . /n .
+-5 /abs .
+/z . /n .
+#FF ,
+#FFFF ,
+255 ,
+#FF #0F & ,
+#FF #F0 & ,
+#F0 #0F | ,
+#FF #AA ^ ,
+0 ~ ,
+#FF ~ ,
+1 { { { .
+#80 { .
+#80 } .
+128 } } } .
+255 1 { ,
+mode
+
+// int16
+0 .
+32767 .
+-32768 .
+32767 1 + .
+-32768 1 - .
+32768 .
+-32769 .
+#FFFF .
+0 /c . /v . /z . /n . /r .
+10 20 + .
+/c . /v . /z . /n .
+32767 1 + .
+/c . /v . /z . /n .
+-32768 1 - .
+/c . /v . /z . /n .
+200 200 + .
+/c . /v . /z . /n .
+-200 -200 + .
+/c . /v . /z . /n .
+10 20 - .
+/c . /v . /z . /n .
+-10 -20 - .
+/c . /v . /z . /n .
+0 1 - .
+/c . /v . /z . /n .
+200 200 * .
+/c . /v . /z . /n .
+-200 200 * .
+/c . /v . /z . /n .
+10 10 - .
+/c . /v . /z . /n .
+-5 /abs .
+/z . /n .
+10 3 / .
+/r .
+17 5 / .
+/r .
+100 7 / .
+/r .
+5 i !
+3 j !
+5 ( /i . 32 /C )
+/N
+i .
+j .
+3 ( 4 ( /j . 32 /C /i . 32 /C 32 /C ) /N )
+i .
+j .
+/T .
+/F .
+/U .
+#FF ,
+#FFFF ,
+#FFFFFFFF ,
+1024 ,
+#FFFF #00FF & ,
+#FFFF #FF00 & ,
+#FF00 #00FF | ,
+#FFFF #AAAA ^ ,
+0 ~ ,
+#FFFF ~ ,
+1 { { { .
+#8000 { .
+#8000 } .
+1024 } } } .
+mode
+
+// TEST BLOCK 4: INTEGER 32-BIT MODE (int32)
+int32
+2147483647 .
+-2147483648 .
+2147483647 1 + .
+-2147483648 1 - .
+#FFFFFFFF .
+#FF ,
+#FFFF ,
+#FFFFFFFF ,
+#FFFFFFFFFFFFFFFF ,
+#FFFFFFFF #0000FFFF & ,
+#FFFF0000 #0000FFFF | ,
+#FFFFFFFF #AAAAAAAA ^ ,
+0 ~ ,
+#FFFFFFFF ~ ,
+1 { { { .
+#80000000 { .
+#80000000 } .
+1024 } } } .
+mode
+
+// TEST BLOCK 5: INTEGER 64-BIT MODE (int64)
+int64
+9223372036854775807 .
+-9223372036854775808 .
+#FF ,
+#FFFF ,
+#FFFFFFFF ,
+#FFFFFFFFFFFFFFFF ,
+#FFFFFFFFFFFFFFFF #00000000FFFFFFFF & ,
+#FFFFFFFF00000000 #00000000FFFFFFFF | ,
+#FFFFFFFFFFFFFFFF #AAAAAAAAAAAAAAAA ^ ,
+0 ~ ,
+#FFFFFFFFFFFFFFFF ~ ,
+1 { { { .
+#8000000000000000 { .
+#8000000000000000 } .
+1024 } } } .
+mode
+
+// TEST BLOCK 6: FINAL VERIFICATION
+help
+list
+mode
+fp
+mode
+int
+mode
+//
+
+
+
+
 
 
 
