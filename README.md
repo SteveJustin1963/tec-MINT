@@ -78,7 +78,7 @@ This also may help if your nuts are too big, by changing `ram.ram` to show `TIBS
 
 # My attempt to run v1.1, first go
 
-- using an EEPROM; AT28C64B.
+- using an EEPROM; AT28C64B.  https://github.com/SteveJustin1963/eeprom-programmer/wiki/eeprom
 - compile v1.1, set flags as needed
 - mod the socket, install eeprom, hangs over the existing rom socket by 2 pins each side. make the mod
 - result; turn a 24 pin socket into 28 pins, lucky the pinout is identical except for A12 and VCC
