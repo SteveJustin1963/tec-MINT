@@ -361,7 +361,7 @@ function add_builtin_words()
   state.dict("/C") = @(s) print_char(s);
   state.dict("/N") = @(s) print_newline(s);
   state.dict("/K") = @(s) read_char(s);
-  state.dict("/KS") = @(s) read_string(s);
+  state.dict("/L") = @(s) read_string(s);
   state.dict("/O") = @(s) port_output(s);
   state.dict("/I") = @(s) port_input(s);
 
@@ -1727,7 +1727,7 @@ function tokens = tokenize_with_strings(line)
         endif
       endif
 
-      if any(next_ch == 'NWEFTUijcrhszkVCKDSAIOPGXevn')
+      if any(next_ch == 'NWEFTUijcrhszkVCKDSAIOPGXevnL')
         if !isempty(current_token)
           tokens{end+1} = strtrim(current_token);
           current_token = "";
@@ -2370,7 +2370,7 @@ function s = show_help(s)
   printf("LOGICAL   | *  }   | shift right (mode-aware)                  | n -- n       | DONE\n");
   printf("STACK     | *  '   | drop top member DROP                      | m n -- m     | DONE\n");
   printf('STACK     | *  "   | duplicate top member DUP                  | n -- n n     | DONE\n');
-  printf("STACK     | *  %%  | over - copy 2nd to top                    | m n -- m n m | DONE\n");
+  printf("STACK     | *  %%   | over - copy 2nd to top                    | m n -- m n m | DONE\n");
   printf("STACK     | *  $   | swap top 2 members SWAP                   | m n -- n m   | DONE\n");
   printf("STACK     | *  /D  | stack depth                               | -- n         | DONE\n");
   printf("STACK     | *  /CS | clear stack                               | ... --       | DONE\n");
@@ -2379,7 +2379,7 @@ function s = show_help(s)
   printf("I/O       | *  `   | print literal string                      | --           | DONE\n");
   printf("I/O       | *  /C  | print character to output                 | n --         | DONE\n");
   printf("I/O       | *  /K  | read char from input                      | -- n         | DONE\n");
-  printf("I/O       | *  /KS | read string (all ASCII codes + length)    | -- n n... n  | DONE\n");
+  printf("I/O       | *  /L  | read string (all ASCII codes + length)    | -- n n... n  | DONE\n");
   printf("I/O       | *  /O  | output to I/O port (file-based)           | n p --       | DONE\n");
   printf("I/O       | *  /I  | input from I/O port (file-based)          | p -- n       | DONE\n");
   printf("FUNCTION  | * :A;  | define function (A-Z)                     | --           | DONE\n");
