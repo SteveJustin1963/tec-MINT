@@ -908,6 +908,23 @@ vals 1 ? .
 // 20 
 ```
 
+
+**Nested arrays with inline syntax fail:**
+```
+> [ 10 
+... [ 20 30 ] 
+... 40 ] d !
+ERROR: Invalid array element: [
+```
+
+This is a parser limitation - it can't handle `[` as an array element. The workaround is to create nested arrays separately:
+```
+[20 30] temp !
+[10 temp 40] d !
+```
+
+
+
 ---
 
 ## Control Flow
