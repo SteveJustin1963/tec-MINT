@@ -36,6 +36,12 @@ state.loop_j = 0;
   state.capture_mode = false;
   state.capture_buffer = "";
   state.capture_name = "";
+  
+  ## Immediate capture mode for incomplete constructs
+  state.immediate_capture_mode = false;
+  state.immediate_capture_buffer = "";
+  
+  
 
   ## I/O Port simulation state
   state.port_dir = "mint_ports";
@@ -81,8 +87,10 @@ state.loop_j = 0;
   endif
 
   ## Main REPL Loop with Capture Mode Support
-  while true
-    if state.capture_mode
+
+while true
+    ## Determine prompt based on mode
+    if state.capture_mode || state.immediate_capture_mode
       printf("... ");
     else
       printf("> ");
@@ -95,7 +103,7 @@ state.loop_j = 0;
       continue;
     endif
 
-    if strcmpi(line, "bye") && !state.capture_mode
+    if strcmpi(line, "bye") && !state.capture_mode && !state.immediate_capture_mode
       if state.debug && state.debug_file != -1
         fclose(state.debug_file);
         printf("Debug log saved.\n");
@@ -107,7 +115,7 @@ state.loop_j = 0;
     hist_ptr = numel(history)+1;
 
     ## Check if entering capture mode - ENHANCED VERSION
-    if !state.capture_mode
+    if !state.capture_mode && !state.immediate_capture_mode
       trimmed = strtrim(line);
       ## Allow : followed by any uppercase letter OR underscore for temp blocks
       if length(trimmed) >= 1 && trimmed(1) == ':'
@@ -171,7 +179,7 @@ state.loop_j = 0;
       endif
     endif
 
-## If in capture mode, accumulate lines
+    ## If in function capture mode, accumulate lines
     if state.capture_mode
       ## Strip inline comments from this line before adding to buffer
       comment_pos = strfind(line, '//');
@@ -188,7 +196,6 @@ state.loop_j = 0;
       if state.debug
         debug_print("[DEBUG] CAPTURE: accumulating line into buffer\n");
       endif
-      
 
       ## Check for semicolon to end capture
       if any(strfind(line, ';'))
@@ -238,6 +245,66 @@ state.loop_j = 0;
       continue;
     endif
 
+    ## Handle immediate capture mode for incomplete constructs
+    if state.immediate_capture_mode
+      ## Add current line to buffer
+      state.immediate_capture_buffer = [state.immediate_capture_buffer, " ", line];
+      
+      ## Check if construct is complete
+      if is_construct_complete(state.immediate_capture_buffer)
+        state.immediate_capture_mode = false;
+        
+        if state.debug
+          debug_print(sprintf("[DEBUG] IMMEDIATE CAPTURE COMPLETE: %s\n", state.immediate_capture_buffer));
+        endif
+        
+        ## Process the complete construct
+        try
+          if state.debug
+            debug_print(sprintf("\n=== EXECUTING BUFFERED: %s ===\n", state.immediate_capture_buffer));
+          endif
+          interpret_line(state.immediate_capture_buffer);
+          if state.debug
+            debug_show_final_state();
+          endif
+          printf("\n");
+        catch err
+          fprintf("ERROR: %s\n", err.message);
+          if state.debug
+            try
+              if isfield(err, 'stack')
+                fprintf("ERROR STACK:\n");
+                disp(err.stack);
+              endif
+            catch
+              fprintf("(Stack trace not available)\n");
+            end_try_catch
+          endif
+        end_try_catch
+        
+        state.immediate_capture_buffer = "";
+      else
+        if state.debug
+          debug_print("[DEBUG] IMMEDIATE CAPTURE: Still incomplete, continuing...\n");
+        endif
+      endif
+      continue;
+    endif
+
+    ## Check if line starts an incomplete construct in immediate mode
+    if !state.capture_mode && !state.immediate_capture_mode
+      if !is_construct_complete(line)
+        ## Enter immediate capture mode
+        state.immediate_capture_mode = true;
+        state.immediate_capture_buffer = line;
+        
+        if state.debug
+          debug_print("[DEBUG] >>> ENTERING IMMEDIATE CAPTURE MODE for incomplete construct\n");
+        endif
+        continue;
+      endif
+    endif
+
     ## Normal immediate mode execution
     try
       if state.debug
@@ -262,7 +329,58 @@ state.loop_j = 0;
       endif
     end_try_catch
   endwhile
+
+
 endfunction
+
+## Check if a construct is complete (balanced brackets/parens)
+function complete = is_construct_complete(line)
+  ## Count open and close brackets and parentheses
+  open_brackets = 0;
+  open_parens = 0;
+  in_string = false;
+  i = 1;
+  
+  while i <= length(line)
+    ch = line(i);
+    
+    ## Skip comments
+    if i <= length(line)-1 && strcmp(line(i:i+1), '//')
+      break;
+    endif
+    
+    ## Handle backtick strings
+    if ch == '`'
+      if in_string
+        in_string = false;
+      else
+        in_string = true;
+      endif
+      i++;
+      continue;
+    endif
+    
+    ## Only count brackets/parens outside of strings
+    if !in_string
+      switch ch
+        case '['
+          open_brackets++;
+        case ']'
+          open_brackets--;
+        case '('
+          open_parens++;
+        case ')'
+          open_parens--;
+      endswitch
+    endif
+    
+    i++;
+  endwhile
+  
+  ## Construct is complete if all brackets and parens are balanced
+  complete = (open_brackets == 0 && open_parens == 0);
+endfunction
+
 
 ## --------------------------
 ## Built-in Dictionary Setup
