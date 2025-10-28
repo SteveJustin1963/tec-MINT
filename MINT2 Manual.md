@@ -2314,7 +2314,7 @@ g s d p D
 
 
 
-## Interrupt Handler         
+## Interrupt Handler - TBA         
 - experimental code, do not use
 - may or may not be in current source code, see John Hardy
 - usage n /X  /v  :Z.....;        
@@ -2350,7 +2350,38 @@ g s d p D
 - This is the same as what would happen if your mint code was interrupted by a hardware interrupt"        "
 - So when you run a mint from ROM in the tec-1 and you interrupt it with an INT or a NMI, mint will not crash it will execute the function Z.
 
+
+# function `Z`
+
+current version of **TEC-1ROM10.z80.lst** file for any implementation of the interrupt handler function `Z`, or any references to `:Z`, `def Z`, RST handling, or `/v` being used for interrupt vectors — but there are **no occurrences** of those constructs in the listing.
+
+That means:
+✅ The **documentation note** you quoted about `Z` being an experimental interrupt handler is **not backed by code** in this ROM listing.
+🚫 There’s **no implemented `Z:` function**, no jump vectors to it, and no interrupt dispatch that writes to `/v`.
+🧠 Therefore, this feature appears to be *conceptual or planned*, possibly implemented only in a development or “John Hardy test” version of MINT, not in this released ROM image.
+
+
+# function `/X`  
+No — the `/X` function or command **is not implemented** in your uploaded **TEC-1ROM10.z80(1).lst** file either.
+
+I searched the entire listing for:
+
+* any label or token named `/X`
+* code performing the described behaviour (push PC to stack and jump to an arbitrary address)
+* comments or tables listing `/X` among MINT words
+
+None of these appear.
+That means:
+🚫 There’s **no executable routine or entry** for `/X` in this ROM.
+🧠 The `/X` feature (which pushes the return address then jumps to a user-supplied address, like a software interrupt test) is **described in notes** but **not compiled** in this binary.
+It may have existed in a **development variant** (e.g. John Hardy’s experimental MINT builds) but not in this final ROM image.
+
+
+
+
+
 ////end for now ///////
+
 
 
 
