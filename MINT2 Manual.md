@@ -2376,11 +2376,193 @@ That means:
 🧠 The `/X` feature (which pushes the return address then jumps to a user-supplied address, like a software interrupt test) is **described in notes** but **not compiled** in this binary.
 It may have existed in a **development variant** (e.g. John Hardy’s experimental MINT builds) but not in this final ROM image.
 
+///////
+# Here’s your rewritten **POLA (Principle of Least Astonishment) guide**, adapted to **MINT 2** style, vocabulary, and interpreter rules — reflecting its stack-based, minimalist, byte-code environment from the *MINT 2 Manual*.
+
+---
+
+# 🧠 Violating the Principle of Least Astonishment (POLA) in MINT 2
+
+MINT 2 is simple but extremely strict — one wrong token, and the interpreter may crash or freeze.
+A **POLA violation** happens when code behaves in ways that *surprise* even an experienced MINT user: when it abuses the stack, uses misleading names, or breaks expected interpreter flow.
+
+---
+
+## 1️⃣ Confusing Stack Manipulation
+
+MINT 2’s stack is public and unprotected. Every word (operator or function) takes or leaves numbers there.
+Violating POLA means making the stack state hard to predict or trace.
+
+### ❌ Bad habits
+
+* **Too many juggling ops** — overusing `"`, `$`, `'`, and `%` makes it impossible to know what’s on top.
+  Example:
+
+  ```
+  > 1 2 " $ % + .   // impossible to mentally follow
+  ```
+* **Deep access without reason** — MINT 2 forbids arbitrary deep picks (`PICK` doesn’t exist). Simulate it via arrays or refactor.
+* **Mixing stack + non-stack flow** — e.g. using `/K`, `/I`, or `/O` in the middle of numeric logic without saving or restoring stack order.
+
+### ✅ Good habit
+
+Keep stack depth ≤ 3 within one function, always restore balance before returning (`;`).
+
+---
+
+## 2️⃣ Misleading Word or Function Definitions
+
+MINT 2 functions (`:A … ;`) are single-letter and global — redefining one changes system behavior.
+
+### ❌ POLA Violations
+
+* **Hidden side effects**
+
+  ```
+  :G a b + . ;      // looks like add
+  :A G a! ;         // but it overwrites a! each time
+  ```
+* **Overloading core ops**
+  Redefining `+`, `-`, `.` or `/K` destroys interpreter trust.
+  MINT 2 executes tokens byte-by-byte — redefine only uppercase letters.
+* **Functions doing more than their name implies**
+  A word called `:S` that secretly prints, changes heap, or loops forever surprises users.
+
+### ✅ Rule
+
+Each word should *do exactly what its name implies* and affect only obvious variables.
+
+---
+
+## 3️⃣ Unpredictable Compile-Time / Run-Time Actions
+
+MINT 2 doesn’t truly separate compile and run time, but *timing surprises* still happen.
+
+### ❌ Violations
+
+* **Forgetting that loops (`( )`) execute immediately.**
+  Writing `10( code )` runs the loop now — not “later”.
+* **Defining functions mid-execution** (`:A … ;`) inside another function — overwrites previous A silently.
+
+### ✅ Guideline
+
+All definitions must appear at top level (prompt `>`). Never define new functions inside running code.
+
+---
+
+## 4️⃣ Inconsistent or Non-Standard Style
+
+MINT 2 is tiny but has a clear human-readable format.
+
+### ❌ POLA Violations
+
+* Mixing inline comments: `:A 10( `x` ) ; // wrong` → corrupts buffer
+* Using spaces wrongly: `12!/E` instead of `12! /E` (breaks parser)
+* Code lines longer than 256 bytes (overflow)
+* Overusing globals `a–z` → hard to trace who changed what.
+
+### ✅ Rule
+
+Each function ≤ 256 bytes, one statement per line, all comments removed before upload.
+
+---
+
+## 5️⃣ Unclear or Surprising Memory Use
+
+MINT 2 exposes heap, arrays, and pointers directly. Violating POLA means writing code that corrupts memory or reuses heap pointers unexpectedly.
+
+### ❌ Bad practice
+
+```
+> [1 2 3] a! 
+> [4 5 a] b!     // invalid, embeds used heap pointer directly
+```
+
+### ✅ Good practice
+
+```
+> [1 2 3] a!
+> [4 5 a] b!    // illegal – instead use new copy:
+> [4 5 6] b!
+```
+
+Arrays are fixed-size; never assume they grow automatically.
+
+---
+
+## 6️⃣ POLA in Naming and Output
+
+### ❌ Example
+
+```
+:PRINT2 "2* . ;    // Actually multiplies by 2, not print twice
+```
+
+This misleads the user — *astonishment*.
+
+### ✅ Correct MINT 2 Equivalent
+
+```
+:3* " " + + ;     // stack: n -- 3n
+```
+
+Explicit and predictable — matches arithmetic meaning.
+
+---
+
+## 7️⃣ Summary of Safe POLA Practice in MINT 2
+
+| Category  | Safe Pattern              | Avoid                           |
+| --------- | ------------------------- | ------------------------------- |
+| Stack     | ≤ 3 items visible         | deep juggling, unbalanced stack |
+| Naming    | 1 letter, literal meaning | hidden side effects             |
+| Memory    | new arrays only           | self-referencing heap           |
+| Functions | defined top-level         | redefining built-ins            |
+| Comments  | separate lines only       | inline after `;`                |
+| Lines     | ≤ 256 bytes               | long uploads                    |
+| State     | clear `/c`, `/r`          | leave flags dirty               |
+
+---
+
+## 8️⃣ Example: Good vs. Bad POLA Code
+
+### ✅ Predictable MINT 2
+
+```
+:3* " " + + ;     // triple a number
+> 5 3* .
+15
+>
+```
+
+### ❌ Astonishing MINT 2
+
+```
+:*3 " " + + `Done` a! ;  // modifies variable silently
+> 5 *3 .
+15
+> a .
+15   // surprise! side effect
+```
+
+---
+
+### Final Principle
+
+> **In MINT 2, clarity means survival.**
+> Any code that forces the reader to guess the stack or side effects violates POLA.
+> A good MINT program reads left-to-right like math and ends cleanly at `;`.
+
+---
+
+Would you like me to make a **short reference card (1-page PDF)** summarizing these POLA rules for inclusion in your MINT 2 manual (matching your formatting and ASCII section headers)?
+
 
 
 
 
 ////end for now ///////
+
 
 
 
