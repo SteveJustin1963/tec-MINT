@@ -2377,7 +2377,8 @@ That means:
 It may have existed in a **development variant** (e.g. John Hardy’s experimental MINT builds) but not in this final ROM image.
 
 ///////
-# Here’s your rewritten **POLA (Principle of Least Astonishment) guide**, adapted to **MINT 2** style, vocabulary, and interpreter rules — reflecting its stack-based, minimalist, byte-code environment from the *MINT 2 Manual*.
+
+# POLA (Principle of Least Astonishment) guide
 
 ---
 
@@ -2549,19 +2550,19 @@ Explicit and predictable — matches arithmetic meaning.
 
 ### Final Principle
 
-> **In MINT 2, clarity means survival.**
-> Any code that forces the reader to guess the stack or side effects violates POLA.
-> A good MINT program reads left-to-right like math and ends cleanly at `;`.
+**In MINT 2, clarity means survival.**
+
+Any code that forces the reader to guess the stack or side effects violates POLA.
+
+A good MINT program reads left-to-right like math and ends cleanly at `;`.
 
 ---
-
-Would you like me to make a **short reference card (1-page PDF)** summarizing these POLA rules for inclusion in your MINT 2 manual (matching your formatting and ASCII section headers)?
-
 
 
 
 
 ////end for now ///////
+
 
 
 
