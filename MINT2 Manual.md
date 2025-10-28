@@ -2378,8 +2378,7 @@ It may have existed in a **development variant** (e.g. John Hardy’s experiment
 
 ///////
 
-# POLA (Principle of Least Astonishment) guide
-
+ 
 ---
 
 # 🧠 Violating the Principle of Least Astonishment (POLA) in MINT 2
@@ -2562,6 +2561,7 @@ A good MINT program reads left-to-right like math and ends cleanly at `;`.
 
 
 ////end for now ///////
+
 
 
 
