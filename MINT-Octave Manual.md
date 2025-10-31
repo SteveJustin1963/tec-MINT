@@ -3918,9 +3918,10 @@ Common ASCII codes for use with `/C` and `/K`:
 
 ---
 
-# 🧠 Violating the Principle of Least Astonishment (POLA) in MINT 2
+# 🧠 POLA - Violating the Principle of Least Astonishment
 
 MINT 2 is simple but extremely strict — one wrong token, and the interpreter may crash or freeze.
+
 A **POLA violation** happens when code behaves in ways that *surprise* even an experienced MINT user: when it abuses the stack, uses misleading names, or breaks expected interpreter flow.
 
 ---
