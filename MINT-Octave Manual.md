@@ -3675,7 +3675,7 @@ This Octave implementation differs from original MINT:
 
 ## The Fix
 
-**NO MORE CACHING.** Every `/I` read is **fresh from disk**. Your manual edits are seen **immediately**.
+Every `/I` read is **fresh from disk**. Your manual edits are seen **immediately**.
 
 ## How It Works Now
 
@@ -3827,7 +3827,6 @@ Yes, reading from disk every time is slower than caching. But:
 
 ---
 
-**No cache. Always fresh. Edit freely!** ✓
 
 
 ### Not Implemented
