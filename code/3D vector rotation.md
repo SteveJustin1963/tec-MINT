@@ -402,7 +402,189 @@ Rotated vector: 0 2 3
 This corrected code should now run without syntax errors in the MINT interpreter, producing the expected rotation results within the constraints of 16-bit integer arithmetic. If you encounter specific issues when running it, please provide the error output or behavior, and I can assist further!
 
 //////////////////////////////////////////////
- v3
+v3
+
+---
+
+### Overview
+
+The goal is to **rotate a 3D vector** `[x y z]` using a **3×3 rotation matrix** `m`, which is assumed to be pre-computed and stored in memory as 9 consecutive values:
+
+```
+m[0] m[1] m[2]
+m[3] m[4] m[5]
+m[6] m[7] m[8]
+```
+
+The input vector `v` is `[vx vy vz]`, and the output is a new rotated vector.
+
+The functions `:X`, `:Y`, `:Z` each compute **one component** of the rotated vector using **matrix-vector multiplication** for that row.
+
+---
+
+### Defined Words (Functions)
+
+#### `:M` – Multiply and accumulate
+```forth
+:M a ! b ! a b * s / ;
+```
+- Takes two values `a` and `b` from the stack
+- Computes `a * b`
+- Adds result to a running sum `s` (assumed initialized elsewhere)
+- This is the **dot product** term
+
+> Note: `s` must be initialized to 0 before use.
+
+---
+
+#### `:R` – Main rotation driver
+```forth
+:R v ! m ! 
+   `R start` /N 
+   m v X x ! m v Y y ! m v Z z ! 
+   `Creating vector` /N 
+   [ x y z ] w ! 
+   `R done` /N 
+   w ;
+```
+
+- Stores input vector `v` and matrix `m`
+- Calls `:X`, `:Y`, `:Z` to compute new `x`, `y`, `z`
+- Assembles result into vector `w = [x y z]`
+- Returns `w`
+
+> This is the **main entry point** for rotation.
+
+---
+
+#### `:X` – Compute new X component
+```forth
+:X v ! m ! `X start` /N 
+   m 0 ? v 0 ? M x ! 
+      `x1=` x . /N 
+   m 1 ? v 1 ? M t ! x t + x ! 
+      `x2=` x . /N 
+   m 2 ? v 2 ? M t ! x t + x ! 
+      `x3=` x . /N 
+   x ;
+```
+
+This computes:
+```
+x' = m[0][0]*vx + m[0][1]*vy + m[0][2]*vz
+```
+
+Step-by-step:
+1. `m 0 ?` → fetch `m[0]`
+2. `v 0 ?` → fetch `v[0]`
+3. `M` → multiply and add to sum → `x = m[0][0] * vx`
+4. Repeat for `m[1] * vy`, add to `x`
+5. Repeat for `m[2] * vz`, add to `x`
+6. Return final `x`
+
+> Note: `?` likely means "fetch from address + index"
+
+---
+
+#### `:Y` – Compute new Y component
+```forth
+:Y v ! m ! `Y start` /N 
+   m 3 ? v 0 ? M y ! `y1=` y . /N 
+   m 4 ? v 1 ? M t ! y t + y ! `y2=` y . /N 
+   m 5 ? v 2 ? M t ! y t + y ! `y3=` y . /N 
+   y ;
+```
+
+Computes:
+```
+y' = m[1][0]*vx + m[1][1]*vy + m[1][2]*vz
+```
+
+Using matrix rows:
+- Row 1: `m[3], m[4], m[5]`
+
+---
+
+#### `:Z` – Compute new Z component
+```forth
+:Z v ! m ! `Z start` /N 
+   m 6 ? v 0 ? M z ! `z1=` z . /N 
+   m 7 ? v 1 ? M t ! z t + z ! `z2=` z . /N 
+   m 8 ? v 2 ? M t ! z t + z ! `z3=` z . /N 
+   z ;
+```
+
+Computes:
+```
+z' = m[2][0]*vx + m[2][1]*vy + m[2][2]*vz
+```
+
+Using row 2: `m[6], m[7], m[8]`
+
+---
+
+### Full Rotation Formula
+
+The code performs standard **matrix-vector multiplication**:
+
+$$
+\begin{bmatrix}
+x' \\ y' \\ z'
+\end{bmatrix}
+=
+\begin{bmatrix}
+m_{00} & m_{01} & m_{02} \\
+m_{10} & m_{11} & m_{12} \\
+m_{20} & m_{21} & m_{22}
+\end{bmatrix}
+\begin{bmatrix}
+v_x \\ v_y \\ v_z
+\end{bmatrix}
+$$
+
+Where:
+- `m[0..8]` = flattened 3×3 matrix (row-major)
+- `v[0..2]` = input vector
+- Output: `[x', y', z']`
+
+---
+
+### Assumptions & Requirements
+
+1. **`s` must be initialized to 0** before calling `:M` (not shown — likely done externally)
+2. **Matrix `m` is row-major**, 9 elements
+3. **Vector `v` is 3 elements**
+4. **Memory access via `?`** = fetch value at address + offset
+5. **Stack discipline**: words clean up after themselves
+6. **Debug prints** with `/N` and `.` for tracing
+
+---
+
+### Example Usage (hypothetical)
+
+```forth
+0 s !            \ initialize accumulator
+[1 0 0] v !      \ input vector
+rot_matrix m !   \ 3x3 rotation matrix
+v m R            \ → returns rotated vector
+```
+
+---
+
+### Summary
+
+
+It’s a **clean, efficient, stack-based implementation** of **3D vector rotation via matrix multiplication** in Forth, with:
+
+- Modular row-wise computation (`:X`, `:Y`, `:Z`)
+- Reusable multiply-accumulate (`:M`)
+- Clear debug tracing
+- Proper vector assembly in `:R`
+
+
+---
+
+
 
 ```
  1000 s !
