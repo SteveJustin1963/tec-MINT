@@ -404,6 +404,7 @@ This corrected code should now run without syntax errors in the MINT interpreter
 //////////////////////////////////////////////
  v3
 
+```
  1000 s !
 
 [ 1000 2000 3000 ]v!
@@ -473,5 +474,4 @@ t w !
 `Original vector: ` v 0 ? s / . 32 /C v 1 ? s / . 32 /C v 2 ? s / . /N
 `Rotated vector: ` w 0 ? s / . 32 /C w 1 ? s / . 32 /C w 2 ? s / . /N
 
-
-
+```
