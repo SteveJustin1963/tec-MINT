@@ -17,7 +17,7 @@ language.
 
 - Z is reserved for interrupt calls. You write your interrupt routine under this function.
 - do not enter a space between `:` and the function letter, otherwise fails
- - eg :R 1 2 + . ;
+  - eg :R 1 2 + . ;
 - this means we define a function with : and end with ;
 - also
 - Comments can only go at end of line after `;` but is better to place on the next line on its own
@@ -2601,6 +2601,7 @@ A good MINT program reads left-to-right like math and ends cleanly at `;`.
 
 
 ////end for now ///////
+
 
 
 
