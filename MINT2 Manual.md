@@ -751,7 +751,9 @@ s (       // Loop up to logical size
 ;
 ```
 
-# Fixed-Array-Manager program
+# Fixed-Array-Manager no comments ready to run
+
+this version, can only take single digit inputs
 
 ```
 :A [0 0 0 0 0 0 0 0 0 0] a! ;
@@ -2599,6 +2601,7 @@ A good MINT program reads left-to-right like math and ends cleanly at `;`.
 
 
 ////end for now ///////
+
 
 
 
