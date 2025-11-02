@@ -547,11 +547,20 @@ eg
 ```
 
 ### Array depth
-bug, this command is broken, do not use
-it should work like this
-```> [1 2 3] /D .
+
+not sure
+
+
+
+### stack depth
+works!
+```
+// assume stack is empty first
+> 1 2 3 /D .
 3
-> 
+
+>  1 2 3 4 5 6 7 8 9  /D.
+9
 ```
 
 
@@ -2590,6 +2599,7 @@ A good MINT program reads left-to-right like math and ends cleanly at `;`.
 
 
 ////end for now ///////
+
 
 
 
