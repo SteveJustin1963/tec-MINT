@@ -382,7 +382,7 @@ ie
 - very important - once defined, their size and contents cannot be changed
 - Arrays are indexed, which means that each element in the array has a unique number associated with it. 
 - This number is called the index of the element.
-- the array indexes start at 0
+- the array indexes start at 0 
 - To create an array, use the following syntax:  
 - v = variable i.e. single lowercase single letter , use this if u want to change the array contents
 - n= number 
@@ -450,6 +450,29 @@ or if we have saved it in a!
 3
 > 
 ```
+
+### difference
+```
+ > \[1 2 3] 1 \? .   
+2 
+>  [1 2 3] 2 ? .
+3 
+>  [1 2 3] 2 _ .
+2 //note its 2 not 3
+> 
+
+> 
+
+> \[1 2 3] 1 \? .
+2 
+> \[1 2 3] 1 ? . //missing backslash
+11779   //error
+>  [1 2 3] 1 ? .
+2 
+>
+
+```
+
 
 
 ### Updating contents of array
@@ -2561,6 +2584,7 @@ A good MINT program reads left-to-right like math and ends cleanly at `;`.
 
 
 ////end for now ///////
+
 
 
 
