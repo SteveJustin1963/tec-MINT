@@ -538,6 +538,12 @@ eg
 > [1 2 3 4 5] /S .
 5
 >
+
+
+> [1 1 1 1 1 1 1 1 1 1 1 1] a!
+> a /S.
+12 
+
 ```
 
 ### Array depth
@@ -2584,6 +2590,7 @@ A good MINT program reads left-to-right like math and ends cleanly at `;`.
 
 
 ////end for now ///////
+
 
 
 
