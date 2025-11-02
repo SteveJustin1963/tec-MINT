@@ -1,6 +1,8 @@
   
 # Recipe 2: 4 digit counter
-ref - https://github.com/tec1group/MINT-cookbook/tree/main/misc/4-digit-counter
+- https://github.com/tec1group/MINT-cookbook/tree/main/misc/4-digit-counter
+- using ver1 of mint
+
 
 ## The Problem
 
