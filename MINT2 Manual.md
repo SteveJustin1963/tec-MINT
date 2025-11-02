@@ -7,7 +7,7 @@
 - It is now ready to accept commands from the keyboard which can be entered followed by followed by a CRLF (enter key)
 - after CRLF a new prompt will appear. when you upload code into terminal with a text transfer method, at the end of each function the `>` should be echoed back
 - lines cannot exceed 256 bytes in length with the current internal buffer setting
-- MINT is a byte-code interpreter - this means that all of its instructions are 1 byte long. 
+- MINT is a byte-code interpreter - this means that all of its instructions are 1 byte long, well almost
 - However, the choice of instruction uses printable ASCII characters, as a human readable alternative to assembly
 language. 
 - Variables are a to z lowercase and only as single character followed by a space
@@ -2601,6 +2601,7 @@ A good MINT program reads left-to-right like math and ends cleanly at `;`.
 
 
 ////end for now ///////
+
 
 
 
