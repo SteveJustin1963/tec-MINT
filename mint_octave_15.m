@@ -1,90 +1,84 @@
-
 ## ----------------------------------------------------------------------
 ## MINT/Forth-like Minimal Interpreter in Octave with DEBUG MODE
 ## Version 15.1 - Mode-aware bitwise operations
 ## ----------------------------------------------------------------------
+
 function mint_octave_15()
-  clear global;
   global state;
+ 
 
-  ## Set display format for scientific work
-  format long;
 
-## Interpreter state
-  state.stack = [];
-  state.vars = containers.Map();  ## FIXED: Changed from array to Map for multi-char support
-  state.heap = zeros(1,4096);
-  state.heap_ptr = 1;
-  state.start_time = time();  ## Track program start time for timestamps
-  state.dict = containers.Map();
-  state.colon_defs = containers.Map();
-  state.last_var = "";  ## FIXED: Changed from -1 to empty string
-  state.loop_i = 0;
-state.loop_j = 0;
-  state.break_loop = false;
-  state.sys_c = 0;  ## Carry flag (unsigned overflow)
-  state.sys_v = 0;  ## Overflow flag (signed overflow)
-  state.sys_z = 0;  ## Zero flag
-  state.sys_n = 0;  ## Negative flag
-  state.sys_r = 0;  ## Remainder from division
-  state.debug = false;
-  state.debug_file = -1;
-  state.int_mode = true;  ## TRUE = integer mode, FALSE = floating-point mode
-  state.int_bits = 16;    ## Integer bit width: 8, 16, 32, or 64
+  ## One-time initialization
+  if isempty(state) || ~isfield(state, "heap")
+    format long;
 
-  ## Capture mode for multi-line function definitions
-  state.capture_mode = false;
-  state.capture_buffer = "";
-  state.capture_name = "";
-  
-  ## Immediate capture mode for incomplete constructs
-  state.immediate_capture_mode = false;
-  state.immediate_capture_buffer = "";
-  
-  
+    % --- Core interpreter state ---
+    state.stack = [];
+    state.vars = containers.Map();      % variable dictionary
+    state.dict = containers.Map('KeyType','char','ValueType','any');      % built-in words (stores function handles)
+    state.colon_defs = containers.Map('KeyType','char','ValueType','any');% user-defined words (stores function handles)
+    state.mem = {};                     % array and object storage
 
-  ## I/O Port simulation state
-  state.port_dir = "mint_ports";
-  state.port_buffers = containers.Map('KeyType', 'double', 'ValueType', 'any');
+    % --- Memory and heap ---
+    state.heap = zeros(1, 4096);        % 4KB default heap
+    state.heap_ptr = 1;                 % heap start pointer
+    state.last_var = "";                % last accessed variable name
 
-  
+    % --- Loop and system variables ---
+    state.loop_i = 0;
+    state.loop_j = 0;
+    state.break_loop = false;
+    state.sys_c = 0;
+    state.sys_v = 0;
+    state.sys_z = 0;
+    state.sys_n = 0;
+    state.sys_r = 0;
 
-  ## Initialize builtins
-  add_builtin_words();
-
-  ## History buffer
-  history = {};
-  hist_ptr = 1;
-
-  printf("MINT-Octave REPL v15.1 (2025-10-13). Type 'bye' or 'help' for info.\n");
-
-  ## Ask user if they want debug mode
-  debug_choice = input("Enable debug mode? (y/n): ", "s");
-  if strcmpi(debug_choice, "y") || strcmpi(debug_choice, "yes")
-    state.debug = true;
-
-    ## Open debug log file
-    debug_filename = sprintf("mint_debug_%s.log", datestr(now, "yyyymmdd_HHMMSS"));
-    state.debug_file = fopen(debug_filename, "w");
-
-    if state.debug_file == -1
-      printf("WARNING: Could not open debug file '%s'\n", debug_filename);
-    else
-      printf("\n*** DEBUG MODE ENABLED ***\n");
-      printf("Debug output will be written to: %s\n", debug_filename);
-    endif
-
-    printf("Debug output will show:\n");
-    printf("  - Token processing\n");
-    printf("  - Stack state\n");
-    printf("  - Variable changes\n");
-    printf("  - Function calls\n");
-    printf("  - Loop iterations\n");
-    printf("  - Capture mode status\n\n");
-  else
+    % --- Modes and runtime flags ---
     state.debug = false;
-    printf("\n*** DEBUG MODE DISABLED ***\n\n");
-  endif
+    state.debug_file = -1;
+    state.int_mode = true;
+    state.int_bits = 16;
+
+    % --- I/O Port Emulation ---
+    state.port_dir = "mint_ports";
+    state.port_indices = containers.Map('KeyType','double','ValueType','double');  % Current read position only
+
+    % --- Timing ---
+    state.start_time = time();
+
+    % --- Capture modes ---
+    state.capture_mode = false;
+    state.capture_buffer = "";
+    state.capture_name = "";
+    state.immediate_capture_mode = false;
+    state.immediate_capture_buffer = "";
+    
+    % --- Command history ---
+    state.history = {};
+    state.hist_ptr = 1;
+
+    % --- Initialize built-in words ---
+    
+    
+    ## Force-reset dictionary if it’s not a containers.Map
+if ~isa(state.dict, "containers.Map")
+  state.dict = containers.Map('KeyType','char','ValueType','any');
+endif
+
+       % --- Initialize built-in words ---
+    if ~isa(state.dict, "containers.Map")
+      state.dict = containers.Map('KeyType','char','ValueType','any');
+    endif
+    add_builtin_words();
+
+    printf("[MINT-Octave v15.1] Persistent environment initialized.\n");
+  endif  ## End of initialization if block
+
+
+
+
+ 
 
   ## Main REPL Loop with Capture Mode Support
 
@@ -111,8 +105,8 @@ while true
       break;
     endif
 
-    history{end+1} = line;
-    hist_ptr = numel(history)+1;
+    state.history{end+1} = line;
+    state.hist_ptr = numel(state.history)+1;
 
     ## Check if entering capture mode - ENHANCED VERSION
     if !state.capture_mode && !state.immediate_capture_mode
@@ -482,6 +476,7 @@ function add_builtin_words()
   state.dict("/L") = @(s) read_string(s);
   state.dict("/O") = @(s) port_output(s);
   state.dict("/I") = @(s) port_input(s);
+  state.dict("/RELOAD") = @(s) port_reload(s);
 
   ## Print ops
   state.dict(".") = @(s) print_num(s);
@@ -491,6 +486,12 @@ function add_builtin_words()
   state.dict("?") = @(s) get_array_item(s);
   state.dict("?!") = @(s) set_array_item(s);
   state.dict("/S") = @(s) array_size(s);
+
+  ## Raw heap allocation
+  state.dict("/A") = @(s) alloc_heap(s);
+  state.dict("/h") = @(s) push(s, state.heap_ptr);
+
+
 
   ## Help
   state.dict("help") = @(s) show_help(s);
@@ -1482,9 +1483,9 @@ function s = port_output(s)
   fprintf(fid, "%g %g\n", timestamp, value);
   fclose(fid);
 
-  ## Clear buffer so next read will reload the file
-  if isKey(state.port_buffers, port)
-    remove(state.port_buffers, port);
+  ## Reset read position so next read starts from beginning
+  if isKey(state.port_indices, port)
+    remove(state.port_indices, port);
   endif
 endfunction
 
@@ -1499,96 +1500,186 @@ function s = port_input(s)
   filename = sprintf("%s/port%d.txt", state.port_dir, port);
 
   if state.debug
-    debug_print(sprintf("[DEBUG] PORT INPUT: reading from port %d (%s)\n", port, filename));
+    debug_print(sprintf("[DEBUG] PORT INPUT: port %d (%s)\n", port, filename));
   endif
 
-  if !isKey(state.port_buffers, port)
-    if !exist(filename, "file")
-      error("Port file does not exist: %s (port %d not ready)", filename, port);
-    endif
-
-    fid = fopen(filename, "r");
-    if fid == -1
-      error("Failed to open port file: %s", filename);
-    endif
-
-    content = fread(fid, Inf, "char=>char")';
-    fclose(fid);
-
-    values = str2num(content);
-    if isempty(values)
-      error("No data available in port %d", port);
-    endif
-
-    ## Flatten matrix to row vector (in case file has newlines)
-    values = reshape(values', 1, []);
-
-    ## Parse timestamp-value pairs: extract only values (every other number starting at index 2)
-    value_only = [];
-    for i = 2:2:length(values)
-      value_only(end+1) = values(i);
-    endfor
-
-    state.port_buffers(port) = num2cell(value_only);
-
-    if state.debug
-      debug_print(sprintf("[DEBUG] PORT: loaded %d values from port %d\n", length(value_only), port));
-    endif
+  % ALWAYS read fresh from disk (no caching)
+  if !exist(filename, "file")
+    error("Port file does not exist: %s", filename);
   endif
 
-  buffer = state.port_buffers(port);
-
-  if isempty(buffer)
-    error("No more data available in port %d", port);
+  fid = fopen(filename, "r");
+  if fid == -1
+    error("Failed to open port file: %s", filename);
   endif
 
-  value = buffer{1};
-  buffer(1) = [];
-  state.port_buffers(port) = buffer;
+  content = fread(fid, Inf, "char=>char")';
+  fclose(fid);
 
-  if state.debug
-    debug_print(sprintf("[DEBUG] PORT INPUT: read %g from port %d (%d values remaining)\n", value, port, length(buffer)));
+  values = str2num(content);
+  if isempty(values)
+    error("No data in port %d", port);
   endif
+
+  values = reshape(values', 1, []);
+  value_only = values(2:2:end);  % Extract values (skip timestamps)
+
+  if isempty(value_only)
+    error("No values in port %d", port);
+  endif
+
+  % Get current read position (default to 1 if first read)
+  if !isKey(state.port_indices, port)
+    idx = 1;
+  else
+    idx = state.port_indices(port);
+  endif
+
+  % Wrap around if at end (circular buffer)
+  if idx > length(value_only)
+    idx = 1;
+  endif
+
+  % Read value at current index
+  value = value_only(idx);
+
+  % Increment and save position
+  state.port_indices(port) = idx + 1;
 
   s = push(s, value);
+
+  if state.debug
+    debug_print(sprintf("[DEBUG] Read value %g from port %d [%d of %d] (fresh from disk)\n", value, port, idx, length(value_only)));
+  endif
 endfunction
+
+## --------------------------
+## Port Reload Function (/RELOAD)
+## --------------------------
+function s = port_reload(s)
+  global state;
+  [s, port] = pop(s);
+  
+  if port < 0 || port > 255
+    error("Port number must be 0-255");
+  endif
+  
+  % Reset read position to start from beginning
+  if isKey(state.port_indices, port)
+    remove(state.port_indices, port);
+  endif
+  
+  printf("Port %d position reset - next read starts from beginning\n", port);
+  
+  if state.debug
+    debug_print(sprintf("[DEBUG] Port %d index cleared - will start from beginning\n", port));
+  endif
+endfunction
+
+## --------------------------
+## Heap Allocation Function  (/A)
+## --------------------------
+function s = alloc_heap(s)
+  global state;
+  [s, n] = pop(s);
+
+  if n <= 0
+    s = push(s, 0);
+    return;
+  endif
+
+  base = state.heap_ptr;              % starting address
+  newptr = state.heap_ptr + n;        % next free address
+  state.heap_ptr = newptr;            % persist new pointer
+
+  if length(state.heap) < state.heap_ptr
+    state.heap(state.heap_ptr) = 0;
+  endif
+
+  s = push(s, base);
+
+  if state.debug
+    debug_print(sprintf("[DEBUG] /A: Alloc %d bytes @%d (heap_ptr=%d)\n", n, base, state.heap_ptr));
+  endif
+endfunction
+
+
+
 
 ## --------------------------
 ## Array Functions
 ## --------------------------
+## --------------------------
+## get_array_item (/?)
+## --------------------------
 function s = get_array_item(s)
   global state;
-  [s, idx] = pop(s);
-  [s, addr] = pop(s);
+  [s, n] = pop(s);    % index
+  [s, a] = pop(s);    % array or address
 
-  size = state.heap(addr);
-  if idx < 0 || idx >= size
-    error("Array index out of bounds: %d (size=%d)", idx, size);
+  % Treat as raw heap pointer if within heap range
+  if a < state.heap_ptr
+    idx = a + n;
+    if idx < 1 || idx > length(state.heap)
+      error("Heap index out of bounds: %d (heap size=%d)", idx, length(state.heap));
+    endif
+    val = state.heap(idx);
+    s = push(s, val);
+    if state.debug
+      debug_print(sprintf("[DEBUG] /? raw heap read @%d = %g\n", idx, val));
+    endif
+    return;
   endif
 
-  value = state.heap(addr + 1 + idx);
+  % Otherwise treat as structured array
+  arr = state.mem{a};
+  if n < 0 || n >= length(arr)
+    error("Array index out of bounds: %d (size=%d)", n, length(arr));
+  endif
+  val = arr(n + 1);
+  s = push(s, val);
+
   if state.debug
-    debug_print(sprintf("[DEBUG] ARRAY GET: addr=%g, idx=%g -> value=%g\n", addr, idx, value));
+    debug_print(sprintf("[DEBUG] /? structured read arr[%d] = %g\n", n, val));
   endif
-  s = push(s, value);
 endfunction
 
+
+## --------------------------
+## set_array_item (?!)
+## --------------------------
 function s = set_array_item(s)
   global state;
-  [s, idx] = pop(s);
-  [s, addr] = pop(s);
-  [s, val] = pop(s);
+  [s, n] = pop(s);    % index
+  [s, a] = pop(s);    % array or address
+  [s, val] = pop(s);  % value
 
-  size = state.heap(addr);
-  if idx < 0 || idx >= size
-    error("Array index out of bounds: %d (size=%d)", idx, size);
+  % Treat as raw heap pointer if within heap range
+  if a < state.heap_ptr
+    idx = a + n;
+    if idx < 1 || idx > length(state.heap)
+      error("Heap index out of bounds: %d (heap size=%d)", idx, length(state.heap));
+    endif
+    state.heap(idx) = val;
+    if state.debug
+      debug_print(sprintf("[DEBUG] /?! raw heap write @%d = %g\n", idx, val));
+    endif
+    return;
   endif
+
+  % Otherwise treat as structured array
+  arr = state.mem{a};
+  if n < 0 || n >= length(arr)
+    error("Array index out of bounds: %d (size=%d)", n, length(arr));
+  endif
+  arr(n + 1) = val;
+  state.mem{a} = arr;
 
   if state.debug
-    debug_print(sprintf("[DEBUG] ARRAY SET: addr=%g, idx=%g, value=%g (was %g)\n", addr, idx, val, state.heap(addr + 1 + idx)));
+    debug_print(sprintf("[DEBUG] /?! structured write arr[%d] = %g\n", n, val));
   endif
-  state.heap(addr + 1 + idx) = val;
 endfunction
+
 
 function s = array_size(s)
   global state;
@@ -2845,4 +2936,6 @@ function s = set_int64_mode(s)
   printf("Maximum precision without overflow\n");
   printf("Bitwise operations work on full 64-bit\n");
   printf("Hex display shows 16 digits (full 64-bit)\n\n");
+
+
 endfunction
