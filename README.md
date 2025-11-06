@@ -12,7 +12,7 @@ Down to business, chaps! And now for something completely similar...
 
 * A staggering 400,000 commands per second (on a 4MHz clock, no less)—or, if you prefer, precisely one order of magnitude slower than whatever clock you've got ticking away in your pocket!
 
-* Pop your code into asm80 (16MHz clock, old bean) and behold: approximately 1,600,000 parsecs—or 4000 shekels, give or take six sigma—on a jolly sunny afternoon, round about 3:23pm, with tea and crumpets optional!
+* Dont have a TEC-1 ? Then pop your code into asm80 (16MHz clock, old bean) and behold: approximately 1,600,000 parsecs—or 4000 shekels, give or take six sigma—on a jolly sunny afternoon, round about 3:23pm, with tea and crumpets optional!
 
 * Permits rapid prototyping of code, effortless concatenation, no tiresome compiling, runs forthwith like a knight on a quest—test as you build, and build as you test, what ho!
 
