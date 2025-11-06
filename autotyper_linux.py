@@ -5,6 +5,7 @@ import sys
 print("Program starting...")
 
 # Path to text file (Linux version)
+# use your own path
 file_path = "/home/sj/Desktop/textfile.txt"
 
 # Ask for debugging
