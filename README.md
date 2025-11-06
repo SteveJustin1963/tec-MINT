@@ -30,7 +30,7 @@ Down to business, chaps! And now for something completely similar...
 
 * [Code to keep punching...](https://github.com/SteveJustin1963/tec-MINT/tree/main/code) and all over my github.. scattered across my GitHub like holy grail crumbs
 
-* My ongoing updated [SJ Manual Mint V2.md](https://github.com/SteveJustin1963/tec-MINT/blob/main/SJ%20Manual%20Mint%20V2.md) (now with 50% more wisdom!)
+* My ongoing updated [SJ Manual Mint V2.md](https://github.com/SteveJustin1963/tec-MINT/blob/main/MINT2%20Manual.md) (now with 50% more wisdom!)
 
 * My ongoing autopsy analysis [and extraction](https://github.com/SteveJustin1963/tec-MINT/wiki)  (dissecting the beast, one bit at a time—nobody expects the Spanish Inquisition!)
 
@@ -189,7 +189,10 @@ The range depends on the allocation of bits for the sign, exponent, and mantissa
 
  
 # MINT in Octave
+
 As MINT can be tricky to use on its own, I built MINT-Octave — a version that runs inside GNU Octave and handles heavier math, floating-point operations, transcendental functions, and other advanced stuff. It supports multiple modes besides FP, such as integer mode, and includes a built-in debugger so all you fellow vibe coders can bounce back and forth between MINT-Octave and the real Z80-based MINT to troubleshoot new code fast. Once you’ve got the hang of it, take off the training wheels and get ready to throw that big ol’ rock.
+https://github.com/SteveJustin1963/tec-MINT/blob/main/MINT-Octave%20Manual.md
+
 
 
 ![image](https://github.com/user-attachments/assets/e15ac155-4a9c-48a9-a4c3-31413bce2aa3)
