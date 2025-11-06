@@ -61,20 +61,37 @@ When running MINT under asm80 emulation, I made a nifty upload tool called autot
 
 
 # Down to business...
-- Its a small fast [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) like system meant especially for the TEC-1 prototype and its lesser cunning monkeys- rev A B C D (E F ?) G and SCC and if all fails for gods sake please use the Micocomp-1 whilst placed under a chair leg. 
-- Incredible 400,000 commands /sec (4Mhz clock) or one order of power slower than your clock speed
-- running your code in asm80 (16 Mhz clock) gets you around 1,600,000 parsecs or 4000 shekels +- 6 sigma there abouts on a sunny afternoon around 3:23pm
-- Allows rapid prototyping of code, easy concatenation, no compiling, runs instantly, test as you build
-- When you get an undetected error, reward yourself with a punch to the n@@ts
-- [THE SOURCE CODE](https://github.com/orgMINT/MINT)
-- https://github.com/tec1group/MINT-cookbook ver1 stuff
-- [monsonite site](https://github.com/monsonite/MINT)
-- [FB Search](https://www.facebook.com/groups/623556744820045/search/?q=mint)
-- [spreadsheet help files](https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/)
-- [Code to keep punching...](https://github.com/SteveJustin1963/tec-MINT/tree/main/code) and all over my github
-- my ongoing updated [SJ Manual Mint V2.md](https://github.com/SteveJustin1963/tec-MINT/blob/main/SJ%20Manual%20Mint%20V2.md)
-- my ongoing autopsy analysis [and extraction](https://github.com/SteveJustin1963/tec-MINT/wiki) 
+Down to business, chaps! And now for something completely similar...
 
+* 'Tis a pint-sized, lightning-swift Forth-ish contraption, crafted with loving care for the noble TEC-1 prototype and its rather dim-witted simian kin—revs A, B, C, D (E? F? Who knows!), G, and the mighty SCC; and if the whole blasted lot explodes in a puff of logic, by Jove, prop up the Micocomp-1 under a chair leg and call it a day!
+
+* A staggering 400,000 commands per second (on a 4MHz clock, no less)—or, if you prefer, precisely one order of magnitude slower than whatever clock you've got ticking away in your pocket!
+
+* Pop your code into asm80 (16MHz clock, old bean) and behold: approximately 1,600,000 parsecs—or 4000 shekels, give or take six sigma—on a jolly sunny afternoon, round about 3:23pm, with tea and crumpets optional!
+
+* Permits rapid prototyping of code, effortless concatenation, no tiresome compiling, runs forthwith like a knight on a quest—test as you build, and build as you test, what ho!
+
+* Should an undetected error sneak past like a dead parrot, do treat yourself to a hearty punch to the n@@ts—it's the only decent reward!
+
+* [THE SOURCE CODE](https://github.com/orgMINT/MINT) (fanfare, please!)
+
+* https://github.com/tec1group/MINT-cookbook — the ver1 goodies, straight from the ministry!
+
+* The [monsonite site](https://github.com/monsonite/MINT) (somewhere in the colonies, no doubt)
+
+* [FB Search](https://www.facebook.com/groups/623556744820045/search/?q=mint) (for when you're feeling social)
+
+* [spreadsheet help files](https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/)  (because even knights need a ledger)
+
+* [Code to keep punching...](https://github.com/SteveJustin1963/tec-MINT/tree/main/code) and all over my github.. scattered across my GitHub like holy grail crumbs
+
+* My ongoing updated [SJ Manual Mint V2.md](https://github.com/SteveJustin1963/tec-MINT/blob/main/SJ%20Manual%20Mint%20V2.md) (now with 50% more wisdom!)
+
+* My ongoing autopsy analysis [and extraction](https://github.com/SteveJustin1963/tec-MINT/wiki)  (dissecting the beast, one bit at a time—nobody expects the Spanish Inquisition!)
+
+
+
+ 
 
 
 
