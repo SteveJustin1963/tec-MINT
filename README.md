@@ -169,7 +169,7 @@ The range depends on the allocation of bits for the sign, exponent, and mantissa
 
  
 # Training wheels, MINT in Octave
- ready!
+As MINT can be tricky to use on its own, I built MINT-Octave — a version that runs inside GNU Octave and handles heavier math, floating-point operations, transcendental functions, and other advanced stuff. It supports multiple modes besides FP, such as integer mode, and includes a built-in debugger so all you fellow vibe coders can bounce back and forth between MINT-Octave and the real Z80-based MINT to troubleshoot new code fast. Once you’ve got the hang of it, take off the training wheels and get ready to throw that big ol’ rock.
 
 
 ![image](https://github.com/user-attachments/assets/e15ac155-4a9c-48a9-a4c3-31413bce2aa3)
