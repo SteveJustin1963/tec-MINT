@@ -28,7 +28,7 @@ Down to business, chaps! And now for something completely similar...
 
 * [spreadsheet help files](https://docs.google.com/spreadsheets/d/1uoJT1DG8Mu-oMqlK1f7USof6CF3R0vvWduXqJm4WmjY/)  (because even knights need a ledger)
 
-* [Code to keep punching...](https://github.com/SteveJustin1963/tec-MINT/tree/main/code) ... scattered across my GitHub like holy grail crumbs
+* [Code to keep punching](https://github.com/SteveJustin1963/tec-MINT/tree/main/code) ... and scattered across my GitHub like holy grail crumbs
 
 * My ongoing updated [SJ Manual Mint V2.md](https://github.com/SteveJustin1963/tec-MINT/blob/main/MINT2%20Manual.md) (now with 50% more wisdom!)
 
