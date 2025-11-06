@@ -6,6 +6,7 @@ import sys
 print("Program starting...")
 
 # Path to text file
+# use your own path
 file_path = r"C:\Users\61418\Desktop\textfile.txt"
 
 # Special character mappings
@@ -88,3 +89,4 @@ keyboard.add_hotkey('ctrl+7', type_text)
 
 # Keep program running until Esc pressed
 keyboard.wait('esc')
+
