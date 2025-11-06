@@ -57,11 +57,8 @@ RAMSIZE     EQU $4000   ;this is 14k of ram (like a real tec1-D maxed out), asm8
 ```
 This may also help if your nuts are too big — just change ram.ram to show TIBSIZE EQU $800 on both the TEC-1 and asm80 builds. That lets you enter huge nuts of code per line. The text input buffer (TIB) is where your code lives, and it’s also reused to display code when you press Ctrl-L.
 
-When running MINT under asm80 emulation, I made a nifty upload tool called autotyper.py. It auto-types your `textfile.txt` directly into any window — including the asm80 console — while MINT is running, and it conveniently strips out any comments starting with //.
+When running MINT under asm80 emulation, I made a nifty upload tool called autotyper.py. It auto-types directly into any window — including the asm80 console — while MINT is running, and it conveniently strips out any comments starting with //.
 
-And finally — if your old Millennium Falcon needs more than 12 parsecs to make the Kessel Run (whatever), tweak the three delay values in the .py file. Try bumping them up to about 0.2, but not much more, or you’ll be bored to tears waiting for it to finish.
-
-Last but not least… use the Force, Luke — so Yoda can access your C:\path\mint-code 😄
 
 # Down to business...
 - Its a small fast [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) like system meant especially for the TEC-1 prototype and its lesser cunning monkeys- rev A B C D (E F ?) G and SCC and if all fails for gods sake please use the Micocomp-1 whilst placed under a chair leg. 
