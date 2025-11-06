@@ -30,35 +30,6 @@ in terms of the order of respect or recognition for their work.**
 - https://www.youtube.com/watch?v=m66y6C54Cds **Alright, buckle up buttercup, because we're about to embark on a cinematic quest longer than a toddler's nap after a sugar rush!  WARNING - 3 1/2 HOURS !**
 
 
-# MINTing your NUTS
-
-
- 
-**Ah, right then, gather 'round, ye code-crunching wizards! You must read my excessively scribbled-upon, over-explained, and possibly bewildering edition of the "[MINT2 Manual](https://github.com/user-attachments/assets/404baeeb-6ae2-4975-b781-face3bb329e7)", now with 67% more footnotes and unnecessary asides. When done reading, try and code some wild and mysterious code fragments then give em a good ol smoke test and modify on the fly— which, in this case, may or may not be assisted by some questionable items of dubious legality. As the test hacking progresses, you’ll inevitably amass a sizeable collection of code nuts — so be sure they’re good and crispy! Next, tie up those nuts but not too tightly into neat function bundles labeled with :A....: , :B....; and so on, until all your nuts are firmly in place so not one dares to escape from use. And now for the Pièce de Résistance: take a deep breath, fling your functions around like a fish monger upon their glorious unification shouting with confidence, “This piece of halibut is good enough for Jehovah!” and Voilà! You've now written and used MINT code for intergalactic conquest. Tip, if yout nuts are sore, ripped off or just broken, use some good old POLA.** 
-
-
-![image](https://github.com/user-attachments/assets/76699c73-d350-4f52-a544-398e5a6214a2)
-
-
-
-
-# Reality
-You can run small programs in 2k but for real halibut you need to max out your ram physically (see below), the tec-1d can take 2k x 7 chips (14k) or if using the asm80.com emulation of the code, max out the ram in file `constants.asm` aka... for then non-puritans there's the fully sic tec1-G.
-
-```
-; Configuration for TEC-1
-LOADER EQU 0
-BITBANG EQU 0
-        
-ROMSTART    EQU $0000
-RAMSTART    EQU $0800
-ROMSIZE     EQU $0800
-RAMSIZE     EQU $4000   ;this is 14k of ram (like a real tec1-D maxed out), asm80 can take it bigger
-```
-This may also help if your nuts are too big — just change ram.ram to show TIBSIZE EQU $800 on both the TEC-1 and asm80 builds. That lets you enter huge nuts of code per line. The text input buffer (TIB) is where your code lives, and it’s also reused to display code when you press Ctrl-L.
-
-When running MINT under asm80 emulation, I made a nifty upload tool called autotyper.py. It auto-types directly into any window — including the asm80 console — while MINT is running, and it conveniently strips out any comments starting with //.
-
 
 # Down to business...
 Down to business, chaps! And now for something completely similar...
@@ -91,10 +62,39 @@ Down to business, chaps! And now for something completely similar...
 
 
 
+# MINTing your NUTS
+
+
+ 
+**Ah, right then, gather 'round, ye code-crunching wizards! You must read my excessively scribbled-upon, over-explained, and possibly bewildering edition of the "[MINT2 Manual](https://github.com/user-attachments/assets/404baeeb-6ae2-4975-b781-face3bb329e7)", now with 67% more footnotes and unnecessary asides. When done reading, try and code some wild and mysterious code fragments then give em a good ol smoke test and modify on the fly— which, in this case, may or may not be assisted by some questionable items of dubious legality. As the test hacking progresses, you’ll inevitably amass a sizeable collection of code nuts — so be sure they’re good and crispy! Next, tie up those nuts but not too tightly into neat function bundles labeled with :A....: , :B....; and so on, until all your nuts are firmly in place so not one dares to escape from use. And now for the Pièce de Résistance: take a deep breath, fling your functions around like a fish monger upon their glorious unification shouting with confidence, “This piece of halibut is good enough for Jehovah!” and Voilà! You've now written and used MINT code for intergalactic conquest. Tip, if yout nuts are sore, ripped off or just broken, use some good old POLA.** 
+
+
+![image](https://github.com/user-attachments/assets/76699c73-d350-4f52-a544-398e5a6214a2)
+
+
+
+
+# Reality
+You can run small programs in 2k but for real halibut you need to max out your ram physically (see below), the tec-1d can take 2k x 7 chips (14k) or if using the asm80.com emulation of the code, max out the ram in file `constants.asm` aka... for then non-puritans there's the fully sic tec1-G.
+
+```
+; Configuration for TEC-1
+LOADER EQU 0
+BITBANG EQU 0
+        
+ROMSTART    EQU $0000
+RAMSTART    EQU $0800
+ROMSIZE     EQU $0800
+RAMSIZE     EQU $4000   ;this is 14k of ram (like a real tec1-D maxed out), asm80 can take it bigger
+```
+This may also help if your nuts are too big — just change ram.ram to show TIBSIZE EQU $800 on both the TEC-1 and asm80 builds. That lets you enter huge nuts of code per line. The text input buffer (TIB) is where your code lives, and it’s also reused to display code when you press Ctrl-L.
+
+When running MINT under asm80 emulation, I made a nifty upload tool called autotyper.py. It auto-types directly into any window — including the asm80 console — while MINT is running, and it conveniently strips out any comments starting with //.
+
  
 
 
-
+# The Build
 # My attempt to run v1.1, first go
 
 - using an EEPROM; AT28C64B.  https://github.com/SteveJustin1963/eeprom-programmer/wiki/eeprom
