@@ -4,32 +4,6 @@
 <img width="555" height="555" alt="image" src="https://github.com/user-attachments/assets/404baeeb-6ae2-4975-b781-face3bb329e7" />
 
 
- 
-**The structuring or acknowledgment of the individuals involved
-in the development of the MINT interpreter
-follows no discernible hierarchy or prioritization of recognition,
-implying that their contributions are regarded in a manner
-devoid of any preordained or systematic reverence.
-This lack of sequentiality reflects an egalitarian or arbitrary approach,
-wherein no specific developer is elevated above another
-in terms of the order of respect or recognition for their work.** 
-
-
-<img width="365" height="610" alt="image" src="https://github.com/user-attachments/assets/87a01b68-8479-4382-b8f3-4e41999ef39d" />
-
-
-# Announcements
-  - https://www.facebook.com/groups/tec1z80/posts/1250512652124448/ 
-  - https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/history.md
-
-![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/263565308_1147844542415783_7150078760328965579_n.jpg)
-
-# Videos
-- https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1638969598.mp4
-- https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1639658972.mp4
-- https://www.youtube.com/watch?v=m66y6C54Cds **Alright, buckle up buttercup, because we're about to embark on a cinematic quest longer than a toddler's nap after a sugar rush!  WARNING - 3 1/2 HOURS !**
-
-
 
 # Down to business...
 Down to business, chaps! And now for something completely similar...
@@ -61,9 +35,36 @@ Down to business, chaps! And now for something completely similar...
 * My ongoing autopsy analysis [and extraction](https://github.com/SteveJustin1963/tec-MINT/wiki)  (dissecting the beast, one bit at a time—nobody expects the Spanish Inquisition!)
 
 
+<img width="365" height="610" alt="image" src="https://github.com/user-attachments/assets/87a01b68-8479-4382-b8f3-4e41999ef39d" />
+ 
+**The structuring or acknowledgment of the individuals involved
+in the development of the MINT interpreter
+follows no discernible hierarchy or prioritization of recognition,
+implying that their contributions are regarded in a manner
+devoid of any preordained or systematic reverence.
+This lack of sequentiality reflects an egalitarian or arbitrary approach,
+wherein no specific developer is elevated above another
+in terms of the order of respect or recognition for their work.** 
+
+
+
+
+
+# Announcements
+  - https://www.facebook.com/groups/tec1z80/posts/1250512652124448/ 
+  - https://github.com/SteveJustin1963/tec-MINT/blob/main/docs/history.md
+
+![](https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/263565308_1147844542415783_7150078760328965579_n.jpg)
+
+# Videos
+- https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1638969598.mp4
+- https://github.com/SteveJustin1963/tec-MINT/blob/main/pics/video-1639658972.mp4
+- https://www.youtube.com/watch?v=m66y6C54Cds **Alright, buckle up buttercup, because we're about to embark on a cinematic quest longer than a toddler's nap after a sugar rush!  WARNING - 3 1/2 HOURS !**
+
+
+
 
 # MINTing your NUTS
-
 
  
 **Ah, right then, gather 'round, ye code-crunching wizards! You must read my excessively scribbled-upon, over-explained, and possibly bewildering edition of the "[MINT2 Manual](https://github.com/user-attachments/assets/404baeeb-6ae2-4975-b781-face3bb329e7)", now with 67% more footnotes and unnecessary asides. When done reading, try and code some wild and mysterious code fragments then give em a good ol smoke test and modify on the fly— which, in this case, may or may not be assisted by some questionable items of dubious legality. As the test hacking progresses, you’ll inevitably amass a sizeable collection of code nuts — so be sure they’re good and crispy! Next, tie up those nuts but not too tightly into neat function bundles labeled with :A....: , :B....; and so on, until all your nuts are firmly in place so not one dares to escape from use. And now for the Pièce de Résistance: take a deep breath, fling your functions around like a fish monger upon their glorious unification shouting with confidence, “This piece of halibut is good enough for Jehovah!” and Voilà! You've now written and used MINT code for intergalactic conquest. Tip, if yout nuts are sore, ripped off or just broken, use some good old POLA.** 
@@ -74,7 +75,7 @@ Down to business, chaps! And now for something completely similar...
 
 
 
-# Reality
+# Specs
 You can run small programs in 2k but for real halibut you need to max out your ram physically (see below), the tec-1d can take 2k x 7 chips (14k) or if using the asm80.com emulation of the code, max out the ram in file `constants.asm` aka... for then non-puritans there's the fully sic tec1-G.
 
 ```
