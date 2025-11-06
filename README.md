@@ -35,6 +35,8 @@ Down to business, chaps! And now for something completely similar...
 * My ongoing autopsy analysis [and extraction](https://github.com/SteveJustin1963/tec-MINT/wiki)  (dissecting the beast, one bit at a time—nobody expects the Spanish Inquisition!)
 
 
+# Acknowledgments
+
 <img width="365" height="610" alt="image" src="https://github.com/user-attachments/assets/87a01b68-8479-4382-b8f3-4e41999ef39d" />
  
 **The structuring or acknowledgment of the individuals involved
