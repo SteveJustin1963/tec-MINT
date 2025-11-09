@@ -185,12 +185,11 @@ The range depends on the allocation of bits for the sign, exponent, and mantissa
 
 - https://en.wikipedia.org/wiki/IEEE_754
 
-
-# playing with 7 seg display
-- aug 2025
+# work in progress
+- playing with 7 seg display
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/code/8-LED-light-chaser.md
 - https://github.com/tec1group/MINT-cookbook/tree/main/misc/4-digit-counter
-- crashes all the time!
+- adding new features to mint octave, issues with parsing and list command compressing spaces
 
  
 
