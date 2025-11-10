@@ -438,6 +438,9 @@ function add_builtin_words()
   state.dict("/D") = @(s) stack_depth(s);
   state.dict("/CS") = @(s) clear_stack(s);
 
+  
+  
+  
   ## Comparison ops
   state.dict(">") = @(s) compare_gt(s);
   state.dict("<") = @(s) compare_lt(s);
@@ -450,6 +453,9 @@ function add_builtin_words()
   state.dict("~") = @(s) bitwise_not(s);
   state.dict("{") = @(s) shift_left(s);
   state.dict("}") = @(s) shift_right(s);
+  
+  ## Logical ops
+  state.dict("&&") = @(s) logical_and(s);
 
   ## Variable operations
   state.dict("!") = @(s) store_var(s);
@@ -458,6 +464,8 @@ function add_builtin_words()
   state.dict("/F") = @(s) push(s, 0);
   state.dict("/T") = @(s) push(s, -1);
   state.dict("/U") = @(s) push(s, -1);
+  
+  
   state.dict("/W") = @(s) loop_while(s);
   state.dict("/i") = @(s) get_loop_i(s);
   state.dict("/j") = @(s) get_loop_j(s);
@@ -1105,6 +1113,7 @@ function s = compare_eq(s)
   endif
 endfunction
 
+
 ## --------------------------
 ## Bitwise Functions (MODE-AWARE)
 ## --------------------------
@@ -1144,6 +1153,27 @@ function s = bitwise_and(s)
   endif
 endfunction
 
+## Logical AND - evaluates operands as boolean
+function s = logical_and(s)
+  global state;
+  if state.debug
+    debug_before_op("&&", s);
+  endif
+  [s,b]=pop(s); [s,a]=pop(s);
+  
+  ## Logical AND: true (-1) if both operands are non-zero
+  ## Returns -1 for true, 0 for false (MINT convention)
+  if (a != 0) && (b != 0)
+    result = -1;  ## TRUE in MINT
+  else
+    result = 0;   ## FALSE in MINT
+  endif
+  
+  s=push(s, result);
+  if state.debug
+    debug_after_op("&&", sprintf("%g && %g = %g (%s)", a, b, result, iif(result, "TRUE", "FALSE")), s);
+  endif
+endfunction
 
 function s = bitwise_or(s)
   global state;
@@ -1179,6 +1209,9 @@ function s = bitwise_or(s)
     debug_after_op("|", sprintf("%g | %g = %g", a, b, double(result)), s);
   endif
 endfunction
+
+
+
 
 
 
@@ -1983,6 +2016,18 @@ elseif ch == '*' && i < length(line) && line(i+1) == '*'
       endif
       tokens{end+1} = '**';
       i = i + 2;
+      
+elseif ch == '&' && i < length(line) && line(i+1) == '&'
+      ## LOOKAHEAD FIX: Treat && as single logical-AND operator
+      if !isempty(current_token)
+        tokens{end+1} = strtrim(current_token);
+        current_token = "";
+      endif
+      tokens{end+1} = '&&';
+      i = i + 2;      
+      
+      
+      
     elseif ch == '?' && i < length(line) && line(i+1) == '!'
       ## LOOKAHEAD FIX: Treat ?! as single array-write operator
       if !isempty(current_token)
@@ -2568,15 +2613,16 @@ function s = show_help(s)
   printf("CONST     | * /e   | push e constant (2.71828...)              | -- n         | DONE\n");
   printf("CONVERT   | * /deg | convert radians to degrees                | n -- n       | DONE\n");
   printf("CONVERT   | * /rad | convert degrees to radians                | n -- n       | DONE\n");
-  printf("LOGICAL   | *  >   | floating-point comparison GT              | n n -- b     | DONE\n");
-  printf("LOGICAL   | *  <   | floating-point comparison LT              | n n -- b     | DONE\n");
-  printf("LOGICAL   | *  =   | floating-point comparison EQ              | n n -- b     | DONE\n");
-  printf("LOGICAL   | *  &   | bitwise AND (mode-aware)                  | n n -- n     | DONE\n");
-  printf("LOGICAL   | *  |   | bitwise OR (mode-aware)                   | n n -- n     | DONE\n");
-  printf("LOGICAL   | *  ^   | bitwise XOR (mode-aware)                  | n n -- n     | DONE\n");
-  printf("LOGICAL   | *  ~   | bitwise NOT (mode-aware)                  | n -- n       | DONE\n");
-  printf("LOGICAL   | *  {   | shift left (mode-aware)                   | n -- n       | DONE\n");
-  printf("LOGICAL   | *  }   | shift right (mode-aware)                  | n -- n       | DONE\n");
+  printf("COMPARE   | *  >   | floating-point comparison GT              | n n -- b     | DONE\n");
+  printf("COMPARE   | *  <   | floating-point comparison LT              | n n -- b     | DONE\n");
+  printf("COMPARE   | *  =   | floating-point comparison EQ              | n n -- b     | DONE\n");
+  printf("BITWISE   | *  &   | bitwise AND (mode-aware)                  | n n -- n     | DONE\n");
+  printf("BITWISE   | *  |   | bitwise OR (mode-aware)                   | n n -- n     | DONE\n");
+  printf("BITWISE   | *  ^   | bitwise XOR (mode-aware)                  | n n -- n     | DONE\n");
+  printf("BITWISE   | *  ~   | bitwise NOT (mode-aware)                  | n -- n       | DONE\n");
+  printf("BITWISE   | *  {   | shift left (mode-aware)                   | n -- n       | DONE\n");
+  printf("BITWISE   | *  }   | shift right (mode-aware)                  | n -- n       | DONE\n");
+  printf("LOGICAL   | *  &&  | logical AND (boolean)                     | n n -- b     | DONE\n");
   printf("STACK     | *  '   | drop top member DROP                      | m n -- m     | DONE\n");
   printf('STACK     | *  "   | duplicate top member DUP                  | n -- n n     | DONE\n');
   printf("STACK     | *  %%   | over - copy 2nd to top                    | m n -- m n m | DONE\n");
