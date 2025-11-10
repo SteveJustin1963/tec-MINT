@@ -754,6 +754,189 @@ Effect: `n -- result`
 // 2 
 ```
 
+# update
+
+```markdown
+## Bitwise AND (&) vs Logical AND (&&)
+
+### Overview
+MINT-Octave provides two AND operators with distinct behaviors:
+- **&** - Bitwise AND: operates on individual bits
+- **&&** - Logical AND: evaluates boolean truth values
+
+### Bitwise AND (&)
+
+**Syntax:** `a b &`
+
+Performs bit-by-bit AND operation on two integers. Each bit position in the result 
+is 1 only if the corresponding bits in both operands are 1.
+
+**Behavior:**
+- Mode-aware: respects int8/int16/int32/int64 bit-width settings
+- In FP mode: operates on full 64-bit values
+- Returns an integer with the AND result
+
+**Examples:**
+```
+5 7 & .          → 5    (binary: 0101 & 0111 = 0101)
+8 12 & .         → 8    (binary: 1000 & 1100 = 1000)
+5 10 & .         → 0    (binary: 0101 & 1010 = 0000)
+#FF #0F & .      → 15   (masking lower 4 bits)
+```
+
+**Common Uses:**
+- Bit masking: `value #FF &` (extract lower 8 bits)
+- Testing flags: `status #04 &` (test bit 2)
+- Clearing bits: Used with NOT to clear specific bits
+
+---
+
+### Logical AND (&&)
+
+**Syntax:** `a b &&`
+
+Evaluates both operands as boolean values and returns TRUE only if both are non-zero.
+
+**Behavior:**
+- Returns -1 (TRUE) if both operands are non-zero
+- Returns 0 (FALSE) if either operand is zero
+- Mode-independent: works same in int and fp modes
+
+**Examples:**
+```
+5 7 && .         → -1   (both non-zero = TRUE)
+0 7 && .         → 0    (first is zero = FALSE)
+5 0 && .         → 0    (second is zero = FALSE)
+0 0 && .         → 0    (both zero = FALSE)
+-5 -3 && .       → -1   (both non-zero = TRUE)
+```
+
+**Common Uses:**
+- Combining conditions: `x 0 > y 10 < && ( ... )`
+- Loop control: `/i 3 > /i 7 < && /W`
+- Validation: `a valid && b valid && ( process )`
+
+---
+
+### Key Differences
+
+| Aspect | Bitwise AND (&) | Logical AND (&&) |
+|--------|----------------|------------------|
+| **Operation** | Bit-by-bit comparison | Boolean evaluation |
+| **Return Value** | Integer result | -1 (TRUE) or 0 (FALSE) |
+| **Zero Operand** | Processes bits normally | Always returns 0 |
+| **Use Case** | Bit manipulation | Conditional logic |
+
+**Side-by-Side Comparison:**
+```
+// Same inputs, different results
+5 10 & .         → 0     (no common bits)
+5 10 && .        → -1    (both non-zero = TRUE)
+
+3 3 & .          → 3     (all bits match)
+3 3 && .         → -1    (both non-zero = TRUE)
+
+5 7 & .          → 5     (bit pattern: 0101)
+5 7 && .         → -1    (both non-zero)
+```
+
+---
+
+### Practical Examples
+
+**Example 1: Bit Masking with &**
+```mint
+// Extract RGB components from 16-bit color
+#F800 color !          // Red: bits 15-11
+color #F800 & 11 } .   // Extract red component
+
+#07E0 color !          // Green: bits 10-5
+color #07E0 & 5 } .    // Extract green component
+```
+
+**Example 2: Conditional Logic with &&**
+```mint
+// Process only if both conditions met
+:CHECK
+  /i 5 > /i 10 < && 
+  ( `Value in range 6-9` /N ) 
+  /E ( `Value out of range` /N )
+;
+
+15 ( CHECK ) /N
+```
+
+**Example 3: Combining Both Operators**
+```mint
+// Check if bit 3 is set AND value is positive
+:TEST
+  value #08 &          // Test bit 3
+  value 0 >            // Test if positive
+  && ( `Bit 3 set and positive` /N )
+;
+```
+
+**Example 4: Loop with Multiple Conditions**
+```mint
+// Loop while index is in range AND flag is set
+:LOOP
+  /i " . ` `
+  /i 0 >= /i 10 < && flag 0 > && /W
+;
+
+/T flag !              // Set flag to TRUE
+15 ( LOOP )            // Run loop
+```
+
+---
+
+### Tips and Best Practices
+
+1. **Use && for readability in conditions**
+   ```mint
+   // Clear intent
+   age 18 >= income 30000 > && ( `Approved` )
+   
+   // Confusing (using bitwise)
+   age 18 >= income 30000 > & ( ... )  // Don't do this!
+   ```
+
+2. **Use & for bit manipulation**
+   ```mint
+   // Extract lower byte
+   value #FF &
+   
+   // Test specific bit
+   flags #04 & 0 > ( `Bit 2 is set` )
+   ```
+
+3. **Remember MINT boolean convention**
+   - TRUE = -1 (all bits set)
+   - FALSE = 0 (no bits set)
+   - Any non-zero value is "truthy" for &&
+
+4. **Mode awareness**
+   ```mint
+   int8
+   255 255 & .       → 255  (all 8 bits)
+   
+   int16
+   #FFFF #00FF & .   → 255  (masked to 16-bit)
+   ```
+
+---
+
+### See Also
+- Bitwise OR (`|`) - bit-by-bit OR operation
+- Bitwise XOR (`^`) - bit-by-bit exclusive OR
+- Bitwise NOT (`~`) - bit inversion
+- Comparison operators (`>`, `<`, `=`)
+- Conditional execution (`(` `)` `/E`)
+```
+
+
+
+
 ---
 
 ## Variables
