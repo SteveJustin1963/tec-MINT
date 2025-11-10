@@ -2617,12 +2617,12 @@ function s = show_help(s)
   printf("COMPARE   | *  <   | floating-point comparison LT              | n n -- b     | DONE\n");
   printf("COMPARE   | *  =   | floating-point comparison EQ              | n n -- b     | DONE\n");
   printf("BITWISE   | *  &   | bitwise AND (mode-aware)                  | n n -- n     | DONE\n");
+  printf("LOGICAL   | *  &&  | logical AND (boolean)                     | n n -- b     | DONE\n");
   printf("BITWISE   | *  |   | bitwise OR (mode-aware)                   | n n -- n     | DONE\n");
   printf("BITWISE   | *  ^   | bitwise XOR (mode-aware)                  | n n -- n     | DONE\n");
   printf("BITWISE   | *  ~   | bitwise NOT (mode-aware)                  | n -- n       | DONE\n");
   printf("BITWISE   | *  {   | shift left (mode-aware)                   | n -- n       | DONE\n");
   printf("BITWISE   | *  }   | shift right (mode-aware)                  | n -- n       | DONE\n");
-  printf("LOGICAL   | *  &&  | logical AND (boolean)                     | n n -- b     | DONE\n");
   printf("STACK     | *  '   | drop top member DROP                      | m n -- m     | DONE\n");
   printf('STACK     | *  "   | duplicate top member DUP                  | n -- n n     | DONE\n');
   printf("STACK     | *  %%   | over - copy 2nd to top                    | m n -- m n m | DONE\n");
