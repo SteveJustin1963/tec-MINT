@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>MINT-Web Interpreter</title>
+<title>MINT-Web Interpreter (Stable Persistent Variables)</title>
 <style>
   body { background:#111; color:#0f0; font-family:monospace; margin:0; padding:10px; }
   #console { white-space:pre-wrap; height:90vh; overflow-y:auto; outline:none; }
@@ -13,84 +13,120 @@
 <script>
 (() => {
   const out = document.getElementById('console');
-  const vars = {};                       // a..z + system vars
-  for(let c=97;c<=122;c++) vars[String.fromCharCode(c)] = 0;
-  vars["/c"]=0; vars["/r"]=0;
+  // --- Persistent variables a..z and system regs ---
+  const vars = Object.create(null);
+  for (let c = 97; c <= 122; c++) vars[String.fromCharCode(c)] = 0; // a..z
+  vars['/c'] = 0; vars['/r'] = 0;                                  // system
+
+  // --- Stack and input state ---
   const stack = [];
-  let inputBuffer = "";
+  let inputBuffer = '';
+  let pendingVar = null;  // defer semantics for "a !" vs fetch
 
-  function mask16(n){ return n & 0xFFFF; }
-  function tos16(n){ n&=0xFFFF; return n>=0x8000 ? n-0x10000 : n; }
-  function print(s){ out.textContent += s; out.scrollTop = out.scrollHeight; }
+  // --- Helpers ---
+  const mask16 = n => (n & 0xFFFF) >>> 0;
+  const tos16  = n => { n &= 0xFFFF; return (n & 0x8000) ? (n - 0x10000) : n; };
+  const print  = s => { out.textContent += s; out.scrollTop = out.scrollHeight; };
+  const push   = v => stack.push(mask16(v));
+  const pop    = () => stack.length ? stack.pop() : (print('STACK UNDERFLOW\n'), 0);
+  const peek   = () => (stack.length ? stack[stack.length-1] : 0);
 
-  function push(v){ stack.push(mask16(v)); }
-  function pop(){ if(!stack.length){ print("STACK UNDERFLOW\n"); return 0; } return stack.pop(); }
-  function peek(){ return stack.length ? stack[stack.length-1] : 0; }
-
+  // --- Ops ---
   const ops = {
-    '+':()=>{let b=pop(),a=pop(); let r=a+b; vars["/c"]=(r>0xFFFF)?1:0; vars["/r"]=0; push(r);},
-    '-':()=>{let b=pop(),a=pop(); let r=a-b; vars["/c"]=(a<b)?1:0; vars["/r"]=0; push(r);},
-    '*':()=>{let b=pop(),a=pop(); let p=a*b; vars["/r"]=(p>>16)&0xFFFF; push(p);},
-    '/':()=>{let b=pop(),a=pop(); if(b===0){print("DIV0\n");push(0);return;}
-             vars["/r"]=a%b; push(Math.trunc(a/b));},
-    '&':()=>{let b=pop(),a=pop(); push(a&b);},
-    '|':()=>{let b=pop(),a=pop(); push(a|b);},
-    '^':()=>{let b=pop(),a=pop(); push(a^b);},
-    '~':()=>{let a=pop(); push(~a);},
-    '{':()=>{let a=pop(); push(a<<1);},
-    '}':()=>{let a=pop(); push(a>>>1);},
-    "'":()=>{pop();},
-    '"':()=>{push(peek());},
-    '$':()=>{let b=pop(),a=pop(); push(b); push(a);},
-    '%':()=>{let n=stack.length; if(n>1) push(stack[n-2]);},
-    '.':()=>{print(tos16(pop())+"\n");},
-    ',':()=>{print((mask16(pop()).toString(16).toUpperCase().padStart(4,'0'))+"\n");}
+    '+': () => { const b=pop(), a=pop(); push(a+b); },
+    '-': () => { const b=pop(), a=pop(); push(a-b); },
+    '*': () => { const b=pop(), a=pop(); push(a*b); },
+    '/': () => { const b=pop(), a=pop(); if (!b) { print('DIV0\n'); push(0); return; } push(Math.trunc(a/b)); },
+    '&': () => { const b=pop(), a=pop(); push(a&b); },
+    '|': () => { const b=pop(), a=pop(); push(a|b); },
+    '^': () => { const b=pop(), a=pop(); push(a^b); },
+    '~': () => { push(~pop()); },
+    '{': () => { push(pop() << 1); },
+    '}': () => { push(pop() >>> 1); },
+    "'": () => { pop(); },
+    '"': () => { push(peek()); },
+    '$': () => { const b=pop(), a=pop(); push(b); push(a); },
+    '%': () => { const n=stack.length; if (n>1) push(stack[n-2]); },
+    '.': () => { print(tos16(pop())+'\n'); },
+    ',': () => { print(mask16(pop()).toString(16).toUpperCase().padStart(4,'0')+'\n'); },
   };
 
-  function evalToken(t){
-    if(!t) return;
-    if(/^#/.test(t)){ push(parseInt(t.slice(1),16)); return; }
-    if(/^-?\d+$/.test(t)){ push(parseInt(t)); return; }
-    if(/^`.*`$/.test(t)){ print(t.slice(1,-1)); return; }
-    if(t==="/T"){ push(0xFFFF); return; }
-    if(t==="/F"){ push(0); return; }
-    if(t==="/N"){ print("\n"); return; }
-    if(t==="/C"){ let v=pop(); print(String.fromCharCode(v&0xFF)); return; }
-    if(vars.hasOwnProperty(t)){ push(vars[t]); return; }
-    if(/^[a-z]!$/.test(t)){ let name=t[0]; vars[name]=mask16(pop()); return; }
-    if(t==="/c!"||t==="/r!"){ let v=pop(); vars[t.slice(0,2)]=mask16(v); return; }
-    if(ops[t]){ ops[t](); return; }
-    print("UNKNOWN TOKEN: "+t+"\n");
+  // --- Token evaluation ---
+  function evalToken(t) {
+    if (!t) return;
+
+    // If we had a pending variable and current token is not a store, fetch it now.
+    if (pendingVar && t !== '!' && t !== pendingVar+'!') {
+      push(vars[pendingVar]);
+      pendingVar = null;
+      // continue processing current token
+    }
+
+    // Numbers / hex / backtick literals
+    if (t[0] === '#') { push(parseInt(t.slice(1),16)); return; }
+    if (/^-?\d+$/.test(t)) { push(parseInt(t,10)); return; }
+    if (t.length>=2 && t[0]==='`' && t[t.length-1]==='`') { print(t.slice(1,-1)); return; }
+
+    // Booleans / specials
+    if (t === '/T') { push(0xFFFF); return; }
+    if (t === '/F') { push(0); return; }
+    if (t === '/N') { print('\n'); return; }
+    if (t === '/C') { print(String.fromCharCode(pop() & 0xFF)); return; }
+
+    // System registers
+    if (t === '/c' || t === '/r') { push(vars[t]); return; }
+    if (t === '/c!' || t === '/r!') { vars[t.slice(0,2)] = mask16(pop()); return; }
+
+    // Variable tokens
+    if (/^[a-z]$/.test(t)) { pendingVar = t; return; }          // defer fetch to see if next is '!'
+    if (/^[a-z]!$/.test(t)) {                                   // shorthand store: a!
+      const name = t[0];
+      vars[name] = mask16(pop());
+      pendingVar = null;
+      return;
+    }
+
+    // Store into previously specified variable: a !
+    if (t === '!') {
+      if (pendingVar) {
+        vars[pendingVar] = mask16(pop());
+        pendingVar = null;
+        return;
+      }
+      print('INVALID VARIABLE NAME\n');
+      return;
+    }
+
+    // Operators
+    if (ops[t]) { ops[t](); return; }
+
+    print('UNKNOWN TOKEN: '+t+'\n');
   }
 
-  function run(line){
-    const toks=line.replace(/\/\/.*$/,'').trim().split(/\s+/);
-    for(const t of toks) evalToken(t);
+  function run(line) {
+    const toks = line.replace(/\/\/.*$/,'').trim().split(/\s+/).filter(Boolean);
+    for (const t of toks) evalToken(t);
+    // If line ends with a bare variable name, treat it as a fetch (like Forth)
+    if (pendingVar) { push(vars[pendingVar]); pendingVar = null; }
   }
 
-  function prompt(){ print("> "); }
-
-  function handleCommand(line){
-    print("\n"); // add CRLF after pressing enter
-    run(line);
+  // --- REPL ---
+  const prompt = () => print('> ');
+  function onEnter() {
+    print('\n');
+    const line = inputBuffer.trim();
+    if (line) run(line);
+    inputBuffer = '';
     prompt();
   }
 
   out.addEventListener('keydown', e => {
-    if(e.key === 'Enter'){
-      e.preventDefault();
-      handleCommand(inputBuffer.trim());
-      inputBuffer = "";
-    } else if(e.key === 'Backspace'){
-      inputBuffer = inputBuffer.slice(0,-1);
-      out.textContent = out.textContent.slice(0,-1);
-    } else if(e.key.length === 1){
-      inputBuffer += e.key;
-      print(e.key);
-    }
+    if (e.key === 'Enter') { e.preventDefault(); onEnter(); return; }
+    if (e.key === 'Backspace') { e.preventDefault(); if (inputBuffer.length) { inputBuffer = inputBuffer.slice(0,-1); out.textContent = out.textContent.slice(0,-1); } return; }
+    if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) { e.preventDefault(); inputBuffer += e.key; print(e.key); return; }
   });
 
-  print("MINT-Web — 16-bit RPN, vars a..z. Type commands below.\n");
+  print('MINT-Web — 16-bit RPN (Stable Persistent Variables)\n');
   prompt();
   out.focus();
 })();
