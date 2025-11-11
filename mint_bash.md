@@ -1,3 +1,163 @@
+```
+#!/usr/bin/env bash
+# mint.sh — Minimal MINT-like 16-bit RPN interpreter (now with a..z variables)
+
+shopt -s extglob
+
+# --- State ----------------------------------------------------------
+declare -a ST=()                 # Data stack
+declare -A VAR                   # a..z variables
+for c in {a..z}; do VAR["$c"]=0; done
+VAR["/c"]=0                      # Carry / borrow
+VAR["/r"]=0                      # Remainder / overflow
+
+mask16(){ echo $(( $1 & 0xFFFF )); }
+tos16(){ local v=$(mask16 "$1"); ((v&0x8000)) && echo $((v-0x10000)) || echo $v; }
+
+push(){ ST+=("$1"); }
+pop(){ local n=${#ST[@]}; ((n==0)) && { echo "STACK UNDERFLOW" >&2; return 1; }
+       echo "${ST[$((n-1))]}"; unset 'ST[$((n-1))]'; }
+peek(){ local n=${#ST[@]}; ((n==0)) && echo 0 || echo "${ST[$((n-1))]}"; }
+
+print_dec(){ printf "%d" "$(tos16 "$1")"; }
+print_hex(){ printf "%04X" "$(( $1 & 0xFFFF ))"; }
+emit_char(){ local v=$(( $1 & 0xFF )); printf "\\$(printf '%03o' "$v")"; }
+
+# --- Arithmetic -----------------------------------------------------
+op_add(){ local b=$(pop) a=$(pop) || return
+           local res=$(( (a+b) & 0xFFFF ))
+           VAR["/c"]=$(( ((a&0xFFFF)+(b&0xFFFF))>0xFFFF ? 1:0 ))
+           VAR["/r"]=0; push "$res"; }
+op_sub(){ local b=$(pop) a=$(pop) || return
+           VAR["/c"]=$(( (a&0xFFFF)<(b&0xFFFF)?1:0 ))
+           push $(( (a-b)&0xFFFF )); VAR["/r"]=0; }
+op_mul(){ local b=$(pop) a=$(pop) || return
+           local prod=$(( (a&0xFFFF)*(b&0xFFFF) ))
+           VAR["/r"]=$(( (prod>>16)&0xFFFF )); push $((prod&0xFFFF)); }
+op_div(){ local b=$(tos16 "$(pop)") a=$(tos16 "$(pop)") || return
+           ((b==0)) && { echo "DIV0" >&2; push 0; VAR["/r"]=0; return; }
+           local q=$((a/b)); local r=$((a%b))
+           VAR["/r"]=$(mask16 "$r"); push "$(mask16 "$q")"; }
+
+# --- Bitwise / Logical ----------------------------------------------
+op_and(){ local b=$(pop) a=$(pop) || return; push $(( (a&b)&0xFFFF )); }
+op_or (){ local b=$(pop) a=$(pop) || return; push $(( (a|b)&0xFFFF )); }
+op_xor(){ local b=$(pop) a=$(pop) || return; push $(( (a^b)&0xFFFF )); }
+op_not(){ local a=$(pop) || return; push $(( (~a)&0xFFFF )); }
+op_shl(){ local a=$(pop) || return; push $(( (a<<1)&0xFFFF )); }
+op_shr(){ local a=$(pop) || return; push $(( (a&0xFFFF)>>1 )); }
+
+# --- Stack ops ------------------------------------------------------
+op_drop(){ pop >/dev/null || true; }
+op_dup (){ local a=$(peek); push "$a"; }
+op_swap(){ local b=$(pop) a=$(pop) || return; push "$b"; push "$a"; }
+op_over(){ local n=${#ST[@]}; ((n<2)) && { echo "UNDERFLOW" >&2; return; }
+           push "${ST[$((n-2))]}"; }
+
+# --- Token evaluator ------------------------------------------------
+eval_token(){
+  local t="$1"
+  [[ -z "$t" ]] && return
+
+  # String literal
+  if [[ "$t" == \`*\` ]]; then printf "%s" "${t:1:${#t}-2}"; return; fi
+
+  # Numbers (#HEX or decimal)
+  if [[ "$t" == \#* ]]; then push $((16#${t:1})); return; fi
+  if [[ "$t" =~ ^-?[0-9]+$ ]]; then push "$(mask16 "$t")"; return; fi
+
+  # Booleans / specials
+  case "$t" in
+    /F) push 0; return ;;
+    /T) push $((0xFFFF)); return ;;
+    /N) printf '\n'; return ;;
+    /C) local v=$(pop)||return; emit_char "$v"; return ;;
+  esac
+
+  # Variable fetch
+  if [[ "$t" =~ ^[a-z]$ ]]; then push "${VAR[$t]}"; return; fi
+
+  # Variable store (a!)
+  if [[ "$t" =~ ^[a-z]\!$ ]]; then
+    local name="${t:0:1}"; local val=$(pop)||return
+    VAR["$name"]=$(mask16 "$val"); return
+  fi
+
+  # System vars /c /r fetch
+  if [[ "$t" == "/c" || "$t" == "/r" ]]; then push "${VAR[$t]}"; return; fi
+  # System vars store (/c! /r!)
+  if [[ "$t" == "/c!" || "$t" == "/r!" ]]; then
+    local v=$(pop)||return; VAR["${t%!}"]=$(mask16 "$v"); return
+  fi
+
+  # Core operators
+  case "$t" in
+    +) op_add; return ;;
+    -) op_sub; return ;;
+    \*) op_mul; return ;;
+    /) op_div; return ;;
+    =) local b=$(pop) a=$(pop)||return
+       push $(( (a==b) ? 0xFFFF : 0 )); return ;;
+    '&') op_and; return ;;
+    '|') op_or; return ;;
+    '^') op_xor; return ;;
+    '~') op_not; return ;;
+    '{') op_shl; return ;;
+    '}') op_shr; return ;;
+    "'") op_drop; return ;;
+    '"') op_dup; return ;;
+    '$') op_swap; return ;;
+    '%') op_over; return ;;
+    .)  local v=$(pop)||return; print_dec "$v"; printf '\n'; return ;;
+    ,)  local v=$(pop)||return; print_hex "$v"; printf '\n'; return ;;
+    //*) return ;; # ignore comment lines
+  esac
+
+  echo "UNKNOWN TOKEN: $t" >&2
+}
+
+# --- Tokenizer ------------------------------------------------------
+read_tokens(){
+  local line="$1"
+  line="${line%%//*}"   # remove inline comment
+  local -a toks=()
+  local i=0 len=${#line}
+  while ((i<len)); do
+    local c=${line:i:1}
+    if [[ "$c" =~ [[:space:]] ]]; then ((i++)); continue; fi
+    if [[ "$c" == "\`" ]]; then
+      local j=$((i+1)); local buf=""
+      while ((j<len)); do
+        local d=${line:j:1}
+        [[ "$d" == "\`" ]] && break
+        buf+="$d"; ((j++))
+      done
+      toks+=("`$buf`"); i=$((j+1)); continue
+    fi
+    local j=$i; while ((j<len)) && ! [[ "${line:j:1}" =~ [[:space:]] ]]; do ((j++)); done
+    toks+=("${line:i:j-i}"); i=$j
+  done
+  printf '%s\0' "${toks[@]}"
+}
+
+# --- REPL -----------------------------------------------------------
+echo "MINT(bash) — 16-bit RPN with variables a..z.  Ctrl+C to exit."
+while true; do
+  printf "> "
+  IFS= read -r LINE || exit 0
+  (( ${#LINE} > 256 )) && { echo "LINE TOO LONG"; continue; }
+  mapfile -d '' TOKS < <(read_tokens "$LINE")
+  for t in "${TOKS[@]}"; do eval_token "$t"; done
+done
+
+```
+
+
+
+
+
+
+```
 #!/usr/bin/env bash
 # mint.sh — minimal MINT-like interpreter in Bash (16-bit, RPN)
 # Features: numbers (dec, #HEX), + - * /, & | ^ { } ~, . ,  `text`  /N /C /F /T
@@ -223,3 +383,5 @@ while true; do
     eval_token "$t"
   done
 done
+```
+
