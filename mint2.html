@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>MINT-Web Interpreter (Stable Persistent Variables)</title>
+<title>MINT-Web Interpreter (Functions + Persistent Variables)</title>
 <style>
   body { background:#111; color:#0f0; font-family:monospace; margin:0; padding:10px; }
   #console { white-space:pre-wrap; height:90vh; overflow-y:auto; outline:none; }
@@ -15,15 +15,17 @@
   const out = document.getElementById('console');
   // --- Persistent variables a..z and system regs ---
   const vars = Object.create(null);
-  for (let c = 97; c <= 122; c++) vars[String.fromCharCode(c)] = 0; // a..z
-  vars['/c'] = 0; vars['/r'] = 0;                                  // system
+  for (let c = 97; c <= 122; c++) vars[String.fromCharCode(c)] = 0;
+  vars['/c'] = 0; vars['/r'] = 0;
 
-  // --- Stack and input state ---
+  // --- Persistent functions A..Z ---
+  const funcs = Object.create(null);
+
   const stack = [];
   let inputBuffer = '';
-  let pendingVar = null;  // defer semantics for "a !" vs fetch
+  let pendingVar = null;
+  let definingFunc = null; // if inside :A ... ; definition
 
-  // --- Helpers ---
   const mask16 = n => (n & 0xFFFF) >>> 0;
   const tos16  = n => { n &= 0xFFFF; return (n & 0x8000) ? (n - 0x10000) : n; };
   const print  = s => { out.textContent += s; out.scrollTop = out.scrollHeight; };
@@ -31,7 +33,6 @@
   const pop    = () => stack.length ? stack.pop() : (print('STACK UNDERFLOW\n'), 0);
   const peek   = () => (stack.length ? stack[stack.length-1] : 0);
 
-  // --- Ops ---
   const ops = {
     '+': () => { const b=pop(), a=pop(); push(a+b); },
     '-': () => { const b=pop(), a=pop(); push(a-b); },
@@ -51,15 +52,37 @@
     ',': () => { print(mask16(pop()).toString(16).toUpperCase().padStart(4,'0')+'\n'); },
   };
 
-  // --- Token evaluation ---
+  function runTokens(tokens) {
+    for (const t of tokens) evalToken(t);
+  }
+
   function evalToken(t) {
     if (!t) return;
+
+    // Function definition mode
+    if (definingFunc) {
+      if (t === ';') {
+        funcs[definingFunc] = definingFuncBody.slice();
+        definingFunc = null;
+        definingFuncBody = [];
+        print('OK\n');
+        return;
+      }
+      definingFuncBody.push(t);
+      return;
+    }
+
+    // Detect function definition start
+    if (/^:[A-Z]$/.test(t)) {
+      definingFunc = t[1];
+      definingFuncBody = [];
+      return;
+    }
 
     // If we had a pending variable and current token is not a store, fetch it now.
     if (pendingVar && t !== '!' && t !== pendingVar+'!') {
       push(vars[pendingVar]);
       pendingVar = null;
-      // continue processing current token
     }
 
     // Numbers / hex / backtick literals
@@ -78,15 +101,14 @@
     if (t === '/c!' || t === '/r!') { vars[t.slice(0,2)] = mask16(pop()); return; }
 
     // Variable tokens
-    if (/^[a-z]$/.test(t)) { pendingVar = t; return; }          // defer fetch to see if next is '!'
-    if (/^[a-z]!$/.test(t)) {                                   // shorthand store: a!
+    if (/^[a-z]$/.test(t)) { pendingVar = t; return; }
+    if (/^[a-z]!$/.test(t)) {
       const name = t[0];
       vars[name] = mask16(pop());
       pendingVar = null;
       return;
     }
 
-    // Store into previously specified variable: a !
     if (t === '!') {
       if (pendingVar) {
         vars[pendingVar] = mask16(pop());
@@ -94,6 +116,13 @@
         return;
       }
       print('INVALID VARIABLE NAME\n');
+      return;
+    }
+
+    // Function execution if token matches [A-Z]
+    if (/^[A-Z]$/.test(t)) {
+      if (funcs[t]) { runTokens(funcs[t]); return; }
+      print('UNDEFINED FUNCTION '+t+'\n');
       return;
     }
 
@@ -106,11 +135,9 @@
   function run(line) {
     const toks = line.replace(/\/\/.*$/,'').trim().split(/\s+/).filter(Boolean);
     for (const t of toks) evalToken(t);
-    // If line ends with a bare variable name, treat it as a fetch (like Forth)
     if (pendingVar) { push(vars[pendingVar]); pendingVar = null; }
   }
 
-  // --- REPL ---
   const prompt = () => print('> ');
   function onEnter() {
     print('\n');
@@ -126,7 +153,7 @@
     if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) { e.preventDefault(); inputBuffer += e.key; print(e.key); return; }
   });
 
-  print('MINT-Web — 16-bit RPN (Stable Persistent Variables)\n');
+  print('MINT-Web — 16-bit RPN (Functions + Persistent Variables)\n');
   prompt();
   out.focus();
 })();
