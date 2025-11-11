@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MINT-Web Interpreter</title>
+<style>
+  body { background:#111; color:#0f0; font-family:monospace; margin:0; padding:10px; }
+  #console { white-space:pre-wrap; height:90vh; overflow-y:auto; outline:none; }
+</style>
+</head>
+<body>
+<div id="console" tabindex="0"></div>
+<script>
+(() => {
+  const out = document.getElementById('console');
+  const vars = {};                       // a..z + system vars
+  for(let c=97;c<=122;c++) vars[String.fromCharCode(c)] = 0;
+  vars["/c"]=0; vars["/r"]=0;
+  const stack = [];
+  let inputBuffer = "";
+
+  function mask16(n){ return n & 0xFFFF; }
+  function tos16(n){ n&=0xFFFF; return n>=0x8000 ? n-0x10000 : n; }
+  function print(s){ out.textContent += s; out.scrollTop = out.scrollHeight; }
+
+  function push(v){ stack.push(mask16(v)); }
+  function pop(){ if(!stack.length){ print("STACK UNDERFLOW\n"); return 0; } return stack.pop(); }
+  function peek(){ return stack.length ? stack[stack.length-1] : 0; }
+
+  const ops = {
+    '+':()=>{let b=pop(),a=pop(); let r=a+b; vars["/c"]=(r>0xFFFF)?1:0; vars["/r"]=0; push(r);},
+    '-':()=>{let b=pop(),a=pop(); let r=a-b; vars["/c"]=(a<b)?1:0; vars["/r"]=0; push(r);},
+    '*':()=>{let b=pop(),a=pop(); let p=a*b; vars["/r"]=(p>>16)&0xFFFF; push(p);},
+    '/':()=>{let b=pop(),a=pop(); if(b===0){print("DIV0\n");push(0);return;}
+             vars["/r"]=a%b; push(Math.trunc(a/b));},
+    '&':()=>{let b=pop(),a=pop(); push(a&b);},
+    '|':()=>{let b=pop(),a=pop(); push(a|b);},
+    '^':()=>{let b=pop(),a=pop(); push(a^b);},
+    '~':()=>{let a=pop(); push(~a);},
+    '{':()=>{let a=pop(); push(a<<1);},
+    '}':()=>{let a=pop(); push(a>>>1);},
+    "'":()=>{pop();},
+    '"':()=>{push(peek());},
+    '$':()=>{let b=pop(),a=pop(); push(b); push(a);},
+    '%':()=>{let n=stack.length; if(n>1) push(stack[n-2]);},
+    '.':()=>{print(tos16(pop())+"\n");},
+    ',':()=>{print((mask16(pop()).toString(16).toUpperCase().padStart(4,'0'))+"\n");}
+  };
+
+  function evalToken(t){
+    if(!t) return;
+    if(/^#/.test(t)){ push(parseInt(t.slice(1),16)); return; }
+    if(/^-?\d+$/.test(t)){ push(parseInt(t)); return; }
+    if(/^`.*`$/.test(t)){ print(t.slice(1,-1)); return; }
+    if(t==="/T"){ push(0xFFFF); return; }
+    if(t==="/F"){ push(0); return; }
+    if(t==="/N"){ print("\n"); return; }
+    if(t==="/C"){ let v=pop(); print(String.fromCharCode(v&0xFF)); return; }
+    if(vars.hasOwnProperty(t)){ push(vars[t]); return; }
+    if(/^[a-z]!$/.test(t)){ let name=t[0]; vars[name]=mask16(pop()); return; }
+    if(t==="/c!"||t==="/r!"){ let v=pop(); vars[t.slice(0,2)]=mask16(v); return; }
+    if(ops[t]){ ops[t](); return; }
+    print("UNKNOWN TOKEN: "+t+"\n");
+  }
+
+  function run(line){
+    const toks=line.replace(/\/\/.*$/,'').trim().split(/\s+/);
+    for(const t of toks) evalToken(t);
+  }
+
+  function prompt(){ print("> "); }
+
+  function handleCommand(line){
+    print("\n"); // add CRLF after pressing enter
+    run(line);
+    prompt();
+  }
+
+  out.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      handleCommand(inputBuffer.trim());
+      inputBuffer = "";
+    } else if(e.key === 'Backspace'){
+      inputBuffer = inputBuffer.slice(0,-1);
+      out.textContent = out.textContent.slice(0,-1);
+    } else if(e.key.length === 1){
+      inputBuffer += e.key;
+      print(e.key);
+    }
+  });
+
+  print("MINT-Web — 16-bit RPN, vars a..z. Type commands below.\n");
+  prompt();
+  out.focus();
+})();
+</script>
+</body>
+</html>
