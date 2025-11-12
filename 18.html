@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MINT-Web v18 — Smart Parser + IF/ELSE + Loops</title>
+<style>
+  body { background:#111; color:#0f0; font-family:monospace; margin:0; padding:10px; }
+  #console { white-space:pre-wrap; height:90vh; overflow-y:auto; outline:none; }
+</style>
+</head>
+<body>
+<div id="console" tabindex="0"></div>
+<script>
+(() => {
+  const out = document.getElementById('console');
+
+  // ---------------- Core State ----------------
+  const vars = Object.create(null);
+  for (let c = 97; c <= 122; c++) vars[String.fromCharCode(c)] = 0; // a..z
+  vars['/c']=0; vars['/r']=0; vars['/i']=0; vars['/j']=0;
+  const funcs = Object.create(null);
+  const stack = [];
+
+  let inputBuffer = '';
+  let pendingVar = null;
+  let definingFunc = null;
+  let definingFuncBody = [];
+
+  // ---------------- Utilities ----------------
+  const mask16 = n => (n & 0xFFFF) >>> 0;
+  const s16    = n => { n &= 0xFFFF; return (n & 0x8000) ? (n - 0x10000) : n; };
+  const print  = s => { out.textContent += s; out.scrollTop = out.scrollHeight; };
+  const push   = v => stack.push(mask16(v));
+  const pop    = () => stack.length ? stack.pop() : (print('STACK UNDERFLOW\n'), 0);
+  const peek   = () => (stack.length ? stack[stack.length - 1] : 0);
+
+  // Truth helper: true → -1, false → 0
+  const b = cond => cond ? -1 : 0;
+
+  // ---------------- Operations ----------------
+  const ops = {
+    '+': () => { const b2=pop(), a=pop(); push(a + b2); },
+    '-': () => { const b2=pop(), a=pop(); push(a - b2); },
+    '*': () => { const b2=pop(), a=pop(); push(a * b2); },
+    '/': () => { const b2=pop(), a=pop(); if (!b2) { print('DIV0\n'); push(0); return; } push(Math.trunc(a / b2)); },
+
+    '&': () => { const b2=pop(), a=pop(); push(a & b2); },
+    '|': () => { const b2=pop(), a=pop(); push(a | b2); },
+    '^': () => { const b2=pop(), a=pop(); push(a ^ b2); },
+    '~': () => { push(~pop()); },
+    '{': () => { push(pop() << 1); },
+    '}': () => { push(pop() >>> 1); },
+
+    "'": () => { pop(); },
+    '"': () => { push(peek()); },
+    '$': () => { const b2=pop(), a=pop(); push(b2); push(a); },
+    '%': () => { const n=stack.length; if (n>1) push(stack[n-2]); },
+
+    // Print
+    '.': () => { print(s16(pop()) + '\n'); },
+    ',': () => { print(mask16(pop()).toString(16).toUpperCase().padStart(4,'0') + '\n'); },
+
+    // Comparisons (signed)
+    '=': () => { const b2=s16(pop()), a=s16(pop()); push(b(a === b2)); },
+    '>': () => { const b2=s16(pop()), a=s16(pop()); push(b(a >  b2)); },
+    '<': () => { const b2=s16(pop()), a=s16(pop()); push(b(a <  b2)); },
+  };
+
+  // ---------------- Token helpers ----------------
+  const parseBlock = tok => {
+    const inner = tok.slice(1, -1).trim();
+    return inner.length ? smartSplit(inner) : [];
+  };
+
+  function runLoop(count, body, isUnlimited=false) {
+    let iVal = 0;
+    vars['/j'] = vars['/i'];
+    while (isUnlimited || iVal < count) {
+      vars['/i'] = iVal;
+      runTokens(body);
+
+      // Break on /W with top == 0 (false)
+      if (stack.length && body.includes('/W')) {
+        if (stack[stack.length - 1] === 0) { pop(); break; }
+      }
+
+      if (!isUnlimited) {
+        iVal++;
+        if (iVal >= count) break;
+      }
+    }
+    vars['/i'] = 0;
+  }
+
+  // ---------------- Runner ----------------
+  function runTokens(tokens) {
+    for (let i = 0; i < tokens.length; i++) {
+      const t = tokens[i];
+
+      // IF (then) /E (else)  — condition already on stack
+      if (t.startsWith('(') && tokens[i+1] === '/E' && tokens[i+2]?.startsWith('(')) {
+        const cond = pop();
+        const thenB = parseBlock(t);
+        const elseB = parseBlock(tokens[i+2]);
+        if (cond !== 0) runTokens(thenB);
+        else            runTokens(elseB);
+        i += 2;
+        continue;
+      }
+
+      // Counted loop: n( ... )
+      if (/^\(.*\)$/.test(t)) {
+        const inner = parseBlock(t);
+        const count = pop();
+        runLoop(count, inner, false);
+        continue;
+      }
+
+      // Infinite loop: /U( ... )
+      if (t === '/U') {
+        const nxt = tokens[i+1];
+        if (nxt && nxt.startsWith('(')) {
+          const inner = parseBlock(nxt);
+          runLoop(0, inner, true);
+          i++;
+          continue;
+        }
+        // If no block follows, leave /U as a normal token value (legacy)
+        push(0xFFFF);
+        continue;
+      }
+
+      evalToken(t);
+    }
+  }
+
+  function evalToken(t) {
+    if (!t) return;
+
+    // During function definition
+    if (definingFunc) {
+      if (t === ';') {
+        funcs[definingFunc] = definingFuncBody.slice();
+        definingFunc = null;
+        definingFuncBody = [];
+        print('OK\n');
+        return;
+      }
+      definingFuncBody.push(t);
+      return;
+    }
+
+    // Begin function definition :F
+    if (/^:[A-Z]$/.test(t)) {
+      definingFunc = t[1];
+      definingFuncBody = [];
+      return;
+    }
+
+    // If a pending variable was just referenced but not stored, push its value
+    if (pendingVar && t !== '!' && t !== pendingVar+'!') {
+      push(vars[pendingVar]);
+      pendingVar = null;
+    }
+
+    // --- Literals ---
+    if (t[0] === '#') { // hex
+      const hex = t.slice(1);
+      if (!hex.length) { print('BAD HEX\n'); push(0); return; }
+      push(parseInt(hex, 16));
+      return;
+    }
+    if (/^-?\d+$/.test(t)) { // decimal
+      push(parseInt(t, 10));
+      return;
+    }
+    if (t.length >= 2 && t[0] === '`' && t[t.length - 1] === '`') {
+      print(t.slice(1, -1) + '\n');
+      return;
+    }
+
+    // --- Constants / System ---
+    if (t === '/T') { push(-1); return; }
+    if (t === '/F') { push(0);  return; }
+    if (t === '/N') { print('\n'); return; }
+    if (t === '/C') { print(String.fromCharCode(pop() & 0xFF)); return; }
+
+    if (t === '/i' || t === '/j' || t === '/c' || t === '/r') { push(vars[t]); return; }
+    if (t === '/c!' || t === '/r!') { vars[t.slice(0,2)] = mask16(pop()); return; }
+
+    // --- Variables a..z ---
+    if (/^[a-z]$/.test(t)) { pendingVar = t; return; }
+    if (/^[a-z]!$/.test(t)) {
+      const name = t[0];
+      vars[name] = mask16(pop());
+      pendingVar = null;
+      return;
+    }
+    if (t === '!') {
+      if (pendingVar) { vars[pendingVar] = mask16(pop()); pendingVar = null; return; }
+      print('INVALID VARIABLE NAME\n');
+      return;
+    }
+
+    // --- Functions A..Z ---
+    if (/^[A-Z]$/.test(t)) {
+      if (funcs[t]) { runTokens(funcs[t]); return; }
+      print('UNDEFINED FUNCTION ' + t + '\n');
+      return;
+    }
+
+    // --- Operators ---
+    if (ops[t]) { ops[t](); return; }
+
+    print('UNKNOWN TOKEN: ' + t + '\n');
+  }
+
+  // ---------------- Smart Tokenizer (no-space) ----------------
+  function smartSplit(line) {
+    // strip inline comment
+    line = line.replace(/\/\/.*$/, '');
+
+    const toks = [];
+    let i = 0, N = line.length;
+
+    const push = tok => { if (tok !== '') toks.push(tok); };
+
+    while (i < N) {
+      const ch = line[i];
+
+      // whitespace
+      if (/\s/.test(ch)) { i++; continue; }
+
+      // backtick string
+      if (ch === '`') {
+        let j = i + 1;
+        while (j < N && line[j] !== '`') j++;
+        if (j >= N) { push(line.slice(i)); i = N; break; }
+        push(line.slice(i, j + 1)); // include closing `
+        i = j + 1;
+        continue;
+      }
+
+      // parentheses block
+      if (ch === '(') {
+        let depth = 1, j = i + 1;
+        while (j < N && depth > 0) {
+          if (line[j] === '(') depth++;
+          else if (line[j] === ')') depth--;
+          j++;
+        }
+        push(line.slice(i, j)); // includes ')'
+        i = j;
+        continue;
+      }
+
+      // hex number #....
+      if (ch === '#') {
+        let j = i + 1;
+        while (j < N && /[0-9a-fA-F]/.test(line[j])) j++;
+        push(line.slice(i, j));
+        i = j;
+        continue;
+      }
+
+      // decimal number -?\d+  (stop before letters or other symbols)
+      if (ch === '-' || /\d/.test(ch)) {
+        let j = i;
+        if (ch === '-') j++;
+        let hasDigit = false;
+        while (j < N && /\d/.test(line[j])) { hasDigit = true; j++; }
+        if (hasDigit) {
+          push(line.slice(i, j));
+          i = j;
+          continue;
+        }
+        // lone '-' is operator
+      }
+
+      // slash-prefixed words: /T /F /W /E /U /i /j /c /r /S /A /N /C ... (+ optional !)
+      if (ch === '/') {
+        let j = i + 1;
+        while (j < N && /[A-Za-z]/.test(line[j])) j++;
+        if (j < N && line[j] === '!') j++;
+        push(line.slice(i, j));
+        i = j;
+        continue;
+      }
+
+      // single-char operators & punctuation
+      if (/^[+\-*\/&|^~{}'",$%.,=<>:;!]$/.test(ch)) {
+        push(ch);
+        i++;
+        continue;
+      }
+
+      // letters a..z A..Z (single-token letters)
+      if (/[A-Za-z]/.test(ch)) {
+        push(ch);
+        i++;
+        continue;
+      }
+
+      // fallback: unknown single char
+      push(ch);
+      i++;
+    }
+
+    // ---- Merge passes for special combos ----
+    const merged1 = [];
+    for (let k = 0; k < toks.length; k++) {
+      // : + Uppercase → :F
+      if (toks[k] === ':' && /^[A-Z]$/.test(toks[k+1] || '')) {
+        merged1.push(':' + toks[k+1]);
+        k++;
+        continue;
+      }
+      // a + ! → a!
+      if (/^[a-z]$/.test(toks[k] || '') && toks[k+1] === '!') {
+        merged1.push(toks[k] + '!');
+        k++;
+        continue;
+      }
+      // /c + ! or /r + ! → /c! /r!
+      if ((toks[k] === '/c' || toks[k] === '/r') && toks[k+1] === '!') {
+        merged1.push(toks[k] + '!');
+        k++;
+        continue;
+      }
+      merged1.push(toks[k]);
+    }
+
+    return merged1.filter(Boolean);
+  }
+
+  function run(line) {
+    const tokens = smartSplit(line.trim());
+    runTokens(tokens);
+    if (pendingVar) { push(vars[pendingVar]); pendingVar = null; }
+  }
+
+  // ---------------- Console / UI ----------------
+  const prompt = () => print('> ');
+  function onEnter() {
+    print('\n');
+    const line = inputBuffer.trim();
+    if (line) run(line);
+    inputBuffer = '';
+    prompt();
+  }
+
+  out.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key.toLowerCase() === 'l') {
+      e.preventDefault();
+      out.textContent = '';
+      print('Defined Functions:\n');
+      for (const [name, body] of Object.entries(funcs)) {
+        print(name + ' : ' + body.join(' ') + ' ;\n');
+      }
+      prompt();
+      return;
+    }
+    if (e.key === 'Enter') { e.preventDefault(); onEnter(); return; }
+    if (e.key === 'Backspace') {
+      e.preventDefault();
+      if (inputBuffer.length) {
+        inputBuffer = inputBuffer.slice(0, -1);
+        out.textContent = out.textContent.slice(0, -1);
+      }
+      return;
+    }
+    if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      inputBuffer += e.key;
+      print(e.key);
+      return;
+    }
+  });
+
+  // ---------------- Boot ----------------
+  print('MINT-Web v18 — Smart Parser + IF/ELSE + Loops + Comparators\n');
+  prompt();
+  out.focus();
+})();
+</script>
+</body>
+</html>
