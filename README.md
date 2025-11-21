@@ -34,7 +34,7 @@ Down to business, chaps! And now for something completely similar...
 
 * My ongoing updated [SJ Manual Mint V2.md](https://github.com/SteveJustin1963/tec-MINT/blob/main/MINT2%20Manual.md) (now with 50% more wisdom!)
 
-* Every—nobody expects the Spanish Inquisition so here is my [autopsy and extraction](https://github.com/SteveJustin1963/tec-MINT/wiki) dissecting the beast!
+* Everybody expects the Spanish Inquisition so here is my [autopsy and extraction](https://github.com/SteveJustin1963/tec-MINT/wiki) dissecting the beast!
 
 
 # Acknowledgments
