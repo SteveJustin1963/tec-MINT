@@ -14,6 +14,8 @@ Down to business, chaps! And now for something completely similar...
 
 * Dont have a TEC-1 ? Then pop your code into asm80 (16MHz clock, old bean) and behold: approximately 1,600,000 parsecs—or 4000 shekels, give or take six sigma—on a jolly sunny afternoon, round about 3:23pm, with tea and crumpets optional!
 
+* Or if you prefer hyperspace drive use my mint_octave code
+
 * Permits rapid prototyping of code, effortless concatenation, no tiresome compiling, runs forthwith like a knight on a quest—test as you build, and build as you test, what ho!
 
 * Should an undetected error sneak past like a dead parrot, do treat yourself to a hearty punch to the n@@ts—it's the only decent reward!
