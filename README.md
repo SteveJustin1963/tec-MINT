@@ -10,7 +10,7 @@ Down to business, chaps! And now for something completely similar...
 
 * 'Tis a pint-sized, lightning-swift Forth-ish contraption, crafted with loving care for the noble TEC-1 prototype and its rather dim-witted simian kin—revs A, B, C, D (E? F? Who knows!), G, and the mighty SCC; and if the whole blasted lot explodes in a puff of logic, by Jove, prop up the Micocomp-1 under a chair leg and call it a day!
 
-* A staggering 400,000 commands per second (on a 4MHz clock, no less)—or, if you prefer, precisely one order of magnitude slower than whatever clock you've got ticking away in your pocket!
+* A staggering [2,000 – 10,000 MINT words per second](https://github.com/SteveJustin1963/tec-MINT/wiki/speed)  (on a 4MHz clock, no less)—or, if you prefer, precisely one order of magnitude slower than whatever clock you've got ticking away in your pocket!
 
 * Dont have a TEC-1 ? Then pop your code into asm80 (16MHz clock, old bean) and behold: approximately 1,600,000 parsecs—or 4000 shekels, give or take six sigma—on a jolly sunny afternoon, round about 3:23pm, with tea and crumpets optional!
 
