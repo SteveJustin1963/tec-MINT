@@ -192,6 +192,7 @@ The range depends on the allocation of bits for the sign, exponent, and mantissa
 - https://github.com/SteveJustin1963/tec-MINT/blob/main/code/8-LED-light-chaser.md
 - https://github.com/tec1group/MINT-cookbook/tree/main/misc/4-digit-counter
 - adding new features to mint octave, issues with parsing and list command compressing spaces
+- build CUDA connections to speed up more
 
  
 
