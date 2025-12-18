@@ -18,7 +18,7 @@ Down to business, chaps! And now for something completely similar...
 
 * Permits rapid prototyping of code, effortless concatenation, no tiresome compiling, runs forthwith like a knight on a quest—test as you build, and build as you test, what ho!
 
-* Should an undetected error sneak past like a dead parrot, do treat yourself to a hearty punch to the n@@ts—it's the only decent reward!
+* Should an undetected error sneak past like a dead parrot, do treat yourself to a hearty punch to the nuts—it's the only decent reward!
 
 * [THE SOURCE CODE](https://github.com/orgMINT/MINT) (fanfare, please!)
 * https://github.com/tec1group/MINT-cookbook — the ver1 goodies, straight from the ministry!
