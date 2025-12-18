@@ -42,6 +42,7 @@ devoid of any preordained or systematic reverence.
 This lack of sequentiality reflects an egalitarian or arbitrary approach,
 wherein no specific developer is elevated above another
 in terms of the order of respect or recognition for their work.
+....."oh! shud up!"
 ```
 
 <img width="365" height="610" alt="image" src="https://github.com/user-attachments/assets/87a01b68-8479-4382-b8f3-4e41999ef39d" />
