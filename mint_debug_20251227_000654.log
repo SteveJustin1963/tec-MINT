@@ -1,0 +1,1111 @@
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // ============================================ ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // CHESS GAME IN MINT-OCTAVE ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // ============================================ ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Initialize board array (64 squares) ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Starting position setup ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'I'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :INIT [ 4 2 3 5 6 3 2 4 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 -1 -1 -1 -1 -1 -1 -1 -4 -2 -3 -5 -6 -3 -2 -4 ] b ! 1 turn ! `Chess Game Initialized` /N `White (uppercase): P H B C Q K` /N `Black (lowercase): p h b c q k` /N /N ;
+[DEBUG] TOKENS: ':INIT' '[' '4' '2' '3' '5' '6' '3' '2' '4' '1' '1' '1' '1' '1' '1' '1' '1' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '0' '-1' '-1' '-1' '-1' '-1' '-1' '-1' '-1' '-4' '-2' '-3' '-5' '-6' '-3' '-2' '-4' ']' 'b' '!' '1' 'turn' '!' '`Chess Game Initialized`' '/N' '`White (uppercase): P H B C Q K`' '/N' '`Black (lowercase): p h b c q k`' '/N' '/N' ';' 
+[DEBUG] Processing token #1: ':INIT'
+[DEBUG] FUNCTION DEF START: INIT
+[DEBUG] FUNCTION DEF END: INIT with 78 tokens
+[DEBUG] FUNCTION 'I' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Display single piece character ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: piece_value -- ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'P'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :PC " piece ! piece 0 = ( 46 /C ) /E ( piece /abs ptype ! ptype 1 = ( 80 pc ! ) /E ( ptype 2 = ( 72 pc ! ) /E ( ptype 3 = ( 66 pc ! ) /E ( ptype 4 = ( 67 pc ! ) /E ( ptype 5 = ( 81 pc ! ) /E ( ptype 6 = ( 75 pc ! ) ) ) ) ) ) piece 0 > ( pc /C ) /E ( pc 32 + /C ) ) ;
+[DEBUG] TOKENS: ':PC' '"' 'piece' '!' 'piece' '0' '=' '(' '46' '/C' ')' '/E' '(' 'piece' '/abs' 'ptype' '!' 'ptype' '1' '=' '(' '80' 'pc' '!' ')' '/E' '(' 'ptype' '2' '=' '(' '72' 'pc' '!' ')' '/E' '(' 'ptype' '3' '=' '(' '66' 'pc' '!' ')' '/E' '(' 'ptype' '4' '=' '(' '67' 'pc' '!' ')' '/E' '(' 'ptype' '5' '=' '(' '81' 'pc' '!' ')' '/E' '(' 'ptype' '6' '=' '(' '75' 'pc' '!' ')' ')' ')' ')' ')' ')' 'piece' '0' '>' '(' 'pc' '/C' ')' '/E' '(' 'pc' '32' '+' '/C' ')' ')' ';' 
+[DEBUG] Processing token #1: ':PC'
+[DEBUG] FUNCTION DEF START: PC
+[DEBUG] FUNCTION DEF END: PC with 94 tokens
+[DEBUG] FUNCTION 'P' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Display board ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: -- ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'D'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :DISP /N `  a b c d e f g h` /N `+----------------+` /N 8 ( 7 /i - row ! row . 32 /C 124 /C 8 ( /i col ! row 8 * col + sq ! b sq ? PC 32 /C ) 124 /C 32 /C row . /N ) `+----------------+` /N `  a b c d e f g h` /N /N ;
+[DEBUG] TOKENS: ':DISP' '/N' '`  a b c d e f g h`' '/N' '`+----------------+`' '/N' '8' '(' '7' '/i' '-' 'row' '!' 'row' '.' '32' '/C' '124' '/C' '8' '(' '/i' 'col' '!' 'row' '8' '*' 'col' '+' 'sq' '!' 'b' 'sq' '?' 'PC' '32' '/C' ')' '124' '/C' '32' '/C' 'row' '.' '/N' ')' '`+----------------+`' '/N' '`  a b c d e f g h`' '/N' '/N' ';' 
+[DEBUG] Processing token #1: ':DISP'
+[DEBUG] FUNCTION DEF START: DISP
+[DEBUG] FUNCTION DEF END: DISP with 50 tokens
+[DEBUG] FUNCTION 'D' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Convert column letter to number (a=0, b=1, ..., h=7) ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: ascii_code -- column_number ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'C'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :COL 97 - ;
+[DEBUG] TOKENS: ':COL' '97' '-' ';' 
+[DEBUG] Processing token #1: ':COL'
+[DEBUG] FUNCTION DEF START: COL
+[DEBUG] FUNCTION DEF END: COL with 2 tokens
+[DEBUG] FUNCTION 'C' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Get piece at square ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: square_index -- piece_value ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'G'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :GP b $ ? ;
+[DEBUG] TOKENS: ':GP' 'b' '$' '?' ';' 
+[DEBUG] Processing token #1: ':GP'
+[DEBUG] FUNCTION DEF START: GP
+[DEBUG] FUNCTION DEF END: GP with 3 tokens
+[DEBUG] FUNCTION 'G' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Set piece at square ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: piece_value square_index -- ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'S'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :SP b $ ?! ;
+[DEBUG] TOKENS: ':SP' 'b' '$' '?!' ';' 
+[DEBUG] Processing token #1: ':SP'
+[DEBUG] FUNCTION DEF START: SP
+[DEBUG] FUNCTION DEF END: SP with 3 tokens
+[DEBUG] FUNCTION 'S' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Check if square is valid (0-63) ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: square -- is_valid ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'V'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :VALID " 0 > $ 64 < & ;
+[DEBUG] TOKENS: ':VALID' '"' '0' '>' '$' '64' '<' '&' ';' 
+[DEBUG] Processing token #1: ':VALID'
+[DEBUG] FUNCTION DEF START: VALID
+[DEBUG] FUNCTION DEF END: VALID with 7 tokens
+[DEBUG] FUNCTION 'V' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Get piece color sign (1 for positive, -1 for negative, 0 for empty) ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: piece -- color ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'S'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :SIGN " 0 > ( 1 ) /E ( " 0 < ( -1 ) /E ( 0 ) ) ;
+[DEBUG] TOKENS: ':SIGN' '"' '0' '>' '(' '1' ')' '/E' '(' '"' '0' '<' '(' '-1' ')' '/E' '(' '0' ')' ')' ';' 
+[DEBUG] Processing token #1: ':SIGN'
+[DEBUG] FUNCTION DEF START: SIGN
+[DEBUG] FUNCTION DEF END: SIGN with 19 tokens
+[DEBUG] FUNCTION 'S' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Check if move from->to is on same row ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: from to -- bool ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'S'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :SAMEROW 8 / $ 8 / = ;
+[DEBUG] TOKENS: ':SAMEROW' '8' '/' '$' '8' '/' '=' ';' 
+[DEBUG] Processing token #1: ':SAMEROW'
+[DEBUG] FUNCTION DEF START: SAMEROW
+[DEBUG] FUNCTION DEF END: SAMEROW with 6 tokens
+[DEBUG] FUNCTION 'S' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Check if move from->to is on same column ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: from to -- bool ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'S'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :SAMECOL 8 /mod ' $ 8 /mod ' = ;
+[DEBUG] TOKENS: ':SAMECOL' '8' '/mod' ''' '$' '8' '/mod' ''' '=' ';' 
+[DEBUG] Processing token #1: ':SAMECOL'
+[DEBUG] FUNCTION DEF START: SAMECOL
+[DEBUG] FUNCTION DEF END: SAMECOL with 8 tokens
+[DEBUG] FUNCTION 'S' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Check if move from->to is diagonal ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: from to -- bool ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'D'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :DIAG % 8 / $ 8 / - /abs $ 8 /mod ' $ 8 /mod ' - /abs = ;
+[DEBUG] TOKENS: ':DIAG' '%' '8' '/' '$' '8' '/' '-' '/abs' '$' '8' '/mod' ''' '$' '8' '/mod' ''' '-' '/abs' '=' ';' 
+[DEBUG] Processing token #1: ':DIAG'
+[DEBUG] FUNCTION DEF START: DIAG
+[DEBUG] FUNCTION DEF END: DIAG with 19 tokens
+[DEBUG] FUNCTION 'D' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Simple move validation (basic rules only) ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: from to -- is_valid ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'V'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :VALID_MOVE % GP frompc ! " GP topc ! frompc turn * 0 > ~ ( /F ) /E ( topc turn * 0 > ( /F ) /E ( frompc /abs ptype ! /T ) ) ;
+[DEBUG] TOKENS: ':VALID_MOVE' '%' 'GP' 'frompc' '!' '"' 'GP' 'topc' '!' 'frompc' 'turn' '*' '0' '>' '~' '(' '/F' ')' '/E' '(' 'topc' 'turn' '*' '0' '>' '(' '/F' ')' '/E' '(' 'frompc' '/abs' 'ptype' '!' '/T' ')' ')' ';' 
+[DEBUG] Processing token #1: ':VALID_MOVE'
+[DEBUG] FUNCTION DEF START: VALID_MOVE
+[DEBUG] FUNCTION DEF END: VALID_MOVE with 36 tokens
+[DEBUG] FUNCTION 'V' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Make move ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: from to -- ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'M'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :MOVE % GP piece ! " 0 SP piece $ SP turn -1 * turn ! ;
+[DEBUG] TOKENS: ':MOVE' '%' 'GP' 'piece' '!' '"' '0' 'SP' 'piece' '$' 'SP' 'turn' '-1' '*' 'turn' '!' ';' 
+[DEBUG] Processing token #1: ':MOVE'
+[DEBUG] FUNCTION DEF START: MOVE
+[DEBUG] FUNCTION DEF END: MOVE with 15 tokens
+[DEBUG] FUNCTION 'M' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Parse chess notation to square index ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Example: "e2" -> row=1, col=4 -> index=12 ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: col_ascii row_ascii -- square_index ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'P'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :PARSE 48 - 1 - r ! COL c ! r 8 * c + ;
+[DEBUG] TOKENS: ':PARSE' '48' '-' '1' '-' 'r' '!' 'COL' 'c' '!' 'r' '8' '*' 'c' '+' ';' 
+[DEBUG] Processing token #1: ':PARSE'
+[DEBUG] FUNCTION DEF START: PARSE
+[DEBUG] FUNCTION DEF END: PARSE with 14 tokens
+[DEBUG] FUNCTION 'P' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Input move from user ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: -- from to (or -1 -1 if quit) ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'I'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :INPUT `Enter move (e.g. e2e4): ` /L chars ! chars 1 = ( 0 /C 113 = ( -1 -1 ) /E ( INPUT ) ) /E ( chars 4 = ( 3 /C 2 /C PARSE from ! 1 /C 0 /C PARSE to ! from to ) /E ( `Invalid format. Try again.` /N INPUT ) ) ;
+[DEBUG] TOKENS: ':INPUT' '`Enter move (e.g. e2e4): `' '/L' 'chars' '!' 'chars' '1' '=' '(' '0' '/C' '113' '=' '(' '-1' '-1' ')' '/E' '(' 'INPUT' ')' ')' '/E' '(' 'chars' '4' '=' '(' '3' '/C' '2' '/C' 'PARSE' 'from' '!' '1' '/C' '0' '/C' 'PARSE' 'to' '!' 'from' 'to' ')' '/E' '(' '`Invalid format. Try again.`' '/N' 'INPUT' ')' ')' ';' 
+[DEBUG] Processing token #1: ':INPUT'
+[DEBUG] FUNCTION DEF START: INPUT
+[DEBUG] FUNCTION DEF END: INPUT with 51 tokens
+[DEBUG] FUNCTION 'I' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Find all pieces for current player ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: -- count ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'C'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :COUNT_PIECES 0 count ! 64 ( b /i ? turn * 0 > ( count 1 + count ! ) ) count ;
+[DEBUG] TOKENS: ':COUNT_PIECES' '0' 'count' '!' '64' '(' 'b' '/i' '?' 'turn' '*' '0' '>' '(' 'count' '1' '+' 'count' '!' ')' ')' 'count' ';' 
+[DEBUG] Processing token #1: ':COUNT_PIECES'
+[DEBUG] FUNCTION DEF START: COUNT_PIECES
+[DEBUG] FUNCTION DEF END: COUNT_PIECES with 21 tokens
+[DEBUG] FUNCTION 'C' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Simple AI: Random legal move ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: -- from to ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'A'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :AI `AI thinking...` /N /U ( 64 /rand /floor from ! from GP turn * 0 > ( 64 /rand /floor to ! from to VALID_MOVE ( from to /W ) ) ) ;
+[DEBUG] TOKENS: ':AI' '`AI thinking...`' '/N' '/U' '(' '64' '/r' 'and' '/floor' 'from' '!' 'from' 'GP' 'turn' '*' '0' '>' '(' '64' '/r' 'and' '/floor' 'to' '!' 'from' 'to' 'VALID_MOVE' '(' 'from' 'to' '/W' ')' ')' ')' ';' 
+[DEBUG] Processing token #1: ':AI'
+[DEBUG] FUNCTION DEF START: AI
+[DEBUG] FUNCTION DEF END: AI with 33 tokens
+[DEBUG] FUNCTION 'A' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Check for checkmate/stalemate (simplified) ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: -- status (0=continue, 1=checkmate, 2=stalemate) ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'G'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :GAME_OVER COUNT_PIECES 1 < ( 1 ) /E ( 0 ) ;
+[DEBUG] TOKENS: ':GAME_OVER' 'COUNT_PIECES' '1' '<' '(' '1' ')' '/E' '(' '0' ')' ';' 
+[DEBUG] Processing token #1: ':GAME_OVER'
+[DEBUG] FUNCTION DEF START: GAME_OVER
+[DEBUG] FUNCTION DEF END: GAME_OVER with 10 tokens
+[DEBUG] FUNCTION 'G' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Main game loop ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'G'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :GAME INIT DISP /U ( GAME_OVER status ! status 0 > ( status 1 = ( `Checkmate!` /N ) /E ( `Stalemate!` /N ) /W ) turn 1 = ( `Your turn (White):` /N INPUT from ! to ! from 0 < ( /W ) from to VALID_MOVE ( from to MOVE DISP ) /E ( `Illegal move!` /N ) ) /E ( AI from ! to ! `AI moves: ` from . ` to ` to . /N from to MOVE DISP ) ) `Game Over` /N ;
+[DEBUG] TOKENS: ':GAME' 'INIT' 'DISP' '/U' '(' 'GAME_OVER' 'status' '!' 'status' '0' '>' '(' 'status' '1' '=' '(' '`Checkmate!`' '/N' ')' '/E' '(' '`Stalemate!`' '/N' ')' '/W' ')' 'turn' '1' '=' '(' '`Your turn (White):`' '/N' 'INPUT' 'from' '!' 'to' '!' 'from' '0' '<' '(' '/W' ')' 'from' 'to' 'VALID_MOVE' '(' 'from' 'to' 'MOVE' 'DISP' ')' '/E' '(' '`Illegal move!`' '/N' ')' ')' '/E' '(' 'AI' 'from' '!' 'to' '!' '`AI moves: `' 'from' '.' '` to `' 'to' '.' '/N' 'from' 'to' 'MOVE' 'DISP' ')' ')' '`Game Over`' '/N' ';' 
+[DEBUG] Processing token #1: ':GAME'
+[DEBUG] FUNCTION DEF START: GAME
+[DEBUG] FUNCTION DEF END: GAME with 79 tokens
+[DEBUG] FUNCTION 'G' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // ============================================ ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // HELPER FUNCTIONS FOR ENHANCED GAMEPLAY ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // ============================================ ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Check if square is attacked by opponent ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: square -- is_attacked ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'A'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :ATTACKED /F attacked ! 64 ( b /i ? turn -1 * * 0 > ( /i $ VALID_MOVE ( /T attacked ! ) ) ) ' attacked ;
+[DEBUG] TOKENS: ':ATTACKED' '/F' 'attacked' '!' '64' '(' 'b' '/i' '?' 'turn' '-1' '*' '*' '0' '>' '(' '/i' '$' 'VALID_MOVE' '(' '/T' 'attacked' '!' ')' ')' ')' ''' 'attacked' ';' 
+[DEBUG] Processing token #1: ':ATTACKED'
+[DEBUG] FUNCTION DEF START: ATTACKED
+[DEBUG] FUNCTION DEF END: ATTACKED with 27 tokens
+[DEBUG] FUNCTION 'A' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Find king position for current player ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: -- king_square ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'F'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :FIND_KING -1 king_sq ! 64 ( b /i ? piece ! piece /abs 6 = piece turn * 0 > & ( /i king_sq ! ) ) king_sq ;
+[DEBUG] TOKENS: ':FIND_KING' '-1' 'king_sq' '!' '64' '(' 'b' '/i' '?' 'piece' '!' 'piece' '/abs' '6' '=' 'piece' 'turn' '*' '0' '>' '&' '(' '/i' 'king_sq' '!' ')' ')' 'king_sq' ';' 
+[DEBUG] Processing token #1: ':FIND_KING'
+[DEBUG] FUNCTION DEF START: FIND_KING
+[DEBUG] FUNCTION DEF END: FIND_KING with 27 tokens
+[DEBUG] FUNCTION 'F' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Check if current player is in check ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: -- in_check ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'I'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :IN_CHECK FIND_KING ATTACKED ;
+[DEBUG] TOKENS: ':IN_CHECK' 'FIND_KING' 'ATTACKED' ';' 
+[DEBUG] Processing token #1: ':IN_CHECK'
+[DEBUG] FUNCTION DEF START: IN_CHECK
+[DEBUG] FUNCTION DEF END: IN_CHECK with 2 tokens
+[DEBUG] FUNCTION 'I' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Generate all legal moves for current player ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stack: -- move_count ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+
+=== EXECUTING LINE: // Stores moves in global move array ===
+[DEBUG] TOKENS: 
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================
+[DEBUG] >>> ENTERING CAPTURE MODE for function 'G'
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] CAPTURE: accumulating line into buffer
+[DEBUG] <<< EXITING CAPTURE MODE
+[DEBUG] COMPLETE BUFFER: :GEN_MOVES 0 mc ! 64 ( /i from ! from GP frompc ! frompc turn * 0 > ( 64 ( /i to ! from to VALID_MOVE ( mc 1 + mc ! ) ) ) ) mc ;
+[DEBUG] TOKENS: ':GEN_MOVES' '0' 'mc' '!' '64' '(' '/i' 'from' '!' 'from' 'GP' 'frompc' '!' 'frompc' 'turn' '*' '0' '>' '(' '64' '(' '/i' 'to' '!' 'from' 'to' 'VALID_MOVE' '(' 'mc' '1' '+' 'mc' '!' ')' ')' ')' ')' 'mc' ';' 
+[DEBUG] Processing token #1: ':GEN_MOVES'
+[DEBUG] FUNCTION DEF START: GEN_MOVES
+[DEBUG] FUNCTION DEF END: GEN_MOVES with 37 tokens
+[DEBUG] FUNCTION 'G' SAVED SUCCESSFULLY
+
+[DEBUG] === FINAL STATE ===
+[DEBUG] STACK: (empty)
+[DEBUG] VARIABLES:
+[DEBUG] FLAGS: /c=0, /v=0, /z=0, /n=0, /r=0
+[DEBUG] LOOPS: /i=0, /j=0
+[DEBUG] ====================

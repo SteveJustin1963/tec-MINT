@@ -1,0 +1,54 @@
+// Variables: a=array, b=size, c=loop_index, d=current_value, e=even_sum, f=odd_sum
+
+:S
+a ! // Get array from stack
+a /S b ! // Get size
+
+0 c ! // Initialize loop index
+0 e ! // Initialize even sum
+0 f ! // Initialize odd sum
+
+b ( // Loop through array
+  a c ? d ! // Get current element
+
+  c 2 % 0 = ( // If index is even (index mod 2 == 0)
+    e d + e ! // Add to even sum
+  ) /E ( // Else (index is odd)
+    f d + f ! // Add to odd sum
+  )
+
+  c 1 + c ! // Increment index
+)
+
+`Even sum: ` e . /N // Print even sum
+`Odd sum: ` f . /N // Print odd sum
+;
+
+// Example Usage:
+[10 20 30 40 50] S // Calculate sums for the array
+
+//////////////
+
+:S
+a !
+a /S b !
+0 c !
+0 e !
+0 f !
+b (
+  a c ? d !
+  c 2 % 0 = (
+    e d + e !
+  ) /E (
+    f d + f !
+  )
+  c 1 + c !
+)
+`Even sum: ` e . /N
+`Odd sum: ` f . /N
+;
+[10 20 30 40 50] S
+
+
+
+

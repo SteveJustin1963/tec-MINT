@@ -1,0 +1,285 @@
+╔═══════════════════════════════════════════════════════════════════════╗
+║                 TEC-1 INTERRUPT FLOW DIAGRAM                          ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  BEFORE PATCH (CURRENT ROM - BROKEN)                                │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Hardware          Z80 CPU         ROM 0038h        Result
+  ────────          ───────         ─────────        ──────
+                                   
+    INT ────────>  INT pin          0038h: RET ───> Returns
+   (active          triggers                        immediately
+    low)            IM 1                             
+                                                     :Z never
+                    Push PC                          called!
+                    Jump 0038h
+                    
+                    Execute
+                    instruction
+                    
+                    Pop PC    <─────────────────────
+                    Continue
+                    
+┌─────────────────────────────────────────────────────────────────────┐
+│  AFTER PATCH (FIXED - WORKING!)                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Hardware      Z80 CPU      ROM 0038h    ROM 008Bh    MINT :Z
+  ────────      ───────      ─────────    ─────────    ───────
+                                   
+    INT ──────> INT pin      0038h:       008Bh:       Execute
+   (from         triggers     JP 008Bh ─> ISR:         your
+    ACIA,        IM 1           │         LD H,0       MINT
+    CTC,                         │         LD (vID),HL code!
+    button)      Push PC         │         CALL ENTER─>
+                 Jump 0038h ─────┘         .CSTR "Z"   :Z
+                                           RET       <──┘
+                 Pop PC      <────────────────┘
+                 Continue
+
+
+                      DETAILED CALL CHAIN
+                      ═══════════════════
+
+      1. Hardware asserts INT (low)
+                ↓
+      2. Z80 completes current instruction
+                ↓
+      3. Z80 pushes PC to stack
+                ↓
+      4. Z80 jumps to 0038h (IM 1 vector)
+                ↓
+      5. Execute: JP 008Bh (3 bytes)
+                ↓
+      6. ISR at 008Bh:
+         - LD H,0          ; Clear H
+         - LD (0C92h),HL   ; Store interrupt ID
+         - CALL 03BDh      ; Call ENTER function
+         - .CSTR "Z"       ; String data
+         - RET             ; Return
+                ↓
+      7. ENTER function (03BDh):
+         - Saves BC (instruction pointer)
+         - Pops return address (points to "Z")
+         - Looks up "Z" in DEFS table (0C34h+25*2=0C66h)
+         - Loads address of :Z code from DEFS
+         - Executes MINT bytecode for :Z
+         - Returns
+                ↓
+      8. ISR continues: RET
+                ↓
+      9. Z80 pops PC from stack
+                ↓
+     10. Resume normal execution
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  MEMORY MAP WITH INTERRUPT PATHS                                    │
+└─────────────────────────────────────────────────────────────────────┘
+
+  ROM (0000h-07FFh):
+  ┌──────────────────────────────────────────────────────────────┐
+  │ 0000h  RST 0  → C3 96 00    JP RESET                         │
+  │ 0008h  RST 1  → 2E 01       LD L,1                           │
+  │        RST 1  → C3 8B 00    JP ISR     ┐                     │
+  │ 0010h  RST 2  → 2E 02       LD L,2     │                     │
+  │        RST 2  → C3 8B 00    JP ISR     │                     │
+  │ 0018h  RST 3  → 2E 03       LD L,3     │                     │
+  │        RST 3  → C3 8B 00    JP ISR     ├─► All jump to ISR  │
+  │ 0020h  RST 4  → 2E 04       LD L,4     │                     │
+  │        RST 4  → C3 8B 00    JP ISR     │                     │
+  │ 0028h  RST 5  → 2E 05       LD L,5     │                     │
+  │        RST 5  → C3 8B 00    JP ISR     │                     │
+  │ 0030h  RST 6  → 2E 06       LD L,6     │                     │
+  │        RST 6  → C3 8B 00    JP ISR     ┘                     │
+  │                                                               │
+  │ 0038h  RST 7  → C9          RET        ◄── FIX THIS!        │
+  │        (INT)  → [SHOULD BE: C3 8B 00]  ◄── TO THIS!         │
+  │                                                               │
+  │ 0066h  NMI    → 2E 08       LD L,8                           │
+  │        NMI    → C3 8B 00    JP ISR                           │
+  │                                                               │
+  │ 008Bh  ISR:                                                  │
+  │        26 00                LD H,0                           │
+  │        22 92 0C             LD (vIntID),HL                   │
+  │        CD BD 03             CALL ENTER                       │
+  │        5A 00                .CSTR "Z"                        │
+  │        C9                   RET                              │
+  │                                                               │
+  │ 03BDh  ENTER:              MINT interpreter                  │
+  │        ... (executes MINT bytecode)                          │
+  └──────────────────────────────────────────────────────────────┘
+
+  RAM (0800h-0FFFh):
+  ┌──────────────────────────────────────────────────────────────┐
+  │ 0A06h  RST08 vector   (2 bytes) ┐                            │
+  │ 0A08h  RST10 vector   (2 bytes) │                            │
+  │ 0A0Ah  RST18 vector   (2 bytes) │                            │
+  │ 0A0Ch  RST20 vector   (2 bytes) ├─► All point to IntRet      │
+  │ 0A0Eh  RST28 vector   (2 bytes) │    (005Fh) which just RET  │
+  │ 0A10h  RST30 vector   (2 bytes) ┘                            │
+  │                                                               │
+  │ 0A14h  INTVEC         (2 bytes) ──► User can change this!    │
+  │ 0A16h  NMIVEC         (2 bytes)                              │
+  │                                                               │
+  │ 0C00h  VARS: a-z      (52 bytes, 2 per variable)            │
+  │                                                               │
+  │ 0C34h  DEFS: A-Z      (52 bytes, 2 per function)            │
+  │        ...                                                    │
+  │        0C64h = X function pointer                            │
+  │        0C66h = Y function pointer                            │
+  │        0C68h = Z function pointer  ◄── :Z lives here!        │
+  │                                                               │
+  │ 0C72h  vIntFunc       (2 bytes) - interrupt function ptr     │
+  │ 0C76h  vHeapPtr       (2 bytes) - heap pointer               │
+  │ 0C92h  vIntID         (2 bytes) - interrupt ID               │
+  │                                                               │
+  │ 0CA0h  HEAP:          (grows upward)                         │
+  │        [Your :Z code is compiled here]                       │
+  │        [Other MINT code here]                                │
+  └──────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  EXACT BYTES TO CHANGE                                              │
+└─────────────────────────────────────────────────────────────────────┘
+
+  Address:  0038h    0039h    003Ah
+           ┌──────┬──────┬──────┐
+  Before:  │  C9  │  ??  │  ??  │  (RET + unknown/unused)
+           └──────┴──────┴──────┘
+           ┌──────┬──────┬──────┐
+  After:   │  C3  │  8B  │  00  │  (JP 008Bh)
+           └──────┴──────┴──────┘
+
+  Disassembly:
+  Before: 0038h: C9        RET
+  After:  0038h: C3 8B 00  JP 008Bh
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  HEX DUMP FORMAT                                                    │
+└─────────────────────────────────────────────────────────────────────┘
+
+Original ROM dump around 0038h:
+00000030: 2e 06 c3 8b 00 00 00 00  c9 00 00 00 00 00 00 00
+          ^^^^^^^^^^^             ^^
+          RST 30h                 RST 38h (broken)
+
+Modified ROM dump around 0038h:
+00000030: 2e 06 c3 8b 00 00 00 00  c3 8b 00 00 00 00 00 00
+          ^^^^^^^^^^^             ^^^^^^^^
+          RST 30h                 RST 38h (fixed!)
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  VERIFY YOUR PATCH                                                  │
+└─────────────────────────────────────────────────────────────────────┘
+
+Using xxd (Linux/Mac):
+$ xxd -s 0x30 -l 16 TEC-1ROM10.bin
+0000030: 2e06 c38b 0000 0000 c900 0000 0000 0000
+                              ^^
+                              Should be C9 (before patch)
+
+$ xxd -s 0x30 -l 16 TEC-1ROM10-PATCHED.bin  
+0000030: 2e06 c38b 0000 0000 c38b 0000 0000 0000
+                              ^^^^
+                              Should be C38B (after patch)
+
+Using hex editor:
+Address   0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+00000030  2E 06 C3 8B 00 00 00 00 [C9]00 00 00 00 00 00 00  ← Before
+00000030  2E 06 C3 8B 00 00 00 00 [C3 8B 00]00 00 00 00 00  ← After
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  CREATE PATCH FILE                                                  │
+└─────────────────────────────────────────────────────────────────────┘
+
+Method 1: Using dd command
+$ echo -ne '\xC3\x8B\x00' > patch.bin
+$ dd if=TEC-1ROM10.bin of=TEC-1ROM10-PATCHED.bin bs=1 count=2048
+$ dd if=patch.bin of=TEC-1ROM10-PATCHED.bin bs=1 seek=56 conv=notrunc
+                                                        ^^
+                                                 0x38 = 56 decimal
+
+Method 2: Using Python
+$ python3 << 'EOF'
+with open('TEC-1ROM10.bin', 'rb') as f:
+    data = bytearray(f.read())
+data[0x38] = 0xC3  # JP opcode
+data[0x39] = 0x8B  # Low byte of ISR address
+data[0x3A] = 0x00  # High byte of ISR address
+with open('TEC-1ROM10-PATCHED.bin', 'wb') as f:
+    f.write(data)
+print("Patched! Check bytes at 0x38: {:02X} {:02X} {:02X}".format(
+    data[0x38], data[0x39], data[0x3A]))
+EOF
+
+Method 3: Using hex editor (Windows/Linux/Mac)
+1. Open TEC-1ROM10.bin in HxD, Hex Fiend, or similar
+2. Go to address 0x38
+3. Change bytes: C9 → C3 8B 00
+4. Save as TEC-1ROM10-PATCHED.bin
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  IPS PATCH FORMAT (for ROM patchers)                                │
+└─────────────────────────────────────────────────────────────────────┘
+
+File: TEC1-INT.ips
+
+Hex content:
+50 41 54 43 48    ; "PATCH" header
+00 00 38          ; Address: 0x000038
+00 03             ; Length: 3 bytes
+C3 8B 00          ; Data: JP 008Bh
+45 4F 46          ; "EOF" trailer
+
+Apply with:
+$ ips-patch TEC-1ROM10.bin TEC1-INT.ips TEC-1ROM10-PATCHED.bin
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  PROGRAMMER COMMANDS                                                │
+└─────────────────────────────────────────────────────────────────────┘
+
+MiniPro TL866:
+$ minipro -p "AT28C64" -r TEC-1ROM10.bin
+$ # Apply patch (use method above)
+$ minipro -p "AT28C64" -w TEC-1ROM10-PATCHED.bin
+
+Willem Programmer:
+Load TEC-1ROM10.bin
+Edit buffer at 0x38: C3 8B 00
+Program chip
+
+TEC-1 JMON (if you can patch ROM in-circuit):
+>M0038
+0038: C9 C3    [enter C3]
+0039: ?? 8B    [enter 8B]
+003A: ?? 00    [enter 00]
+[ESC to exit]
+
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║                        SUCCESS CHECKLIST                              ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+□ Backup original ROM file
+□ Verify patch at address 0x38: C3 8B 00
+□ Burn patched ROM or apply to RAM
+□ Boot TEC-1, get MINT prompt
+□ Define test :Z function
+□ Generate test interrupt (serial/button/CTC)
+□ Verify :Z was called (check variables)
+□ Celebrate! 🎉
+
+
+═══════════════════════════════════════════════════════════════════════
+                      YOU'RE READY TO GO!
+═══════════════════════════════════════════════════════════════════════

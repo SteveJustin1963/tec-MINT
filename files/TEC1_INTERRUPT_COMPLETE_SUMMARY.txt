@@ -1,0 +1,386 @@
+╔═══════════════════════════════════════════════════════════════════════╗
+║                                                                       ║
+║          TEC-1 ROM10 INTERRUPT MODIFICATION - COMPLETE GUIDE          ║
+║                Enable :Z Function for Real Interrupts                 ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+
+█████████████████████████████████████████████████████████████████████████
+█  EXECUTIVE SUMMARY                                                    █
+█████████████████████████████████████████████████████████████████████████
+
+PROBLEM:   RST 38h (hardware interrupt vector) does RET → :Z never called
+SOLUTION:  Change 3 bytes at ROM address 0038h: C9 → C3 8B 00
+RESULT:    Hardware interrupts now execute your MINT :Z function!
+
+The ROM already contains:
+✓ ISR routine at 008Bh that calls MINT function "Z"
+✓ ENTER function that executes MINT bytecode
+✓ Function table (DEFS) where :Z code address is stored
+✓ All other RST vectors (08h, 10h, 18h, etc.) already work this way
+
+All we need: Make RST 38h jump to ISR instead of returning immediately
+
+
+█████████████████████████████████████████████████████████████████████████
+█  QUICK START - 5 MINUTE VERSION                                      █
+█████████████████████████████████████████████████████████████████████████
+
+1. PATCH THE ROM
+   ─────────────
+   Python:   python3 tec1_int_patch.py TEC-1ROM10.bin TEC-1ROM10-INT.bin
+   Manual:   Change address 0x38 from C9 to: C3 8B 00
+
+2. BURN NEW ROM
+   ────────────
+   minipro -p AT28C64 -w TEC-1ROM10-INT.bin
+
+3. TEST IN MINT
+   ────────────
+   > :Z `*` ;                    Define simple test handler
+   > #03 #80 /O #92 #80 /O       Enable serial interrupts
+   > (type characters)           Each one prints *
+   
+   SUCCESS! 🎉
+
+
+█████████████████████████████████████████████████████████████████████████
+█  THE MODIFICATION                                                     █
+█████████████████████████████████████████████████████████████████████████
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ MEMORY ADDRESS: 0038h (RST 38h / IM 1 Interrupt Vector)              │
+└───────────────────────────────────────────────────────────────────────┘
+
+  Byte    Before    After     Meaning
+  ────────────────────────────────────────────────────────────────────
+  0x38     C9        C3       Change RET to JP opcode
+  0x39     ??        8B       Low byte: jump to 008Bh
+  0x3A     ??        00       High byte: jump to 008Bh
+
+  BEFORE: 0038h: RET              ; Do nothing, return immediately
+  AFTER:  0038h: JP   008Bh      ; Jump to ISR routine
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ WHAT HAPPENS AT 008Bh (ISR Routine - Already in ROM!)                │
+└───────────────────────────────────────────────────────────────────────┘
+
+  008Bh:  LD   H,0              ; Clear H register
+  008Dh:  LD   (0C92h),HL       ; Store interrupt ID in vIntID
+  0090h:  CALL 03BDh            ; Call ENTER (MINT interpreter)
+  0093h:  DB   'Z',0            ; String data: execute function "Z"
+  0095h:  RET                   ; Return from interrupt
+
+  The ISR:
+  1. Stores which interrupt occurred (in variable 'v')
+  2. Calls the MINT interpreter ENTER function
+  3. ENTER looks up ":Z" in the function definition table
+  4. Executes whatever MINT code is in your :Z function
+  5. Returns to interrupted code
+
+
+█████████████████████████████████████████████████████████████████████████
+█  FILES PROVIDED                                                       █
+█████████████████████████████████████████████████████████████████████████
+
+1. TEC1_ENABLE_Z_INTERRUPTS.asm
+   ─────────────────────────────
+   • Complete technical documentation
+   • Assembly language details
+   • Four different implementation methods
+   • Memory map reference
+
+2. TEC1_INTERRUPT_PRACTICAL_GUIDE.txt
+   ───────────────────────────────────
+   • Step-by-step patch instructions
+   • Working MINT code examples
+   • Interrupt source setup (ACIA, CTC, button)
+   • Troubleshooting guide
+
+3. TEC1_INTERRUPT_VISUAL_GUIDE.txt
+   ────────────────────────────────
+   • Flow diagrams (before/after)
+   • Memory map visualization
+   • Hex dump examples
+   • Verification procedures
+
+4. tec1_int_patch.py
+   ─────────────────
+   • Automated Python patch script
+   • Verify ROM patches
+   • Create IPS patches
+   • Hex dump tool
+
+5. MINT2_CORRECTED_COMPLETE.txt
+   ────────────────────────────
+   • Fixed MINT 2 syntax examples
+   • Port I/O code that actually works
+   • Comparison with broken original code
+
+
+█████████████████████████████████████████████████████████████████████████
+█  MINT CODE EXAMPLES (READY TO USE)                                   █
+█████████████████████████████████████████████████████████████████████████
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ EXAMPLE 1: Simple Counter                                            │
+└───────────────────────────────────────────────────────────────────────┘
+0 a !
+:Z a 1 + a ! ;
+
+Variable 'a' increments on each interrupt
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ EXAMPLE 2: Port Toggle (LED Blink)                                   │
+└───────────────────────────────────────────────────────────────────────┘
+:Z 3 /I 1 ^ 3 /O ;
+
+Toggles bit 0 of port 3 on each interrupt
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ EXAMPLE 3: Count with Periodic Display                               │
+└───────────────────────────────────────────────────────────────────────┘
+0 b !
+:Z b 1 + b ! b 100 = ( `*` 0 b ! ) ;
+
+Prints * every 100 interrupts, resets counter
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ EXAMPLE 4: Serial Echo                                               │
+└───────────────────────────────────────────────────────────────────────┘
+:Z #81 /I #81 /O ;
+
+Reads serial input, echoes back immediately
+(Requires 6850 ACIA with receive interrupt enabled)
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ EXAMPLE 5: Capture to Array Buffer                                   │
+└───────────────────────────────────────────────────────────────────────┘
+[0 0 0 0 0 0 0 0 0 0] c !
+0 d !
+:Z 3 /I c d ? ! d 1 + d ! d 10 = ( 0 d ! ) ;
+
+Captures port 3 values in circular buffer
+Buffer size = 10 samples
+
+
+█████████████████████████████████████████████████████████████████████████
+█  INTERRUPT SOURCE SETUP                                              █
+█████████████████████████████████████████████████████████████████████████
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ METHOD 1: 6850 ACIA Serial Receive Interrupt                         │
+└───────────────────────────────────────────────────────────────────────┘
+
+MINT Code:
+> #03 #80 /O              Master reset ACIA
+> #92 #80 /O              8N2, /64, RIE (receive interrupt enable)
+
+Now every received character triggers INT → calls :Z
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ METHOD 2: Z80 CTC Timer Interrupt                                    │
+└───────────────────────────────────────────────────────────────────────┘
+
+Assuming CTC at ports 10h-13h, 4MHz clock:
+
+MINT Code:
+> #47 #10 /O              Control: interrupt enabled, counter mode
+> #FF #10 /O              Time constant = 255
+
+Result: ~15.6 kHz interrupt rate (4000000 / 256)
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ METHOD 3: Manual Pushbutton                                          │
+└───────────────────────────────────────────────────────────────────────┘
+
+Hardware:
+• Connect pushbutton between Z80 pin 16 (INT) and GND
+• Add 10K pullup resistor: INT pin to +5V
+• Add 100nF capacitor across button for debounce
+
+Software (if button bounces badly):
+0 e ! 0 f !
+:Z e 1 + e ! e 10 > ( f 1 + f ! 0 e ! ) ;
+
+Only increments 'f' after 10 consecutive interrupts
+
+
+█████████████████████████████████████████████████████████████████████████
+█  COMPLETE TEST PROCEDURE                                             █
+█████████████████████████████████████████████████████████████████████████
+
+STEP 1: Verify ROM Patch
+═════════════════════════
+Method 1: If MINT has memory examine
+> #38 ?                   Should show C3 (JP opcode)
+> #39 ?                   Should show 8B
+> #3A ?                   Should show 00
+
+Method 2: Using Python script
+$ python3 tec1_int_patch.py --verify TEC-1ROM10-INT.bin
+✓ ROM is correctly patched (JP 008Bh present)
+
+
+STEP 2: Define Simple Test Handler
+═══════════════════════════════════
+> 0 g !                   Initialize counter
+> :Z g 1 + g ! ;          Increment on interrupt
+> g .                     Check current value
+0                         Should be 0
+
+
+STEP 3: Generate Test Interrupt
+════════════════════════════════
+For ACIA (if installed):
+> #03 #80 /O #92 #80 /O   Enable serial interrupts
+> (type 5 characters in terminal)
+
+For manual button:
+(Press INT button 5 times)
+
+
+STEP 4: Verify :Z Was Called
+═════════════════════════════
+> g .                     Check counter
+5                         Should show 5!
+
+SUCCESS! Interrupts are working! 🎉
+
+
+STEP 5: Try More Complex Handler
+═════════════════════════════════
+> :Z 3 /I 1 ^ 3 /O g 1 + g ! ;
+(Now :Z toggles LED AND counts)
+
+> (generate more interrupts)
+> g .                     Shows total count
+> 3 /I .                  Shows current port 3 state
+
+
+█████████████████████████████████████████████████████████████████████████
+█  TROUBLESHOOTING                                                      █
+█████████████████████████████████████████████████████████████████████████
+
+┌─────────────────────────────────┬─────────────────────────────────────┐
+│ SYMPTOM                         │ SOLUTION                            │
+├─────────────────────────────────┼─────────────────────────────────────┤
+│ System hangs/freezes            │ :Z has infinite loop or bug         │
+│                                 │ Press RESET, define simpler :Z      │
+│                                 │ Keep :Z short - no loops!           │
+├─────────────────────────────────┼─────────────────────────────────────┤
+│ Counter doesn't increment       │ Check ROM patch at 0x38             │
+│                                 │ Verify interrupts enabled (EI)      │
+│                                 │ Check INT pin with oscilloscope     │
+├─────────────────────────────────┼─────────────────────────────────────┤
+│ :Z not defined                  │ Re-enter: > :Z ... ;                │
+│                                 │ Check with: > Z (manual call)       │
+├─────────────────────────────────┼─────────────────────────────────────┤
+│ Too many interrupts, slow       │ Reduce interrupt frequency          │
+│                                 │ Increase CTC time constant          │
+│                                 │ Disable ACIA interrupts temporarily │
+├─────────────────────────────────┼─────────────────────────────────────┤
+│ Stack overflow                  │ :Z uses too much stack              │
+│                                 │ Don't call other functions from :Z  │
+│                                 │ Keep stack depth < 5 levels         │
+├─────────────────────────────────┼─────────────────────────────────────┤
+│ Serial buffer overrun           │ Don't use /K or long text in :Z     │
+│                                 │ Set flag in :Z, process in main loop│
+├─────────────────────────────────┼─────────────────────────────────────┤
+│ Spurious interrupts             │ Check for floating INT pin          │
+│                                 │ Add pullup resistor (10K)           │
+│                                 │ Check for noise on INT line         │
+└─────────────────────────────────┴─────────────────────────────────────┘
+
+
+█████████████████████████████████████████████████████████████████████████
+█  BEST PRACTICES                                                       █
+█████████████████████████████████████████████████████████████████████████
+
+DO:
+✓ Keep :Z functions SHORT and FAST
+✓ Set flags/counters, process in main loop
+✓ Use simple port I/O and variable updates
+✓ Test with low interrupt rates first
+✓ Add software debouncing for buttons
+✓ Clear ACIA status by reading data register
+
+DON'T:
+✗ Put loops in :Z
+✗ Print long strings from :Z
+✗ Call complex functions from :Z
+✗ Use /K (keyboard input) in :Z
+✗ Modify heap or create arrays in :Z
+✗ Expect >1000 interrupts/sec with MINT
+
+
+█████████████████████████████████████████████████████████████████████████
+█  ADVANCED: FASTER ISR IN ASSEMBLY                                    █
+█████████████████████████████████████████████████████████████████████████
+
+For time-critical interrupts, write ISR in assembly:
+
+        ORG     0D00h           ; Place in RAM
+
+FAST_ISR:
+        PUSH    AF              ; Save registers
+        IN      A,(03h)         ; Read port 3
+        XOR     01h             ; Toggle bit 0
+        OUT     (03h),A         ; Write back
+        LD      A,(0C00h)       ; Load counter (variable 'a')
+        INC     A               ; Increment
+        LD      (0C00h),A       ; Save back
+        POP     AF              ; Restore
+        EI                      ; Re-enable interrupts
+        RETI                    ; Return
+
+Install from MINT:
+> #0D00 #0A14 !                 Set INTVEC to FAST_ISR
+
+This is ~10x faster than MINT :Z
+
+
+█████████████████████████████████████████████████████████████████████████
+█  SUMMARY                                                              █
+█████████████████████████████████████████████████████████████████████████
+
+WHAT YOU NEED:
+• Original TEC-1ROM10.bin file
+• EPROM programmer (TL866, Willem, etc.)
+• Python 3 or hex editor
+
+STEPS:
+1. Patch ROM: change 0x38 from C9 to C3 8B 00
+2. Burn patched ROM
+3. Define :Z in MINT
+4. Generate interrupts
+5. Enjoy!
+
+RESULT:
+Hardware interrupts now call your MINT :Z function automatically!
+
+TIME REQUIRED:
+• Patch creation: 1 minute
+• ROM burning: 2 minutes  
+• Testing: 2 minutes
+• Total: 5 minutes
+
+DIFFICULTY: ⭐⭐☆☆☆ (Easy - just 3 bytes!)
+
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║                                                                       ║
+║  You now have EVERYTHING needed to enable :Z interrupt support!      ║
+║                                                                       ║
+║  Questions? Check the detailed guides in the other files.            ║
+║                                                                       ║
+║  Good luck and happy interrupting! 🚀                                 ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝

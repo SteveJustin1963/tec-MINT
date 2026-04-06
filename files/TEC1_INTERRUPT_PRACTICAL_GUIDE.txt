@@ -1,0 +1,291 @@
+╔═══════════════════════════════════════════════════════════════════════╗
+║  TEC-1 ROM10 INTERRUPT PATCH - PRACTICAL GUIDE                        ║
+║  Enable :Z Function for Hardware Interrupts                           ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ QUICK SUMMARY                                                          │
+└───────────────────────────────────────────────────────────────────────┘
+
+The TEC-1 ROM10 already has ALL the code needed for :Z interrupts!
+The only problem: RST 38h (address 0038h) does RET instead of calling ISR.
+
+Fix: Change 1 byte (or add 3 bytes) in ROM at address 0038h
+Result: Hardware interrupts will call your MINT :Z function
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ METHOD 1: ROM BURNER PATCH (PERMANENT)                                │
+└───────────────────────────────────────────────────────────────────────┘
+
+READ YOUR ROM: Save original TEC-1ROM10.bin first!
+
+MODIFY THESE BYTES:
+╔════════╦═══════╦═══════╦════════════════════════════════════════════╗
+║ Addr   ║  Old  ║  New  ║  Description                               ║
+╠════════╬═══════╬═══════╬════════════════════════════════════════════╣
+║ 0038h  ║  C9   ║  C3   ║  Change RET to JP opcode                  ║
+║ 0039h  ║  ??   ║  8B   ║  Low byte of ISR address (008Bh)          ║
+║ 003Ah  ║  ??   ║  00   ║  High byte of ISR address (008Bh)         ║
+╚════════╩═══════╩═══════╩════════════════════════════════════════════╝
+
+USING MINIPRO/TL866:
+minipro -p "AT28C64B" -r original.bin         # Backup original
+xxd -s 0x38 -l 3 original.bin                 # View bytes at 38h
+  0000038: c9??                                # Should show C9
+
+# Create patch file
+echo "0000038: c38b 00" | xxd -r - patch.bin
+
+# Merge patch into ROM
+dd if=patch.bin of=modified.bin bs=1 seek=56 conv=notrunc
+minipro -p "AT28C64B" -w modified.bin         # Burn new ROM
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ METHOD 2: RAM PATCH (TEMPORARY, NO ROM BURN)                          │
+└───────────────────────────────────────────────────────────────────────┘
+
+If you have RAM at 0000h (shadow ROM setup), patch it directly:
+
+MINT CODE TO PATCH RAM:
+> #C3 #38 /C    (write JP opcode to address 38h)
+> #8B #39 /C    (write low byte of ISR to 39h)  
+> #00 #3A /C    (write high byte of ISR to 3Ah)
+
+Or as a function:
+:P #C3 #38 /C #8B #39 /C #00 #3A /C `INT patched` /N ;
+
+Run once:
+> P
+
+Note: Lost on reset/power cycle
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ METHOD 3: WIRE MOD (HARDWARE HACK)                                    │
+└───────────────────────────────────────────────────────────────────────┘
+
+If you can't reprogram ROM:
+
+1. Lift pin 20 (CE) of ROM chip
+2. Add 74LS688 comparator to detect address 0038h
+3. Connect comparator output to ROM CE (active low)
+4. Connect comparator output to RAM CE at shadow address
+5. Put patch code in RAM at shadow location
+
+This is complex - easier to burn new ROM!
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ VERIFICATION: DID THE PATCH WORK?                                     │
+└───────────────────────────────────────────────────────────────────────┘
+
+STEP 1: Check ROM at 0038h
+If using MINT with monitor access:
+> #38 /M    (if /M command exists to examine memory)
+Should show: C3 8B 00 (not C9)
+
+STEP 2: Define test :Z function
+> 0 c !
+> :Z c 1 + c ! ;
+
+This increments variable 'c' each interrupt
+
+STEP 3: Generate test interrupt
+Option A - Manual INT pin:
+- Momentarily ground pin 16 (INT) of Z80 CPU
+- Use pushbutton with 10K pullup
+
+Option B - Serial interrupt (if 6850 ACIA installed):
+> #03 #80 /O      (reset ACIA)
+> #92 #80 /O      (8N2, /64, receive interrupt enabled)
+Now type any character in terminal → triggers interrupt
+
+STEP 4: Check if counter incremented
+> c .
+Should show count > 0 if interrupts are working!
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ WORKING MINT CODE EXAMPLES                                            │
+└───────────────────────────────────────────────────────────────────────┘
+
+EXAMPLE 1: LED BLINK ON INTERRUPT
+─────────────────────────────────────────────────────────────────────────
+0 a !
+:Z a #FF = ( 0 a ! ) /E ( a 1 + a ! ) a 3 /O ;
+
+Counts 0-255 in variable 'a', outputs to port 3 (TEC-1 display data)
+
+
+EXAMPLE 2: COUNT INTERRUPTS, DISPLAY EVERY 100
+─────────────────────────────────────────────────────────────────────────
+0 b !
+:Z b 1 + b ! b 100 = ( `*` 0 b ! ) ;
+
+Prints * every 100 interrupts
+
+
+EXAMPLE 3: SERIAL ECHO (6850 ACIA)
+─────────────────────────────────────────────────────────────────────────
+:Z #81 /I #81 /O ;
+
+Read from receive register, write to transmit register
+Simple echo - every received char is sent back
+
+
+EXAMPLE 4: SOFTWARE DEBOUNCE
+─────────────────────────────────────────────────────────────────────────
+0 d ! 0 e !
+:Z d 1 + d ! d 10 > ( e 1 + e ! 0 d ! ) ;
+
+Only counts 'e' when 10+ interrupts received
+Use for debouncing button interrupts
+
+
+EXAMPLE 5: MILLISECOND TIMER (assuming 1000 Hz interrupt)
+─────────────────────────────────────────────────────────────────────────
+0 f ! 0 g !
+:Z f 1 + f ! f 1000 = ( g 1 + g ! 0 f ! ) ;
+
+'f' = milliseconds, 'g' = seconds
+Generate 1kHz interrupt with Z80 CTC or timer circuit
+
+
+EXAMPLE 6: READ PORT ON INTERRUPT, STORE IN ARRAY
+─────────────────────────────────────────────────────────────────────────
+[0 0 0 0 0 0 0 0 0 0] h !
+0 i !
+:Z 3 /I h i ? ! i 1 + i ! i 10 = ( 0 i ! ) ;
+
+Reads port 3 on each interrupt
+Stores in circular buffer (array h)
+Index i wraps at 10
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ INTERRUPT SOURCE SETUP                                                │
+└───────────────────────────────────────────────────────────────────────┘
+
+6850 ACIA RECEIVE INTERRUPT:
+─────────────────────────────────────────────────────────────────────────
+#03 #80 /O               Master reset
+#92 #80 /O               Enable RIE (bit 7), 8N2, /64
+Every serial character received triggers INT
+
+
+Z80 CTC TIMER INTERRUPT:
+─────────────────────────────────────────────────────────────────────────
+Assuming CTC at port 10h-13h:
+#47 #10 /O               Control: INT enabled, counter mode
+#FF #10 /O               Time constant = 255
+Results in ~15.6 kHz interrupt (4MHz / 256)
+
+
+MANUAL PUSHBUTTON:
+─────────────────────────────────────────────────────────────────────────
+Hardware:
+- Connect pushbutton between Z80 pin 16 (INT) and GND
+- Add 10K pullup resistor from INT to +5V
+- Add 100nF capacitor across button for debounce
+
+Note: Will trigger MANY interrupts per press due to bounce!
+Use software debounce (Example 4)
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ TROUBLESHOOTING                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+PROBLEM: System hangs or freezes
+CAUSE:   :Z has infinite loop or very slow code
+FIX:     Press reset, define simpler :Z
+         Keep :Z functions SHORT - no loops, no delays
+
+PROBLEM: No interrupts happening
+CAUSE:   Interrupts disabled with DI
+FIX:     Check that EI was called (ROM does this at boot)
+         Type: #FB #00 /X (execute EI instruction)
+
+PROBLEM: Too many interrupts, system slow
+CAUSE:   Interrupt source too fast
+FIX:     Reduce interrupt frequency
+         Add longer delays to CTC
+         Reduce ACIA baud rate divisor
+
+PROBLEM: Stack overflow or corruption
+CAUSE:   :Z uses too much stack space
+FIX:     Simplify :Z
+         Don't call other functions from :Z
+         Keep stack usage < 5 levels
+
+PROBLEM: MINT stops accepting input
+CAUSE:   Serial buffer overrun in interrupt
+FIX:     Don't use /K in :Z
+         Process serial in main loop, not interrupt
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ ADVANCED: CUSTOM ISR IN ASSEMBLY                                      │
+└───────────────────────────────────────────────────────────────────────┘
+
+For maximum speed, write ISR in assembly and install at INTVEC:
+
+; Place this code in RAM at 0D00h
+ORG     0D00h
+
+FAST_ISR:
+        PUSH    AF              ; Save registers
+        IN      A,(03h)         ; Read port 3
+        XOR     01h             ; Toggle bit 0
+        OUT     (03h),A         ; Write back
+        LD      A,(0C00h)       ; Load counter from variable 'a'
+        INC     A               ; Increment
+        LD      (0C00h),A       ; Save back
+        POP     AF              ; Restore
+        EI                      ; Re-enable interrupts
+        RETI                    ; Return from interrupt
+
+; Install from MINT:
+> #0D00 #0A14 !         (set INTVEC to point to FAST_ISR)
+
+This is ~10x faster than MINT :Z function
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ COMPLETE TEST PROGRAM                                                 │
+└───────────────────────────────────────────────────────────────────────┘
+
+Copy and paste these lines into MINT prompt one at a time:
+
+0 j !
+:Z j 1 + j ! ;
+:I #03 #80 /O #92 #80 /O `Serial INT enabled` /N ;
+:C j . ` interrupts` /N ;
+:T I `Press keys...` /N 10( 1000() C ) ;
+
+Then run: T
+
+This will:
+- Initialize serial interrupts
+- Count interrupts in variable 'j'
+- Show count every ~1 second for 10 seconds
+- Type characters to trigger interrupts
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ SUMMARY                                                               │
+└───────────────────────────────────────────────────────────────────────┘
+
+✓ Change 3 bytes at ROM address 0038h: C3 8B 00
+✓ Or patch RAM if you have shadow ROM
+✓ Define :Z with your interrupt handler code
+✓ Keep :Z SHORT and FAST
+✓ Generate interrupts from hardware (INT pin, ACIA, CTC)
+✓ Test with simple counter first
+✓ Stack is shared - don't nest deeply
+
+The ROM already has the infrastructure - you just need to flip the switch!
+
+═══════════════════════════════════════════════════════════════════════

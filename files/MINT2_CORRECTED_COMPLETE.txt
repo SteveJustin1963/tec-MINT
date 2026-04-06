@@ -1,0 +1,215 @@
+═══════════════════════════════════════════════════════════
+  MINT 2 INTERRUPT CODE - CORRECTED VERSION
+  Based on MINT2_Manual.md specifications
+═══════════════════════════════════════════════════════════
+
+╔═══════════════════════════════════════════════════════════╗
+║  ORIGINAL CODE PROBLEMS                                    ║
+╚═══════════════════════════════════════════════════════════╝
+
+❌ HERE 12 ALLOT DUP >R        → Not MINT 2 commands
+❌ C, FB C, F5                 → C, doesn't exist  
+❌ :MYISR ... ;                → Multi-char names not allowed
+❌ VCARRY @ VCARRY !           → @ doesn't exist, ! needs variable
+❌ ' MYISR R@ 5 + !            → ' is DROP, not tick/quote
+❌ INTVEC !                    → INTVEC doesn't exist
+❌ X FB ED 46 C9 ;             → X command doesn't exist
+❌ IF ... THEN                 → Wrong syntax (use () /E ())
+❌ MOD                         → Not a MINT 2 command
+❌ /C for output               → /C is char output, not string
+❌ KEY DROP                    → KEY not documented
+
+╔═══════════════════════════════════════════════════════════╗
+║  MINT 2 ACTUAL SYNTAX (from manual)                        ║
+╚═══════════════════════════════════════════════════════════╝
+
+✓ Variables:  a b c ... z (lowercase, single letter)
+✓ Store:      123 a !  (value then variable then !)
+✓ Recall:     a        (just the letter)
+✓ Functions:  :A ... ; :B ... ; :Z ... ; (uppercase A-Z)
+✓ Interrupt:  :Z ... ; (Z reserved for interrupts)
+✓ Stack:      " (dup), ' (drop), $ (swap), % (over)
+✓ Math:       + - * / ^ & | ~
+✓ Compare:    > < =
+✓ Port I/O:   p /I (input), n p /O (output)
+✓ Print:      . (decimal), , (hex), `text` (literal), /C (char)
+✓ Loops:      100 ( code )  (/i has loop counter)
+✓ Condition:  test ( true_code ) /E ( false_code )
+✓ Constants:  /T (true), /F (false), /U (unlimited loop)
+✓ System:     /c (carry), /r (remainder), /i (loop index)
+
+╔═══════════════════════════════════════════════════════════╗
+║  WORKING EXAMPLE 1: PORT TOGGLE WITH COUNTER              ║
+╚═══════════════════════════════════════════════════════════╝
+
+0 a !
+:T 3 /I 1 ^ 3 /O a 1 + a ! ;
+:M 1000 ( T a 100 = ( `*` 0 a ! ) ) /N ;
+
+USAGE: Type M at prompt
+
+EXPLANATION:
+Line 1: Initialize counter a to 0
+Line 2: Define function T:
+        - 3 /I      → Read port 3
+        - 1 ^       → XOR with 1 (toggle bit 0)
+        - 3 /O      → Write to port 3  
+        - a 1 + a ! → Increment counter
+Line 3: Define main loop:
+        - 1000 ( ... ) → Loop 1000 times
+        - T            → Call toggle function
+        - a 100 =      → Is counter = 100?
+        - ( `*` 0 a !) → Print * and reset counter
+        - /N           → Newline at end
+
+╔═══════════════════════════════════════════════════════════╗
+║  WORKING EXAMPLE 2: SIMPLE BLINK                          ║
+╚═══════════════════════════════════════════════════════════╝
+
+:B 10 ( #FF 3 /O 1000 ( ) 0 3 /O 1000 ( ) ) ;
+
+USAGE: Type B at prompt
+
+EXPLANATION:
+- 10 ( ... )        → Repeat 10 times
+- #FF 3 /O          → Output 0xFF to port 3 (LED on)
+- 1000 ( )          → Delay loop
+- 0 3 /O            → Output 0 to port 3 (LED off)
+- 1000 ( )          → Delay loop
+
+╔═══════════════════════════════════════════════════════════╗
+║  WORKING EXAMPLE 3: DISPLAY LOOP COUNTER                  ║
+╚═══════════════════════════════════════════════════════════╝
+
+:L 20 ( /i . 32 /C ) /N ;
+
+USAGE: Type L at prompt
+
+EXPLANATION:
+- 20 ( ... ) → Loop 20 times
+- /i         → System variable with current loop index (0-19)
+- .          → Print loop counter
+- 32 /C      → Print space (ASCII 32)
+- /N         → Newline at end
+
+OUTPUT: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+
+╔═══════════════════════════════════════════════════════════╗
+║  WORKING EXAMPLE 4: CONDITIONAL PORT CONTROL              ║
+╚═══════════════════════════════════════════════════════════╝
+
+:C 3 /I 128 & ( `High` 0 3 /O ) /E ( `Low` #FF 3 /O ) /N ;
+
+USAGE: Type C at prompt
+
+EXPLANATION:
+- 3 /I           → Read port 3
+- 128 &          → AND with 128 (test bit 7)
+- ( ... )        → If true (bit 7 set)
+- `High` 0 3 /O  → Print "High", output 0
+- /E ( ... )     → Else
+- `Low` #FF 3 /O → Print "Low", output 255
+- /N             → Newline
+
+╔═══════════════════════════════════════════════════════════╗
+║  ABOUT :Z INTERRUPT HANDLER                               ║
+╚═══════════════════════════════════════════════════════════╝
+
+According to the manual (line 18):
+"Z is reserved for interrupt calls. You write your 
+interrupt routine under this function."
+
+HOWEVER (lines 2356-2377):
+⚠️  :Z is DOCUMENTED but NOT IMPLEMENTED in TEC-1ROM10.z80
+⚠️  /X is DOCUMENTED but NOT IMPLEMENTED in TEC-1ROM10.z80
+
+This means:
+1. You CAN define :Z but it won't be called by hardware INT
+2. You CAN call Z manually: just type Z at prompt
+3. Real interrupts need assembly language RST/IM handlers
+
+THEORETICAL :Z USAGE (if it was implemented):
+:Z 3 /I 1 ^ 3 /O ;
+
+This would toggle port 3 bit 0 on every hardware interrupt.
+
+╔═══════════════════════════════════════════════════════════╗
+║  READY-TO-USE: COMPLETE PORT TOGGLE DEMO                  ║
+╚═══════════════════════════════════════════════════════════╝
+
+Paste these lines one at a time at the > prompt:
+
+0 c !
+:T 3 /I 1 ^ 3 /O c 1 + c ! ;
+:D c 100 / . `interrupts` /N 0 c ! ;
+:M 10000 ( T c 100 = ( D ) ) `Complete!` /N ;
+M
+
+WHAT IT DOES:
+- Initializes counter to 0
+- Defines toggle function that increments counter
+- Defines display function (shows count every 100)
+- Main loop runs 10,000 iterations
+- Shows progress dots
+- Prints "Complete!" when done
+
+╔═══════════════════════════════════════════════════════════╗
+║  KEY DIFFERENCES: ORIGINAL vs PROPER MINT 2               ║
+╚═══════════════════════════════════════════════════════════╝
+
+ORIGINAL               →  PROPER MINT 2
+─────────────────────────────────────────────────
+HERE 12 ALLOT          →  [0 0 0 0 0 0] a !
+DUP                    →  "
+DROP                   →  '
+>R / R> / R@           →  Not available
+C, FB                  →  Not available
+INTVEC !               →  Not available
+' MYISR                →  Just use letter: A or T
+@ (fetch)              →  Just use variable: a
+! (alone)              →  Must be: a !
+VCARRY @               →  Use variable: a
++! (increment)         →  a 1 + a !
+IF...THEN              →  condition ( ) /E ( )
+MOD                    →  Use / and /r
+/X                     →  Not implemented
+KEY                    →  /K
+
+╔═══════════════════════════════════════════════════════════╗
+║  SYNTAX RULES TO REMEMBER                                 ║
+╚═══════════════════════════════════════════════════════════╝
+
+1. NO spaces between : and function letter
+   ✓ :A ... ;
+   ❌ : A ... ;
+
+2. Variables MUST have ! to store
+   ✓ 123 a !
+   ❌ 123 !
+
+3. Comments ONLY on separate lines
+   ✓ // This is OK
+   ✓ :A 10 . ;
+   ❌ :A 10 . ; // NO! Crashes MINT
+
+4. Max 256 bytes per line
+   
+5. One function per line when uploading code
+
+6. Use backticks for literal text
+   ✓ `Hello`
+   ❌ "Hello"
+
+7. Port I/O syntax
+   ✓ 3 /I      (read port 3)
+   ✓ 255 3 /O  (write 255 to port 3)
+   ❌ I 3
+   ❌ O 3
+
+8. Loop syntax
+   ✓ 100 ( code )
+   ❌ FOR 100 code NEXT
+
+═══════════════════════════════════════════════════════════
+                      END OF DOCUMENT
+═══════════════════════════════════════════════════════════

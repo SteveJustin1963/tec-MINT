@@ -1,0 +1,39 @@
+// Example 3: Using Memory Allocation (/A) as a Dynamic Array and Populating It
+// Variables: a=size, b=memory_pointer, c=loop_counter, d=byte_value
+
+:A
+a !
+a /A b !
+
+0 c !
+
+a (
+  `Enter byte ` c . `: ` /N
+  /K d !
+  d b c \?!
+  c 1 + c !
+)
+
+b
+;
+
+// Helper function to print byte array contents (needs size passed again)
+// Variables: b=memory_pointer, a=size, c=loop_counter
+:P
+b !
+a !
+
+0 c !
+`Memory contents:` /N
+a (
+  b c \? .
+  32 /C
+  c 1 + c !
+)
+) /N // Added a closing parenthesis that was missing in the previous version
+;
+
+// Example Usage:
+// Allocate 5 bytes, populate from input, then print (requires entering 5 characters)
+5 A 5 P
+
