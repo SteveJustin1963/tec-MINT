@@ -43,12 +43,7 @@ This lack of sequentiality reflects an egalitarian or arbitrary approach,
 wherein no specific developer is elevated above another
 in terms of the order of respect or recognition for their work.
 ```
-
-<img width="365" height="610" alt="image" src="https://github.com/user-attachments/assets/87a01b68-8479-4382-b8f3-4e41999ef39d" />
- 
-
-
-
+<img width="365" height="610" alt="Tribute to Chucky Moore the II" src="https://github.com/user-attachments/assets/4ed8ede4-673a-4334-9ea4-7ff66e2856a6" />
 
 
 # Announcements
