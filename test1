@@ -1,0 +1,140 @@
+100 cnt! 200 sum! 300 max!
+cnt . sum . max . /N
+
+10 xxx! 20 yyy! 30 zzz!
+xxx yyy + tmp!
+tmp . /N
+tmp zzz * res!
+res . /N
+
+:A 10 20 + ;
+:B 5 * ;
+:C A B ;
+C . /N
+
+:SQ " * ;
+:DB 2 * ;
+7 SQ . /N
+8 DB . /N
+
+:ADD x y + ;
+:MUL x y * ;
+:AVG ADD 2 / ;
+5 x! 15 y!
+ADD . /N
+MUL . /N
+AVG . /N
+
+1 a! 2 b! 3 c!
+[a b c] ar1!
+ar1 0 ? . ar1 1 ? . ar1 2 ? . /N
+
+10 aa! 20 bb! 30 cc!
+[aa bb cc] ar2!
+ar2 0 ? . ar2 1 ? . ar2 2 ? . /N
+
+100 aaa! 200 bbb! 300 ccc!
+[aaa bbb ccc] ar3!
+ar3 0 ? . ar3 1 ? . ar3 2 ? . /N
+
+7 x! 8 yy! 9 zzz!
+[x yy zzz] mix!
+mix 0 ? . mix 1 ? . mix 2 ? . /N
+
+:SUM 0 tot! n /S ( n /i ? tot + tot! ) tot ;
+[5 10 15 20] num!
+num SUM . /N
+
+:MAX n 0 ? big! n /S ( n /i ? big > ( n /i ? big! ) /E ( ) ) big ;
+[42 17 99 23 8] dat!
+dat MAX . /N
+
+:MIN n 0 ? sml! n /S ( n /i ? sml < ( n /i ? sml! ) /E ( ) ) sml ;
+dat MIN . /N
+
+0 i! 10 ( i 1 + i! ) i . /N
+
+0 acc! 5 ( acc /i + acc! ) acc . /N
+
+1 fib! 1 prv! 8 ( fib prv + nxt! prv fib! nxt fib! ) fib . /N
+
+:FAC " 1 = ( ' 1 ) /E ( " 1 - FAC * ) ;
+5 FAC . /N
+
+10 val! 20 tmp!
+val tmp $ tmp! val!
+val . tmp . /N
+
+[0 0 0 0 0] vec!
+5 ( /i vec /i ?! ) 
+vec 0 ? . vec 1 ? . vec 2 ? . vec 3 ? . vec 4 ? . /N
+
+100 aaa!
+200 bbb!
+300 ccc!
+aaa bbb ccc + + . /N
+
+:POW b! e! 1 r! e ( r b * r! ) r ;
+2 b! 8 e!
+b e POW . /N
+
+5 low! 10 hgh!
+low hgh > ( low ) /E ( hgh ) . /N
+
+0 cnt! /U ( cnt 1 + cnt! cnt . /N cnt 5 = /W )
+
+[1 2 3 4 5] lst!
+0 sum! lst /S ( lst /i ? sum + sum! ) sum . /N
+
+10 nn! 3 mm!
+nn mm > nn mm < & . /N
+
+#FF #0F & , /N
+#F0 #0F | , /N
+#FF #AA ^ , /N
+
+5 " " " * * * . /N
+
+1 2 3 $ $ $ . . . /N
+
+1 2 3 % % . ' ' ' ' /N
+
+[10 20 30] 1 ? " . . /N
+
+99 tmp! tmp 0 = ( 0 ) /E ( tmp ) . /N
+
+:ABS " 0 < ( -1 * ) /E ( ) ;
+-42 ABS . /N
+
+:GCD a! b! /U ( b 0 = /W a b /mod b! a! ) a ;
+48 a! 18 b!
+a b GCD . /N
+
+100 100 100 /CS /D . /N
+
+:FIB n! 0 a! 1 b! n ( a b + c! b a! c b! ) a ;
+10 FIB . /N
+
+1 2 + 3 4 + * 5 - . /N
+
+[7 3 9 1 5] arr!
+arr 0 ? big!
+arr /S ( arr /i ? big > ( arr /i ? big! ) /E ( ) ) big . /N
+
+0 evn! 10 ( /i 2 /mod 0 = ( evn 1 + evn! ) /E ( ) ) evn . /N
+
+:RNG s! e! e s - ;
+10 s! 50 e!
+s e RNG . /N
+
+1 x! 2 y! 3 z!
+[x y z] v!
+v 0 ? v 1 ? v 2 ? + + . /N
+
+5 n! n " * /pi * . /N
+
+:ISP n! /T flg! 2 ( /i 2 + dvr! n dvr /mod 0 = ( /F flg! ) /E ( ) dvr n /sqrt > /W ) flg ;
+17 ISP . /N
+
+[1 1 2 3 5 8 13 21] fib!
+fib 7 ? . /N

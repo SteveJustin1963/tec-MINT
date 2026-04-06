@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MINT-Web Interpreter (Functions + Ctrl+L Function List)</title>
+<style>
+  body { background:#111; color:#0f0; font-family:monospace; margin:0; padding:10px; }
+  #console { white-space:pre-wrap; height:90vh; overflow-y:auto; outline:none; }
+</style>
+</head>
+<body>
+<div id="console" tabindex="0"></div>
+<script>
+(() => {
+  const out = document.getElementById('console');
+  const vars = Object.create(null);
+  for (let c = 97; c <= 122; c++) vars[String.fromCharCode(c)] = 0;
+  vars['/c'] = 0; vars['/r'] = 0;
+  const funcs = Object.create(null);
+  const stack = [];
+  let inputBuffer = '';
+  let pendingVar = null;
+  let definingFunc = null;
+
+  const mask16 = n => (n & 0xFFFF) >>> 0;
+  const tos16  = n => { n &= 0xFFFF; return (n & 0x8000) ? (n - 0x10000) : n; };
+  const print  = s => { out.textContent += s; out.scrollTop = out.scrollHeight; };
+  const push   = v => stack.push(mask16(v));
+  const pop    = () => stack.length ? stack.pop() : (print('STACK UNDERFLOW\n'), 0);
+  const peek   = () => (stack.length ? stack[stack.length-1] : 0);
+
+  const ops = {
+    '+': () => { const b=pop(), a=pop(); push(a+b); },
+    '-': () => { const b=pop(), a=pop(); push(a-b); },
+    '*': () => { const b=pop(), a=pop(); push(a*b); },
+    '/': () => { const b=pop(), a=pop(); if (!b) { print('DIV0\n'); push(0); return; } push(Math.trunc(a/b)); },
+    '&': () => { const b=pop(), a=pop(); push(a&b); },
+    '|': () => { const b=pop(), a=pop(); push(a|b); },
+    '^': () => { const b=pop(), a=pop(); push(a^b); },
+    '~': () => { push(~pop()); },
+    '{': () => { push(pop() << 1); },
+    '}': () => { push(pop() >>> 1); },
+    "'": () => { pop(); },
+    '"': () => { push(peek()); },
+    '$': () => { const b=pop(), a=pop(); push(b); push(a); },
+    '%': () => { const n=stack.length; if (n>1) push(stack[n-2]); },
+    '.': () => { print(tos16(pop())+'\n'); },
+    ',': () => { print(mask16(pop()).toString(16).toUpperCase().padStart(4,'0')+'\n'); },
+  };
+
+  function runTokens(tokens) {
+    for (const t of tokens) evalToken(t);
+  }
+
+  function evalToken(t) {
+    if (!t) return;
+    if (definingFunc) {
+      if (t === ';') {
+        funcs[definingFunc] = definingFuncBody.slice();
+        definingFunc = null;
+        definingFuncBody = [];
+        print('OK\n');
+        return;
+      }
+      definingFuncBody.push(t);
+      return;
+    }
+
+    if (/^:[A-Z]$/.test(t)) {
+      definingFunc = t[1];
+      definingFuncBody = [];
+      return;
+    }
+
+    if (pendingVar && t !== '!' && t !== pendingVar+'!') {
+      push(vars[pendingVar]);
+      pendingVar = null;
+    }
+
+    if (t[0] === '#') { push(parseInt(t.slice(1),16)); return; }
+    if (/^-?\d+$/.test(t)) { push(parseInt(t,10)); return; }
+    if (t.length>=2 && t[0]==='`' && t[t.length-1]==='`') { print(t.slice(1,-1)); return; }
+
+    if (t === '/T') { push(0xFFFF); return; }
+    if (t === '/F') { push(0); return; }
+    if (t === '/N') { print('\n'); return; }
+    if (t === '/C') { print(String.fromCharCode(pop() & 0xFF)); return; }
+
+    if (t === '/c' || t === '/r') { push(vars[t]); return; }
+    if (t === '/c!' || t === '/r!') { vars[t.slice(0,2)] = mask16(pop()); return; }
+
+    if (/^[a-z]$/.test(t)) { pendingVar = t; return; }
+    if (/^[a-z]!$/.test(t)) { const name = t[0]; vars[name] = mask16(pop()); pendingVar = null; return; }
+
+    if (t === '!') {
+      if (pendingVar) { vars[pendingVar] = mask16(pop()); pendingVar = null; return; }
+      print('INVALID VARIABLE NAME\n');
+      return;
+    }
+
+    if (/^[A-Z]$/.test(t)) {
+      if (funcs[t]) { runTokens(funcs[t]); return; }
+      print('UNDEFINED FUNCTION '+t+'\n');
+      return;
+    }
+
+    if (ops[t]) { ops[t](); return; }
+
+    print('UNKNOWN TOKEN: '+t+'\n');
+  }
+
+  // --- Fixed tokenizer that keeps `string literals` together ---
+  function run(line) {
+    line = line.replace(/\/\/.*$/, '').trim();
+    const toks = [];
+    let current = '';
+    let inString = false;
+
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '`') {
+        if (inString) {
+          current += ch;
+          toks.push(current);
+          current = '';
+          inString = false;
+        } else {
+          if (current.trim().length) toks.push(current.trim());
+          current = ch;
+          inString = true;
+        }
+      } else if (/\s/.test(ch) && !inString) {
+        if (current.trim().length) toks.push(current.trim());
+        current = '';
+      } else {
+        current += ch;
+      }
+    }
+    if (current.trim().length) toks.push(current.trim());
+
+    for (const t of toks) evalToken(t);
+    if (pendingVar) { push(vars[pendingVar]); pendingVar = null; }
+  }
+
+  const prompt = () => print('> ');
+  function onEnter() {
+    print('\n');
+    const line = inputBuffer.trim();
+    if (line) run(line);
+    inputBuffer = '';
+    prompt();
+  }
+
+  out.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key.toLowerCase() === 'l') {
+      e.preventDefault();
+      out.textContent = '';
+      print('Defined Functions:\n');
+      for (const [name, body] of Object.entries(funcs)) {
+        print(name + ' : ' + body.join(' ') + ' ;\n');
+      }
+      prompt();
+      return;
+    }
+
+    if (e.key === 'Enter') { e.preventDefault(); onEnter(); return; }
+    if (e.key === 'Backspace') { e.preventDefault(); if (inputBuffer.length) { inputBuffer = inputBuffer.slice(0,-1); out.textContent = out.textContent.slice(0,-1); } return; }
+    if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) { e.preventDefault(); inputBuffer += e.key; print(e.key); return; }
+  });
+
+  print('MINT-Web — 16-bit RPN (Functions + Ctrl+L Function List)\n');
+  prompt();
+  out.focus();
+})();
+</script>
+</body>
+</html>
