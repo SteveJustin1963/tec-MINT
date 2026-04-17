@@ -63,6 +63,45 @@ code executes a `RET`, control returns to the MINT interpreter.
 > #1800 /X          \ call code at RAM address $1800
 ```
 
+### Ways to get machine code into MINT for `/X`
+
+**Form 1 — Inline byte array literal (self-contained)**
+
+```
+\[#3E #FF #D3 #01 #C9] a!    \ store Z80 opcodes on heap, address → a
+a /X                          \ execute: LD A,#FF / OUT(#01),A / RET
+```
+
+`\[...]` allocates the bytes on the heap and leaves the address on the stack. `a!` saves it. The code must end with `#C9` (`RET`) to return to MINT.
+
+**Form 2 — Allocate with `/A`, poke bytes with `\!`**
+
+```
+5 /A a!              \ allocate 5 bytes, address → a
+#3E a 0 \!           \ byte 0: LD A,
+#0F a 1 \!           \ byte 1: #0F
+#D3 a 2 \!           \ byte 2: OUT
+#01 a 3 \!           \ byte 3: (port 1)
+#C9 a 4 \!           \ byte 4: RET
+a /X
+```
+
+Use this when you need to patch individual bytes at runtime (e.g. change the port number dynamically before calling).
+
+**Form 3 — Pre-loaded binary at fixed address**
+
+```
+:B #1800 /X ;        \ wrap the call in a named MINT function
+6  #1900 !           \ write arg to fixed RAM location
+7  #1902 !
+B                    \ call it — machine code runs, RET returns to MINT
+#1904 @ .            \ read result
+```
+
+Use this for larger compiled C or hand-written Z80 routines loaded via `autotyper.py`. The `:B ... ;` wrapper lets you call it by name repeatedly.
+
+> **Key rule for all three forms:** the machine code must end with `RET` (`#C9`) — that's what returns control to the `jp (iy)` inside `exec_` and resumes the MINT interpreter.
+
 > **Warning:** `/X` is implemented in `Stack_Fix/MAIN.asm` but is **not present**
 > in the stock `TEC-1ROM10` binary. You must compile and burn the `Stack_Fix`
 > version of MINT for `/X` to work.
