@@ -269,7 +269,7 @@ B                \ run it
 
 | Issue | Detail |
 |-------|--------|
-| **`/X` not in stock ROM** | Must use `Stack_Fix` build of MINT |
+| **`/X` not in stock ROM** | Must compile from source — see Source Availability below |
 | **No stdlib** | SDCC's `printf`, `malloc` etc. will not work — freestanding only |
 | **Fixed code address** | SDCC output is not position-independent by default; recompile if load address changes |
 | **RAM budget** | Base TEC-1 has only ~3.5K free after MINT overhead; use extended RAM config |
@@ -294,6 +294,19 @@ srec_cat mycode.ihx -Intel -o mycode.bin -Binary
 #1800 /X            \ execute C function
 #1904 @  .          \ read result
 ```
+
+---
+
+## Source Availability of `/X`
+
+`/X` is **not present in the pre-built `TEC-1ROM10.z80` binary** but is implemented in both known source trees:
+
+| Source | Location | Line |
+|--------|----------|------|
+| Local `Stack_Fix/MAIN.asm` | `exec_` label | ~992 |
+| Upstream `orgMINT/MINT` on GitHub | `exec_` label | ~620 |
+
+The implementations are identical — `call exec1` / `EX (SP),hl` / `jp (hl)`. Either source can be compiled to get a ROM with `/X` support. The stock binary predates or excludes this feature.
 
 ---
 
